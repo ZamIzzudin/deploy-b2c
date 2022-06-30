@@ -1,0 +1,14 @@
+.card-container {
+    gap: 10px;
+}
+
+.filter-container {
+    background-color: var(--semiBg);
+    width: 100%;
+    border-radius: 10px;
+    flex-direction: column;
+}
+
+.rank-container {
+    gap: 10px;
+}

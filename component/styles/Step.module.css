@@ -1,0 +1,64 @@
+.card-step {
+    display: grid;
+    grid-template-areas: "icon desc";
+    grid-template-columns: 1fr 4fr;
+    padding: 20px;
+    transition: .25s;
+}
+
+.card-step:hover {
+    background: var(--primColor);
+}
+
+.card-step:focus {
+    background: var(--primColor);
+    outline: none;
+}
+
+.card-step:focus-visible {
+    outline: none;
+}
+
+.icon-side {
+    grid-area: icon;
+    margin: 0 20px 0 0;
+}
+
+.desc-side {
+    grid-area: desc;
+}
+
+.step-title {
+    font-weight: 700;
+}
+
+.step-name {
+    font-size: 1.3em;
+    text-align: left;
+}
+
+.step-desc {
+    font-size: 1em;
+    text-align: justify;
+    font-weight: 300;
+    margin-top: 13px;
+}
+
+.list {
+    list-style: none;
+    padding: 0;
+}
+
+.list li {
+    font-weight: 300;
+    font-style: italic;
+}
+
+.list li::before {
+    content: "✓";
+    margin-right: 10px;
+}
+
+.hide {
+    color: var(--bg);
+}

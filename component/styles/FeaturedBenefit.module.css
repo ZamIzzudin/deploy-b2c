@@ -1,0 +1,77 @@
+.debug1 {
+    margin-left: auto;
+    grid-area: one;
+    width: 70%;
+}
+
+.debug2 {
+    padding: 0 30px;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    grid-area: two;
+    text-align: center;
+}
+
+.debug3 {
+    grid-area: three;
+}
+
+.debug4 {
+    grid-area: four;
+}
+
+.debug5 {
+    width: 80%;
+    grid-area: five;
+    margin-right: auto;
+}
+
+.benefit-container {
+    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(1fr);
+    grid-template-rows: repeat(1fr);
+    grid-template-areas:
+        'one two three'
+        'four two five';
+}
+
+.benefit-title {
+    font-family: var(--logoFont);
+    text-transform: uppercase;
+    font-size: 3.3em;
+}
+
+.benefit-subtitle {
+    font-size: 1em;
+    font-weight: 700;
+    text-transform: capitalize;
+    color: var(--primColor);
+}
+
+.benefit-desc {
+    text-align: justify;
+    font-size: .9em;
+    font-weight: 400;
+    opacity: .8;
+    margin: 25px 0;
+}
+
+.benefit-card {
+    padding: 20px;
+}
+
+.benefit-card-title {
+    margin-top: 15px;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.benefit-card-subtitle {
+    margin-top: 10px;
+    font-size: 1em;
+    font-weight: 400;
+    opacity: .8;
+    text-align: justify;
+}

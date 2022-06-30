@@ -1,0 +1,35 @@
+.account-card {
+    min-width: 270px;
+    max-width: 300px;
+}
+
+.card-left-side {
+    font-family: var(--primfont);
+    align-items: flex-end;
+    font-size: .9em;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.card-right-side {
+    gap: 8px;
+    align-items: flex-start;
+    flex-direction: column;
+    font-size: .9em;
+    font-family: var(--primfont);
+}
+
+.desc-highlight {
+    color: var(--primColor) !important;
+}
+
+.desc-text {
+    opacity: .6;
+    font-weight: 400;
+}
+
+.price-text {
+    font-weight: 700;
+    color: var(--yellow);
+    font-size: 2.3em;
+}

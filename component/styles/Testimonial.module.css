@@ -1,0 +1,41 @@
+.testi-card {
+    width: 90%;
+    margin: auto;
+    min-height: 150px;
+}
+
+.review-user {
+    text-align: right;
+    font-size: .9em;
+    font-weight: 300;
+    opacity: .8;
+}
+
+.review {
+    margin-top: 10px;
+    font-size: 1.3em;
+    text-transform: capitalize;
+    font-weight: 500;
+}
+
+.review-detail {
+    font-size: .9em;
+    font-weight: 300;
+}
+
+.review-star {
+    text-align: center;
+    margin: 10px;
+}
+
+.review-star i {
+    color: var(--yellow);
+    margin: 0 5px;
+}
+
+.review-date {
+    font-size: .7em;
+    font-weight: 300;
+    opacity: .8;
+    margin: 10px 0;
+}

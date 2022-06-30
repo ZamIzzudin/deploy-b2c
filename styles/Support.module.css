@@ -1,0 +1,16 @@
+.brand-socmed-text {
+    font-family: var(--primfont);
+    font-size: 1.3em;
+    font-weight: 600;
+    text-transform: capitalize;
+    text-align: center;
+}
+
+.brand-socmed-icon {
+    font-size: 2.5em;
+}
+
+.brand-card {
+    min-height: 180px;
+    min-width: 90%;
+}
