@@ -12,3 +12,39 @@
 .rank-container {
     gap: 10px;
 }
+
+.detail-account-title {
+    color: var(--yellow);
+    font-size: 1em;
+}
+
+.detail-list {
+    list-style: none;
+    font-weight: 300;
+}
+
+.stats-card {
+    background-color: var(--bg);
+    margin: 15px 0;
+    padding: 15px 15px;
+    border-radius: 5px;
+}
+
+.stats-card-title {
+    font-size: 1.1em;
+    color: var(--yellow);
+    font-weight: bold;
+}
+
+.server-name {
+    font-weight: 700;
+}
+
+.id-account {
+    color: var(--yellow);
+    font-size: .6em;
+}
+
+.account-desc {
+    font-weight: 300;
+}

@@ -15,17 +15,20 @@
 }
 
 .content-title {
-    font-family: var(--logoFont);
-    font-size: 5em;
-    font-weight: 400;
+    font-family: var(--primFont);
+    font-size: 4em;
+    font-weight: 900;
+    font-style: italic;
     text-transform: uppercase;
 }
 
 .content-subtitle {
+    font-family: var(--secFont);
     font-size: 1em;
-    color: var(--primColor);
+    color: var(--yellow);
     font-weight: 700;
     text-transform: capitalize;
+    letter-spacing: 1px;
 }
 
 .banner-bg {
@@ -33,7 +36,7 @@
 }
 
 .banner-title {
-    letter-spacing: 10px;
+    letter-spacing: 5px;
     font-size: 5em;
 }
 
@@ -42,5 +45,55 @@
     height: fit-content;
     background: url('/gg.jpg');
     background-size: cover;
-    background-position: top;
+    background-position: 0% 20%;
+}
+
+.arrow-decoration {
+    position: absolute;
+    left: -20%;
+    top: 13%;
+    height: fit-content;
+    width: fit-content;
+    opacity: .7;
+    animation: blink 1.3s infinite alternate;
+}
+
+.arrow-decoration2 {
+    position: absolute;
+    right: -20%;
+    bottom: 13%;
+    height: fit-content;
+    width: fit-content;
+    opacity: .7;
+    animation: blink 1.3s infinite alternate;
+}
+
+.arrow-decoration3 {
+    position: absolute;
+    right: -18%;
+    bottom: 62%;
+    height: fit-content;
+    width: fit-content;
+    opacity: .7;
+    animation: blink 1.3s infinite alternate;
+}
+
+.arrow-decoration4 {
+    position: absolute;
+    left: -20%;
+    bottom: 35%;
+    height: fit-content;
+    width: fit-content;
+    opacity: .7;
+    animation: blink 1.3s infinite alternate;
+}
+
+@keyframes blink {
+    from {
+        transform: translateY(5%)
+    }
+
+    to {
+        transform: translateY(0%)
+    }
 }

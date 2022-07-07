@@ -11,7 +11,9 @@ import FAQ from './FAQ';
 import Step from './Step';
 import AccountCard from './Account-Card';
 import LoginModal from './Login-Modal';
+import FormBoost from './Form-Boost';
+import Checkout from './Checkout';
 
 export {
-    Navbar, Footer, Jumbotron, Testimonial, FeaturedBenefit, GameCard, FAQ, Step, AccountCard, LoginModal,
+    Navbar, Footer, Jumbotron, Testimonial, FeaturedBenefit, GameCard, FAQ, Step, AccountCard, LoginModal, FormBoost, Checkout,
 };

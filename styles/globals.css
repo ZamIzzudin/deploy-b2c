@@ -1,14 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=author@501,400,500,200,301,601,600,300,201,401&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=supreme@501,800,400,401,200,100,300,101,301,500,201,801,701,700&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,301,701,300,501,401,901,400&display=swap');
 @import '@splidejs/react-splide/css/core';
 @import '@splidejs/react-splide/css';
 
 
 :root {
-  --logoFont: 'Anton', sans-serif;
-  --primFont: 'Open Sans', sans-serif;
+  --primFont: 'Satoshi', sans-serif;
+  --secFont: 'Supreme', sans-serif;
+  --thirdFont: 'Author', sans-serif;
   --lightBg: #28264E;
   --semiBg: #141432;
   --bg: #1d1d42;
@@ -22,7 +22,7 @@
   color: var(--textTheme);
   padding: 0;
   margin: 0;
-  font-family: var(--primFont);
+  font-family: var(--thirdFont);
   font-weight: 600;
 }
 
@@ -62,9 +62,11 @@ a {
   display: flex;
   justify-content: center;
   padding: 0;
+  position: relative;
 }
 
 .button {
+  font-family: var(--secFont);
   padding: 8px 32px;
   background-color: var(--primColor);
   border: 2px solid var(--primColor);
@@ -81,23 +83,28 @@ a {
 }
 
 .title {
-  font-size: 4.5em;
-  font-weight: 400;
-  font-family: var(--logoFont);
+  font-size: 4.8em;
+  font-weight: 901;
+  font-family: var(--primFont);
+  text-transform: uppercase;
+  font-style: italic;
 }
 
 .section-title {
-  font-family: var(--logoFont);
+  font-family: var(--primFont);
   font-size: 5em;
-  font-weight: 400;
+  font-weight: 900;
+  font-style: italic;
   text-transform: uppercase;
 }
 
 .section-subtitle {
+  font-family: var(--secFont);
   font-size: 1em;
-  color: var(--primColor);
+  color: var(--yellow);
   font-weight: 700;
   text-transform: capitalize;
+  letter-spacing: 1px;
 }
 
 .subtitle {
@@ -139,7 +146,8 @@ a {
 }
 
 .card-hovering:hover {
-  background: var(--primColor)
+  background: var(--primColor) !important;
+  transform: scale(1.1);
 }
 
 .no-shadow {
@@ -177,6 +185,12 @@ a {
   justify-content: flex-start;
 }
 
+.flex-down-centered-right {
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
 .centered-down {
   flex-direction: column;
   display: flex;
@@ -208,4 +222,8 @@ a {
 
 .fit-content {
   min-width: fit-content;
+}
+
+.org-icon {
+  color: var(--yellow);
 }

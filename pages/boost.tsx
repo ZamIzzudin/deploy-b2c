@@ -1,3 +1,4 @@
+/* eslint-disable react/self-closing-comp */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/jsx-no-bind */
@@ -7,10 +8,11 @@
 /* eslint-disable import/no-unresolved */
 import { Container, Row, Col } from 'react-bootstrap';
 import { useState } from 'react';
-import { GameCard } from '../component';
+import { GameCard, FormBoost, Checkout } from '../component';
 
 function Order() {
     const [service, setService] = useState<any>([]);
+    const [formType, setFormType] = useState<string>('');
 
     function getGame(game: any) {
         const select = game.replace(
@@ -18,17 +20,18 @@ function Order() {
             '',
         ).replace(/\s/g, '');
         getService(select);
+        setFormType('');
     }
 
     function getService(Game: any) {
-        const ApexLegend = ['Rank Boosting', 'Battlepass Boost', 'Level Boost'];
-        const Valorant = ['Rank Boosting', 'Placement', 'Competitive Net Wins', 'Derank', 'Unrated Wins', 'Challenges', 'Smurf Account'];
-        const NewWorld = ['Player Level', 'Coins', 'Trade Skill', 'Gear Score', 'Mutated Expeditions', 'Weapon Mastery', 'Farming Service'];
-        const Dota = ['Placement Matches', 'MMR Boost', 'Ranked Net Win', 'Low Priority'];
-        const BlackDesert = ['Hourly Farm', 'Questlines', 'Energy Point', 'Level Boost', 'Contribution Points', 'Adventure Logs'];
-        const CSGO = ['Macthmaking Rank', 'Matchmaking Net Rank', 'Wingman Rank', 'Dangerzone Rank', 'Faceit Level'];
-        const GenshinImpact = [null];
-        const CODColdWar = ['Camo', 'Weapon Level', 'Player Level'];
+        const ApexLegend = [{ name: 'Rank Boosting', type: 'A' }, { name: 'Battlepass Boost', type: 'B' }, { name: 'Level Boost', type: 'C' }];
+        const Valorant = [{ name: 'Rank Boosting', type: 'A' }, { name: 'Placement', type: 'C' }, { name: 'Competitive Net Wins', type: 'D' }, { name: 'Derank', type: 'A' }, { name: 'Unrated Wins', type: 'B' }, { name: 'Challenges', type: 'D' }, { name: 'Smurf Account', type: 'C' }];
+        const NewWorld = [{ name: 'Player Level', type: 'E' }, { name: 'Coins', type: 'F' }, { name: 'Trade Skill', type: 'G' }, { name: 'Gear Score', type: 'H' }, { name: 'Mutated Expeditions', type: 'E' }, { name: 'Weapon Mastery', type: 'I' }, { name: 'Farming Service', type: 'F' }];
+        const Dota = [{ name: 'Placement Matches', type: 'A' }, { name: 'MMR Boost', type: 'B' }, { name: 'Ranked Net Win', type: 'C' }, { name: 'Low Priority', type: 'J' }];
+        const BlackDesert = [{ name: 'Hourly Farm', type: 'F' }, { name: 'Questlines', type: 'J' }, { name: 'Energy Point', type: 'F' }, { name: 'Level Boost', type: 'E' }, { name: 'Contribution Points', type: 'F' }, { name: 'Adventure Logs', type: 'G' }];
+        const CSGO = [{ name: 'Macthmaking Rank', type: 'A' }, { name: 'Matchmaking Net Rank', type: 'C' }, { name: 'Wingman Rank', type: 'B' }, { name: 'Dangerzone Rank', type: 'A' }, { name: 'Faceit Level', type: 'D' }];
+        const GenshinImpact = [{ name: 'Daily Mission', type: 'F' }, { name: 'Enhance Weapon', type: 'J' }, { name: 'Adventure Rank', type: 'F' }];
+        const CODColdWar = [{ name: 'Camo', type: 'G' }, { name: 'Weapon Level', type: 'J' }, { name: 'Player Level', type: 'F' }];
 
         if (Game === 'ApexLegend') {
             setService(ApexLegend);
@@ -49,40 +52,37 @@ function Order() {
         }
     }
 
+    function getForm(type: string) {
+        setFormType(type);
+    }
+
     return (
         <Container className="my-5 py-5 centered-down">
             <h1 className="section-title mt-5 text-center">Boost</h1>
             <span className="section-subtitle">Choose Your Game</span>
-            <Row className="centered my-5">
-                <GameCard name="Apex Legend" thumbnail="/apex.png" getData={getGame} />
-                <GameCard name="Valorant" thumbnail="/valo.png" getData={getGame} />
-                <GameCard name="New World" thumbnail="/newworld.png" getData={getGame} />
+            <Row className="centered mt-5 mb-3">
+                <GameCard name="Apex Legend" thumbnail="/apex.png" getData={getGame} mini />
+                <GameCard name="Valorant" thumbnail="/valo.png" getData={getGame} mini />
+                <GameCard name="New World" thumbnail="/newworld.png" getData={getGame} mini />
                 <GameCard name="Dota" thumbnail="/Dota.png" getData={getGame} />
-                <GameCard name="Black Desert" thumbnail="/Blackdesert.png" getData={getGame} />
-                <GameCard name="CS:GO" thumbnail="/csgo.png" getData={getGame} />
-                <GameCard name="Genshin Impact" thumbnail="/Genshin.png" getData={getGame} />
-                <GameCard name="COD Cold War" thumbnail="/coldwar.png" getData={getGame} />
+                <GameCard name="Black Desert" thumbnail="/Blackdesert.png" getData={getGame} mini />
+                <GameCard name="CS:GO" thumbnail="/csgo.png" getData={getGame} mini />
+                <GameCard name="Genshin Impact" thumbnail="/Genshin.png" getData={getGame} mini />
+                <GameCard name="COD Cold War" thumbnail="/coldwar.png" getData={getGame} mini />
             </Row>
-            <Row className="centered my-5">
+            <Row className="centered mb-3">
                 {service.map((i: any) => (
-                    <Col className="card fit-content mx-2">
-                        {i}
+                    <Col className="card fit-content mx-2" onClick={() => getForm(i.type)}>
+                        {i.name}
                     </Col>
                 ))}
             </Row>
-            <Row>
+            <Row className="mt-3">
                 <Col className="col-md-7 mx-3 card">
-                    <h1>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, maiores!
-                    </h1>
+                    <FormBoost type={formType} />
                 </Col>
                 <Col className="col-md-4 mr-3 card">
-                    <h3 className="text-center">
-                        Checkout
-                    </h3>
-                    <h4>Total Amount</h4>
-                    <h4> $50.00</h4>
-                    <button className="button capsule">Pay Now</button>
+                    <Checkout type={formType} />
                 </Col>
             </Row>
         </Container>

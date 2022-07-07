@@ -11,7 +11,7 @@ function Jumbotron() {
         <div className={styles.jumbotron}>
             <Row className={styles['jumbotron-overview']}>
                 <Container className={`${styles['jumbotron-desc']} col`}>
-                    <h1 className="title">YOUR RANK BOOSTER PARTNER</h1>
+                    <h1 className="title">Your Rank Booster</h1>
                     <h2 className="desc mt-3 mb-5">Reach your dream rank effortlessly with our safe boosting services or instanly buy an account on our market.</h2>
                     <div>
                         <button type="button" className="button capsule">Boost Now</button>

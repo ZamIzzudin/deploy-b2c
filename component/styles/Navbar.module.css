@@ -1,10 +1,5 @@
 .brand-text {
-    font-family: var(--logoFont);
-    font-size: 1.5em;
-    color: var(--textTheme) !important;
-    font-weight: 400;
     margin-right: 100px;
-    letter-spacing: 5px;
 }
 
 .navbar {
@@ -17,6 +12,9 @@
 }
 
 .navbar-link a {
+    font-family: var(--secFont);
+    font-weight: 600;
+    font-size: 1.05em;
     margin-right: 50px;
     transition: 0.3s;
     position: relative;

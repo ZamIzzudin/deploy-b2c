@@ -5,7 +5,7 @@
 /* eslint-disable react/destructuring-assignment */
 import { Modal } from 'react-bootstrap';
 import { facebookProvider, googleProvider } from '../config/socialAuth';
-import { socialMediaAuth } from '../login-auth/auth';
+import socialMediaAuth from '../login-auth/auth';
 
 export default function LoginModal(props: any) {
     const handleLogin = async (provider: any) => {

@@ -14,14 +14,14 @@ function Step() {
 
     return (
         <div>
-            <Row className="mb-3">
+            <Row>
                 <Col className="px-3">
                     <button type="button" className={`${styles['card-step']} card`} onClick={() => setStep(1)}>
                         <div className={styles['icon-side']}>
-                            <i className="fa-solid fa-clipboard-check fa-2x" />
+                            <i className="fa-solid fa-clipboard-check fa-2x org-icon" />
                         </div>
                         <div className={styles['desc-side']}>
-                            <h3 className={styles['step-name']}>1- Select Service</h3>
+                            <h3 className={styles['step-name']}>1 - Select Service</h3>
                             <h4 className={styles['step-desc']}>Select and customize your desired service.</h4>
                         </div>
                     </button>
@@ -29,10 +29,10 @@ function Step() {
                 <Col className="px-3">
                     <button type="button" className={`${styles['card-step']} card`} onClick={() => setStep(2)}>
                         <div className={styles['icon-side']}>
-                            <i className="fa-solid fa-money-bill-wave fa-2x" />
+                            <i className="fa-solid fa-money-bill-wave fa-2x org-icon" />
                         </div>
                         <div className={styles['desc-side']}>
-                            <h3 className={styles['step-name']}>2- Complete Payment</h3>
+                            <h3 className={styles['step-name']}>2 - Complete Payment</h3>
                             <h4 className={styles['step-desc']}>Choose your preferred payment method.</h4>
                         </div>
                     </button>
@@ -40,16 +40,16 @@ function Step() {
                 <Col className="px-3">
                     <button type="button" className={`${styles['card-step']} card`} onClick={() => setStep(3)}>
                         <div className={styles['icon-side']}>
-                            <i className="fa-solid fa-ranking-star fa-2x" />
+                            <i className="fa-solid fa-ranking-star fa-2x org-icon" />
                         </div>
                         <div className={styles['desc-side']}>
-                            <h3 className={styles['step-name']}>3- Rank Up</h3>
+                            <h3 className={styles['step-name']}>3 - Rank Up</h3>
                             <h4 className={styles['step-desc']}>Follow your order and live chat with your booster.</h4>
                         </div>
                     </button>
                 </Col>
             </Row>
-            <Row className="my-5">
+            <Row>
                 {step === 1 && (
                     <>
                         <Col>
@@ -108,7 +108,6 @@ function Step() {
                     </>
                 )}
             </Row>
-
         </div>
     );
 }

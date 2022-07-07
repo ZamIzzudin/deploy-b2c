@@ -26,14 +26,14 @@ function AccountCard(props: any) {
                         <span className={styles['desc-highlight']}>Current Rank</span>
                         <span className={styles['desc-text']}>Highest Rank</span>
                         <span className={styles['desc-text']}>Server Region</span>
-                        <span className={styles['desc-text']}>Champions</span>
+                        <span className={styles['desc-text']}>Agent</span>
                         <span className={styles['desc-text']}>Skins</span>
                     </Col>
                     <Col className={styles['card-left-side']}>
                         <span className={styles['desc-highlight']}>{data.current_rank}</span>
                         <span className={styles['desc-text']}>{data.highest_rank}</span>
                         <span className={styles['desc-text']}>{data.server_region}</span>
-                        <span className={styles['desc-text']}>{data.champions.length}</span>
+                        <span className={styles['desc-text']}>{data.agent.length}</span>
                         <span className={styles['desc-text']}>{data.skins.length}</span>
                     </Col>
                 </Row>

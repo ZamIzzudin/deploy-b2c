@@ -19,6 +19,3 @@ function GameCard(props: any) {
 }
 
 export default GameCard;
-function getGame(name: any) {
-    throw new Error('Function not implemented.');
-}

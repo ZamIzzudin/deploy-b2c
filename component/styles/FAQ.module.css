@@ -1,10 +1,11 @@
 .details-text {
-    font-size: 1em;
-    font-weight: 300;
+    font-size: 1.1em;
+    font-weight: 400;
     opacity: .8;
     padding: 10px 20px;
     text-align: justify;
     margin-top: 10px;
+    transition: .3s;
 }
 
 .details-title {
@@ -17,6 +18,7 @@
 
 .details-card[open] .details-title {
     color: var(--primColor);
+    font-size: 1.1em;
 }
 
 .container-card {

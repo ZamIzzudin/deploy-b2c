@@ -38,21 +38,25 @@
 }
 
 .benefit-title {
-    font-family: var(--logoFont);
+    font-family: var(--primFont);
+    font-size: 3.5em;
+    font-weight: 800;
+    font-style: italic;
     text-transform: uppercase;
-    font-size: 3.3em;
 }
 
 .benefit-subtitle {
+    font-family: var(--secFont);
     font-size: 1em;
     font-weight: 700;
     text-transform: capitalize;
-    color: var(--primColor);
+    color: var(--yellow);
+    letter-spacing: 1px;
 }
 
 .benefit-desc {
-    text-align: justify;
-    font-size: .9em;
+    text-align: center;
+    font-size: 1.1em;
     font-weight: 400;
     opacity: .8;
     margin: 25px 0;
@@ -63,6 +67,7 @@
 }
 
 .benefit-card-title {
+    font-family: var(--secfont);
     margin-top: 15px;
     font-size: 1.5em;
     font-weight: 600;
@@ -70,7 +75,7 @@
 
 .benefit-card-subtitle {
     margin-top: 10px;
-    font-size: 1em;
+    font-size: 1.1em;
     font-weight: 400;
     opacity: .8;
     text-align: justify;

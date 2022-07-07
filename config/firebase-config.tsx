@@ -1,5 +1,4 @@
 import firebase from 'firebase';
-import 'firebase/analytics';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyBUS4vcB7jK6vKKyY-YOJjCfQbdmekzNg0',
@@ -13,7 +12,6 @@ const firebaseConfig = {
 
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
 }
 
 export default firebase;

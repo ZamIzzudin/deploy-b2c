@@ -14,18 +14,19 @@
     display: flex;
 }
 
+.brand-logo {
+    font-size: 1.8em;
+    display: flex;
+    padding: .5em;
+}
+
 .brand-overview:nth-child(2) {
     padding: 5px 55px;
     font-size: 1.6em;
 }
 
 .brand-text {
-    font-family: var(--logoFont);
-    font-size: 3em;
-    color: var(--textTheme) !important;
-    font-weight: 400;
     margin-right: 100px;
-    letter-spacing: 5px;
 }
 
 .footer-part {
@@ -34,6 +35,7 @@
 }
 
 .footer-part h1 {
+    font-family: var(--secFont);
     font-size: 1.2em;
     color: var(--primColor);
     font-weight: 700;
@@ -41,6 +43,7 @@
 }
 
 .footer-list {
+    font-size: 1.1em;
     width: 85%;
     list-style: none;
     padding-left: 0;
@@ -50,9 +53,15 @@
     font-weight: 400;
 }
 
-.footer-copyright {
-    margin-top: 25px;
-    font-size: .9em;
+.footer-copyright h3 {
+    font-family: var(--thirdFont);
+    font-size: 1.1em;
+    font-weight: 550;
+}
+
+.footer-copyright h3 span {
+    font-family: var(--thirdFont);
+    font-size: 1em;
     font-weight: 400;
 }
 

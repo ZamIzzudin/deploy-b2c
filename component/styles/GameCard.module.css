@@ -9,6 +9,7 @@
 }
 
 .card-name {
+    font-family: var(--secFont);
     font-size: 1.3em;
     margin-bottom: 0;
 }
