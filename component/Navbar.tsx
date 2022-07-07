@@ -35,18 +35,20 @@ function TabBar() {
     };
 
     const getDataLogin = (data: any) => {
-        const dataUser = {
-            displayName: data.displayName, email: data.email, isLogin: data.emailVerified, photoURL: data.photoURL,
-        };
+        if (data !== undefined) {
+            const dataUser = {
+                displayName: data.displayName, email: data.email, isLogin: data.emailVerified, photoURL: data.photoURL,
+            };
 
-        document.cookie = 'user=' + JSON.stringify(dataUser);
-        let user = getCookie("user");
+            document.cookie = 'user=' + JSON.stringify(dataUser);
+            let user = getCookie("user");
 
-        if (user !== undefined) {
-            user = JSON.parse(user);
-            setUserData(user);
-            setLogin(true);
-            showModal(false);
+            if (user !== undefined) {
+                user = JSON.parse(user);
+                setUserData(user);
+                setLogin(true);
+                showModal(false);
+            }
         }
     };
 

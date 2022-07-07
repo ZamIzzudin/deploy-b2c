@@ -5,7 +5,7 @@
 /* eslint-disable import/extensions */
 import firebase from '../config/firebase-config';
 
-function socialMediaAuth(provider: any) { firebase.auth().signInWithPopup(provider).then((res) => res.user).catch((err) => err); }
+const socialMediaAuth = (provider: any) => firebase.auth().signInWithPopup(provider).then((res) => res.user).catch((err) => err);
 
 export const socialMediaLogout = () => firebase.auth().signOut();
 

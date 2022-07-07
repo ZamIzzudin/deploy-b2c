@@ -12,4 +12,16 @@
     font-family: var(--secFont);
     font-size: 1.3em;
     margin-bottom: 0;
+    background-color: salmon;
+}
+
+.card-game-mini {
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: stretch;
+    padding: 20px 0;
+    margin: 15px 15px;
+    border-radius: 30px;
 }

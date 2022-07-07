@@ -64,7 +64,7 @@ function Order() {
                 <GameCard name="Apex Legend" thumbnail="/apex.png" getData={getGame} mini />
                 <GameCard name="Valorant" thumbnail="/valo.png" getData={getGame} mini />
                 <GameCard name="New World" thumbnail="/newworld.png" getData={getGame} mini />
-                <GameCard name="Dota" thumbnail="/Dota.png" getData={getGame} />
+                <GameCard name="Dota" thumbnail="/Dota.png" getData={getGame} mini />
                 <GameCard name="Black Desert" thumbnail="/Blackdesert.png" getData={getGame} mini />
                 <GameCard name="CS:GO" thumbnail="/csgo.png" getData={getGame} mini />
                 <GameCard name="Genshin Impact" thumbnail="/Genshin.png" getData={getGame} mini />
