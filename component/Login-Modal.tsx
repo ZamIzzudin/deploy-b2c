@@ -4,7 +4,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable react/destructuring-assignment */
 import { Modal, Row, Col } from 'react-bootstrap';
-import Image from 'next/Image';
+import Image from 'next/image';
 import { facebookProvider, googleProvider } from '../config/socialAuth';
 import socialMediaAuth from '../login-auth/auth';
 import styles from './styles/LoginModal.module.css';
