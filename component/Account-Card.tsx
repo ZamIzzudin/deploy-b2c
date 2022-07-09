@@ -8,7 +8,7 @@ import styles from './styles/AccountCard.module.css';
 function AccountCard(props: any) {
     const { data } = props;
     return (
-        <Col className={`${styles['account-card']} card`}>
+        <Col className={`${styles['account-card']} card bordered`}>
             <Row>
                 <Row className="centered">
                     <Col>

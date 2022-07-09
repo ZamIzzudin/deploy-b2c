@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-no-useless-fragment */
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable no-use-before-define */
 /* eslint-disable quotes */
 /* eslint-disable prefer-template */
@@ -19,10 +21,10 @@ import { LoginModal } from '.';
 import { socialMediaLogout } from '../login-auth/auth';
 import styles from './styles/Navbar.module.css';
 
-function TabBar() {
+function TabBar(props: any) {
+    const { User } = props;
     const [modal, showModal] = useState(false);
-    const [userData, setUserData] = useState<any | null>(null);
-    const [isLogin, setLogin] = useState(false);
+    const [userData, setUserData] = useState<any | null>(User);
 
     const handleModal = () => {
         showModal(true);
@@ -31,7 +33,6 @@ function TabBar() {
     const handleLogout = async () => {
         socialMediaLogout();
         document.cookie = "user=;";
-        setLogin(false);
     };
 
     const getDataLogin = (data: any) => {
@@ -40,13 +41,16 @@ function TabBar() {
                 displayName: data.displayName, email: data.email, isLogin: data.emailVerified, photoURL: data.photoURL,
             };
 
-            document.cookie = 'user=' + JSON.stringify(dataUser);
+            const expiryDate = new Date();
+            const month = (expiryDate.getMonth() + 1) % 12;
+            expiryDate.setMonth(month);
+
+            document.cookie = 'user=' + JSON.stringify(dataUser) + "; expires=" + expiryDate.toUTCString();
             let user = getCookie("user");
 
             if (user !== undefined) {
                 user = JSON.parse(user);
                 setUserData(user);
-                setLogin(true);
                 showModal(false);
             }
         }
@@ -78,9 +82,19 @@ function TabBar() {
                         <Link scroll href="/support">Support</Link>
                     </Nav>
                     <Navbar.Collapse className="justify-content-end">
-                        {isLogin === true ? (
+                        {userData ? (
                             <>
-                                <span className="mx-3">{userData.displayName}</span>
+                                {userData ? (
+                                    <Link scroll href="/profile/detail">
+                                        <a>
+                                            <img src={userData?.photoURL} width="40" height="40" className="circle" />
+                                            <span className="mx-3">{userData.displayName}</span>
+                                        </a>
+                                    </Link>
+
+                                ) : (
+                                    <></>
+                                )}
                                 <span onClick={() => handleLogout()}>
                                     <a className="button capsule">Logout</a>
                                 </span>
@@ -101,5 +115,4 @@ function TabBar() {
         </Navbar>
     );
 }
-
 export default TabBar;

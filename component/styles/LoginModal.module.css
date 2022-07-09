@@ -1,0 +1,37 @@
+.Login-Header {
+    font-family: var(--primFont);
+    font-style: italic;
+    text-transform: uppercase;
+    font-weight: 800;
+    text-align: center;
+    font-size: 4em;
+}
+
+.Login-Subheader {
+    font-family: var(--secFont);
+    color: var(--yellow);
+    font-size: 1em;
+    text-align: center;
+    letter-spacing: .5px;
+}
+
+.Socmed-Button {
+    position: relative;
+    color: grey;
+    border: none;
+    padding: .5em .5em .5em .5em;
+    border-radius: 5px;
+    margin: 10px 0;
+    width: 100%;
+}
+
+.Provider-Logo {
+    position: absolute;
+    left: 5%;
+}
+
+.Login-Footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}

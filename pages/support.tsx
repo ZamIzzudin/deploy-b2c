@@ -11,23 +11,30 @@ function Support() {
             <h1 className="section-title mt-5">Tell Your Problem</h1>
             <span className="section-subtitle ">Send this form and connect with us</span>
             <Row className="mt-5">
-                <Col className="col-md-7">
+                <Col className="col-md-7 card">
                     <Row>
                         <Form.Group className="mb-3 col-md-6">
-                            <Form.Label>Email address</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" />
+                            <Form.Label>Name</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Your Name" className="form-layout" />
                         </Form.Group>
                         <Form.Group className="mb-3 col-md-6">
                             <Form.Label>Email address</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" />
+                            <Form.Control type="email" placeholder="Enter email" className="form-layout" />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label>Email address</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" />
+                            <Form.Label>Category</Form.Label>
+                            <Form.Select className="form-layout">
+                                <option>General Question</option>
+                                <option>Order Issues</option>
+                                <option>Payment Issues</option>
+                                <option>Application</option>
+                                <option>Bug Report</option>
+                                <option>Others</option>
+                            </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control as="textarea" placeholder="Password" />
+                            <Form.Label>Message</Form.Label>
+                            <Form.Control as="textarea" placeholder="Enter Your Message" className="form-layout" />
                         </Form.Group>
                         <div>
                             <button type="button" className="button capsule">Send</button>

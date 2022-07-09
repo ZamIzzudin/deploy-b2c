@@ -45,7 +45,7 @@ function AccountDetails() {
             </Row>
             <Row className="mt-5">
                 <Col className="card mx-2">
-                    <h2 className={styles['detail-account-title']}>Champion</h2>
+                    <h2 className={styles['detail-account-title']}>Agent</h2>
                     {data.champion.map((i) => <li className={styles['detail-list']}>{i}</li>)}
                 </Col>
                 <Col className="card mx-2">

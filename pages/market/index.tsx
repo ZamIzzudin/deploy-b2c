@@ -16,6 +16,17 @@ import { GameCard, AccountCard } from '../../component';
 import styles from '../../styles/Market.module.css';
 
 function Market() {
+    const [minPrice, setMin] = useState(0);
+    const [maxPrice, setMax] = useState(1000);
+
+    function getMaxValue(value: any) {
+        setMax(value);
+    }
+
+    function getMinValue(value: any) {
+        setMin(value);
+    }
+
     const data = [
         {
             id: 15345,
@@ -44,10 +55,10 @@ function Market() {
             <Row className={`${styles['filter-container']} my-5 py-5 px-3`}>
                 <Form>
                     <Row>
-                        <Col>
-                            <Form.Group className="mb-3">
+                        <Col className="px-5">
+                            <Form.Group className="mb-3 fullwidth">
                                 <Form.Label>Server</Form.Label>
-                                <Form.Select>
+                                <Form.Select className="form-layout">
                                     <option>All</option>
                                     <option>EU-West</option>
                                     <option>EU-Nordic & East</option>
@@ -66,31 +77,39 @@ function Market() {
                                 </Form.Select>
                             </Form.Group>
                         </Col>
-                        <Col>
-                            <Form.Group>
+                        <Col className="px-5">
+                            <Form.Group className="fullwidth">
                                 <Form.Label>Min Price</Form.Label>
-                                <h5>0</h5>
-                                <Form.Range />
+                                <h5>
+                                    $
+                                    {' '}
+                                    {minPrice}
+                                </h5>
+                                <Form.Range className="form-range" min="0" max="1000" onChange={(e: any) => { getMinValue(e.target.value); }} value={minPrice} />
                             </Form.Group>
                         </Col>
-                        <Col>
-                            <Form.Group>
+                        <Col className="px-5">
+                            <Form.Group className="fullwidth">
                                 <Form.Label>Max Price</Form.Label>
-                                <h5>100</h5>
-                                <Form.Range />
+                                <h5>
+                                    $
+                                    {' '}
+                                    {maxPrice}
+                                </h5>
+                                <Form.Range min="0" max="1000" onChange={(e: any) => { getMaxValue(e.target.value); }} value={maxPrice} />
                             </Form.Group>
                         </Col>
                     </Row>
                     <Row className={`${styles['rank-container']} centered mt-4`}>
-                        <span className="card col-md-2">Unranked</span>
-                        <span className="card col-md-2">Iron</span>
-                        <span className="card col-md-2">Bronze</span>
-                        <span className="card col-md-2">Silver</span>
-                        <span className="card col-md-2">Gold</span>
-                        <span className="card col-md-2">Platinum</span>
-                        <span className="card col-md-2">Diamond</span>
-                        <span className="card col-md-2">Immortal</span>
-                        <span className="card col-md-2">Radiant</span>
+                        <span className="card col-md-2 card-hovering">Unranked</span>
+                        <span className="card col-md-2 card-hovering">Iron</span>
+                        <span className="card col-md-2 card-hovering">Bronze</span>
+                        <span className="card col-md-2 card-hovering">Silver</span>
+                        <span className="card col-md-2 card-hovering">Gold</span>
+                        <span className="card col-md-2 card-hovering">Platinum</span>
+                        <span className="card col-md-2 card-hovering">Diamond</span>
+                        <span className="card col-md-2 card-hovering">Immortal</span>
+                        <span className="card col-md-2 card-hovering">Radiant</span>
                     </Row>
                 </Form>
             </Row>

@@ -9,6 +9,7 @@
 import { Container, Row, Col } from 'react-bootstrap';
 import { useState } from 'react';
 import { GameCard, FormBoost, Checkout } from '../component';
+import styles from '../styles/Boost.module.css';
 
 function Order() {
     const [service, setService] = useState<any>([]);
@@ -59,7 +60,7 @@ function Order() {
     return (
         <Container className="my-5 py-5 centered-down">
             <h1 className="section-title mt-5 text-center">Boost</h1>
-            <span className="section-subtitle">Choose Your Game</span>
+            <span className="section-subtitle"></span>
             <Row className="centered mt-5 mb-3">
                 <GameCard name="Apex Legend" thumbnail="/apex.png" getData={getGame} mini />
                 <GameCard name="Valorant" thumbnail="/valo.png" getData={getGame} mini />
@@ -72,8 +73,8 @@ function Order() {
             </Row>
             <Row className="centered mb-3">
                 {service.map((i: any) => (
-                    <Col className="card fit-content mx-2" onClick={() => getForm(i.type)}>
-                        {i.name}
+                    <Col className="card fit-content card-hovering mx-2" onClick={() => getForm(i.type)}>
+                        <span className={styles['service-name']}>{i.name}</span>
                     </Col>
                 ))}
             </Row>

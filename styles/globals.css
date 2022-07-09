@@ -68,7 +68,8 @@ a {
 .button {
   font-family: var(--secFont);
   padding: 8px 32px;
-  background-color: var(--primColor);
+  background: rgb(171, 0, 255);
+  background: linear-gradient(166deg, rgba(171, 0, 255, 1) 0%, rgba(82, 78, 238, 1) 100%);
   border: 2px solid var(--primColor);
   transition: .5s;
 }
@@ -141,6 +142,10 @@ a {
   -moz-box-shadow: 0px 0px 40px 5px rgba(20, 20, 50, 0.54) !important;
 }
 
+.bordered {
+  border: 3px solid var(--primColor);
+}
+
 .card-hovering {
   transition: .3s;
 }
@@ -211,7 +216,12 @@ a {
   min-height: 200px;
 }
 
+.fullwidth {
+  width: 100%;
+}
+
 .modal-content {
+  border: 3px solid var(--primColor);
   padding: 15px !important;
   border-radius: 15px !important;
   background: linear-gradient(166deg, rgba(40, 38, 78, 1) 0%, rgba(57, 55, 83, 1) 100%) !important;
@@ -226,4 +236,29 @@ a {
 
 .org-icon {
   color: var(--yellow);
+}
+
+.form-layout {
+  background-color: var(--bg);
+  border: none;
+  color: white;
+  width: 100%;
+}
+
+.form-layout::placeholder {
+  color: white;
+}
+
+.form-range {
+  -webkit-appearance: none;
+}
+
+.form-layout:focus {
+  box-shadow: 0px 0px 2px 2px var(--primColor);
+  background-color: var(--bg);
+  color: white;
+}
+
+.circle {
+  border-radius: 50%;
 }
