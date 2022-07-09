@@ -16,15 +16,14 @@
 import { Container, Navbar, Nav } from 'react-bootstrap';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LoginModal } from '.';
 import { socialMediaLogout } from '../login-auth/auth';
 import styles from './styles/Navbar.module.css';
 
 function TabBar(props: any) {
-    const { User } = props;
     const [modal, showModal] = useState(false);
-    const [userData, setUserData] = useState<any | null>(User);
+    const [userData, setUserData] = useState<any | null>(null);
 
     const handleModal = () => {
         showModal(true);
@@ -33,6 +32,7 @@ function TabBar(props: any) {
     const handleLogout = async () => {
         socialMediaLogout();
         document.cookie = "user=;";
+        setUserData(null);
     };
 
     const getDataLogin = (data: any) => {
@@ -46,15 +46,32 @@ function TabBar(props: any) {
             expiryDate.setMonth(month);
 
             document.cookie = 'user=' + JSON.stringify(dataUser) + "; expires=" + expiryDate.toUTCString();
-            let user = getCookie("user");
+            const user = getCookie("user");
 
             if (user !== undefined) {
-                user = JSON.parse(user);
-                setUserData(user);
+                const User = JSON.parse(user);
+                setUserData(User);
                 showModal(false);
             }
         }
     };
+
+    useEffect(() => {
+        const user = getCookie("user");
+
+        if (user === "") {
+            setUserData(null);
+        } else if (user !== undefined) {
+            if (userData === null) {
+                const User = JSON.parse(user);
+                setUserData(User);
+            } else {
+                setUserData(userData);
+            }
+        } else {
+            setUserData(null);
+        }
+    }, [userData]);
 
     function getCookie(cName: any) {
         const name = cName + "=";
