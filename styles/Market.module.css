@@ -31,9 +31,14 @@
 }
 
 .stats-card-title {
-    font-size: 1.1em;
-    color: var(--yellow);
+    font-size: 1.4em;
     font-weight: bold;
+    font-family: var(--secFont);
+}
+
+.stats-card-subtitle {
+    color: var(--yellow);
+    font-size: 1.1em;
 }
 
 .server-name {
@@ -47,4 +52,10 @@
 
 .account-desc {
     font-weight: 300;
+}
+
+.price-tag {
+    color: var(--yellow);
+    font-weight: 800;
+    font-size: 2.5em;
 }

@@ -1,0 +1,23 @@
+.mini-text {
+    font-weight: 400;
+    font-size: 1em;
+}
+
+.sub-mini-text {
+    font-weight: 300;
+    font-size: .8em;
+}
+
+.service-type {
+    font-family: var(--secFont);
+}
+
+.service-desc {
+    color: var(--yellow);
+}
+
+.service-price {
+    color: var(--yellow);
+    font-weight: 800;
+    font-size: 2em;
+}
