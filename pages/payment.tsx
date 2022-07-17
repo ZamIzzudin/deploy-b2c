@@ -33,13 +33,13 @@ function Payment() {
                     <h3 className="section-subtitle">Payement Gateaway</h3>
                     <Row>
                         <Col className="p-4">
-                            <div className="centered-down bordered fullwidth p-2 capsule card-hovering">
+                            <div className="centered-down inside-card fullwidth p-2 card-hovering">
                                 <Image src="/metamask.png" width="100" height="100" />
                                 <h5 className="mt-3">Metamask</h5>
                             </div>
                         </Col>
                         <Col className="p-4">
-                            <div className="centered-down bordered fullwidth p-2 capsule card-hovering">
+                            <div className="centered-down inside-card fullwidth p-2 card-hovering">
                                 <Image src="/paypal.png" width="90" height="90" />
                                 <h5 className="mt-3">PayPal</h5>
                             </div>

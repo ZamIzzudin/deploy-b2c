@@ -1,0 +1,23 @@
+.list-toogle {
+    list-style: none;
+    font-size: 1.1em;
+    max-width: fit-content;
+}
+
+.list-item {
+    margin: 25px 0;
+    background-color: var(--card);
+    width: 180%;
+    height: 40px;
+    padding: 25px 15px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    transition: .3s;
+    border: none;
+}
+
+.list-item:hover {
+    background-color: var(--primColor);
+    transform: scale(1.05);
+}

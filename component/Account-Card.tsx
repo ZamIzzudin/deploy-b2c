@@ -6,10 +6,10 @@ import Link from 'next/link';
 import styles from './styles/AccountCard.module.css';
 
 function AccountCard(props: any) {
-    const { data } = props;
+    const { data, manage } = props;
     return (
         <Col className={`${styles['account-card']} card`}>
-            <Row>
+            <div>
                 <Row className="centered">
                     <Col>
                         <h3 className={styles['price-text']}>
@@ -38,12 +38,18 @@ function AccountCard(props: any) {
                     </Col>
                 </Row>
                 <Row className="centered">
-                    <Link scroll href={`market/details/${data.id}`}>
-                        <button className="button capsule mt-4 mb-3">See Details</button>
-                    </Link>
+                    {manage === true ? (
+                        <div className="centered">
+                            <button className="button capsule mt-4 mb-3">Delete</button>
+                            <button className="button capsule mt-4 mb-3">Edit</button>
+                        </div>
+                    ) : (
+                        <Link scroll href={`market/details/${data.id}`}>
+                            <button className="button capsule mt-4 mb-3">See Details</button>
+                        </Link>
+                    )}
                 </Row>
-
-            </Row>
+            </div>
         </Col>
     );
 }

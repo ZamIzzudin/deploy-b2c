@@ -1,0 +1,34 @@
+/* Booster */
+.booster-card-title {
+    font-family: var(--primFont);
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.booster-card-subtitle {
+    font-family: var(--secFont);
+    font-size: 1em;
+    color: var(--yellow);
+}
+
+.booster-card-price {
+    font-size: 2em;
+}
+
+/* Order */
+.service-name {
+    font-weight: 400;
+    font-size: 1.1em;
+    letter-spacing: .5px;
+}
+
+.filter-container {
+    background-color: var(--card);
+    width: 100%;
+    border-radius: 10px;
+    flex-direction: column;
+}
+
+.rank-container {
+    gap: 10px;
+}

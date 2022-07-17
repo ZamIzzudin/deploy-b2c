@@ -103,8 +103,8 @@ function TabBar(props: any) {
                             <>
                                 {userData ? (
                                     <Link scroll href="/profile/detail">
-                                        <a>
-                                            <img src={userData?.photoURL} width="40" height="40" className="circle" />
+                                        <a className="flex-horizon-centered-right">
+                                            <Image src={userData?.photoURL} width="40" height="40" className="circle" />
                                             <span className="mx-3">{userData.displayName}</span>
                                         </a>
                                     </Link>

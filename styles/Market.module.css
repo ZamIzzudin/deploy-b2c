@@ -3,7 +3,7 @@
 }
 
 .filter-container {
-    background-color: var(--semiBg);
+    background-color: var(--card);
     width: 100%;
     border-radius: 10px;
     flex-direction: column;
@@ -24,7 +24,7 @@
 }
 
 .stats-card {
-    background-color: var(--bg);
+    background-color: var(--insideCard);
     margin: 15px 0;
     padding: 15px 15px;
     border-radius: 5px;

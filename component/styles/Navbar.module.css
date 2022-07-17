@@ -4,7 +4,7 @@
 
 .navbar {
     padding: 20px 0;
-    background-color: var(--semiBg);
+    background-color: var(--bar);
     position: fixed;
     width: 100%;
     top: 0;

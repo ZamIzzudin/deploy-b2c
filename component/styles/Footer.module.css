@@ -1,7 +1,9 @@
 .Footer {
     padding: 40px 0 10px 0;
     width: 100%;
-    background-color: var(--semiBg);
+    background-color: var(--bar);
+    z-index: 10;
+    position: absolute;
 }
 
 .col {

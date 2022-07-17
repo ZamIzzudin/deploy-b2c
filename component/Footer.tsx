@@ -11,11 +11,6 @@ function Footer() {
                         <div className={styles['brand-overview']}>
                             <Image src="/logo.png" width="200" height="70" />
                         </div>
-                        <div className={`${styles['brand-logo']} mt-1`}>
-                            <i className="fa-brands fa-twitter fa-1x mx-3" />
-                            <i className="fa-brands fa-facebook fa-1x mx-3" />
-                            <i className="fa-brands fa-instagram fa-1x mx-3" />
-                        </div>
                     </Col>
                     <Col className="col-md-3 col-8">
                         <div className={styles['footer-part']}>
@@ -54,10 +49,19 @@ function Footer() {
 
                     </Col>
                 </Row>
+                <Row className="my-4">
+                    <Col className="centered">
+                        <div className={`${styles['brand-logo']}`}>
+                            <i className="fa-brands fa-twitter fa-1x mx-5" />
+                            <i className="fa-brands fa-facebook fa-1x mx-5" />
+                            <i className="fa-brands fa-instagram fa-1x mx-5" />
+                        </div>
+                    </Col>
+                </Row>
                 <Row className="mt-3">
                     <Col className={styles['footer-copyright']}>
                         <h3>
-                            Lunar Boost
+                            Lunar Boost 2022
                             -
                             {' '}
                             <span>All Rights Reserved</span>

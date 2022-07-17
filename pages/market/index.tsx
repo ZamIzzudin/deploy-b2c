@@ -12,7 +12,8 @@ import {
     Container, Row, Col, Form,
 } from 'react-bootstrap';
 import { useState } from 'react';
-import { GameCard, AccountCard } from '../../component';
+import Image from 'next/image';
+import { AccountCard } from '../../component';
 import styles from '../../styles/Market.module.css';
 
 function Market() {
@@ -101,15 +102,42 @@ function Market() {
                         </Col>
                     </Row>
                     <Row className={`${styles['rank-container']} centered mt-4`}>
-                        <span className="card col-md-2 card-hovering">Unranked</span>
-                        <span className="card col-md-2 card-hovering">Iron</span>
-                        <span className="card col-md-2 card-hovering">Bronze</span>
-                        <span className="card col-md-2 card-hovering">Silver</span>
-                        <span className="card col-md-2 card-hovering">Gold</span>
-                        <span className="card col-md-2 card-hovering">Platinum</span>
-                        <span className="card col-md-2 card-hovering">Diamond</span>
-                        <span className="card col-md-2 card-hovering">Immortal</span>
-                        <span className="card col-md-2 card-hovering">Radiant</span>
+                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                            <Image src="/unranked_mini_valo.png" width="35" height="35" />
+                            Unranked
+                        </span>
+                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                            <Image src="/iron_mini_valo.png" width="35" height="35" />
+                            Iron
+                        </span>
+                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                            <Image src="/bronze_mini_valo.png" width="35" height="35" />
+                            Bronze
+                        </span>
+                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                            <Image src="/silver_mini_valo.png" width="35" height="35" />
+                            Silver
+                        </span>
+                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                            <Image src="/gold_mini_valo.png" width="35" height="35" />
+                            Gold
+                        </span>
+                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                            <Image src="/platinum_mini_valo.png" width="35" height="35" />
+                            Platinum
+                        </span>
+                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                            <Image src="/diamond_mini_valo.png" width="35" height="35" />
+                            Diamond
+                        </span>
+                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                            <Image src="/immortal_mini_valo.png" width="35" height="35" />
+                            Immortal
+                        </span>
+                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                            <Image src="/radiant_mini_valo.png" width="35" height="35" />
+                            Radiant
+                        </span>
                     </Row>
                 </Form>
             </Row>
@@ -117,7 +145,6 @@ function Market() {
                 {data.map((i: any) => (
                     <AccountCard data={i} />
                 ))}
-
             </Row>
         </Container>
     );
