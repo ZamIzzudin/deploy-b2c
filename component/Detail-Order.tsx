@@ -1,9 +1,18 @@
+/* eslint-disable import/extensions */
+/* eslint-disable import/no-unresolved */
 /* eslint-disable react/button-has-type */
 import { Table, Row, Col } from 'react-bootstrap';
+import { useState } from 'react';
+import ChatModal from './Chat-Modal';
 // import styles from './styles/DetailPage.module.css';
 
 function DetailOrder(props: any) {
     const { role } = props;
+    const [modal, showModal] = useState(false);
+
+    const handleModal = () => {
+        showModal(true);
+    };
 
     return (
         <div className="mt-4">
@@ -25,8 +34,8 @@ function DetailOrder(props: any) {
                             <td>Genshin Impact</td>
                             <td>Daily Mission</td>
                             <td>On Process</td>
-                            <td>
-                                <button className="capsule button">Chat</button>
+                            <td className="text-center">
+                                <button className="capsule button" onClick={() => handleModal()}>Chat</button>
                             </td>
                             <td className="centered">
                                 <button className="capsule button">Details</button>
@@ -37,8 +46,8 @@ function DetailOrder(props: any) {
                             <td>Valorant</td>
                             <td>Rank Boosting</td>
                             <td>Finished</td>
-                            <td>
-                                <button className="capsule button">Chat</button>
+                            <td className="text-center">
+                                <button className="capsule button" onClick={() => handleModal()}>Chat</button>
                             </td>
                             <td className="centered">
                                 <button className="capsule button">Details</button>
@@ -66,7 +75,7 @@ function DetailOrder(props: any) {
                             <td>Daily Mission</td>
                             <td>On Process</td>
                             <td className="centered">
-                                <button className="capsule button">Chat</button>
+                                <button className="capsule button" onClick={() => handleModal()}>Chat</button>
                                 <button className="capsule button">Finish</button>
                             </td>
                             <td>
@@ -79,7 +88,7 @@ function DetailOrder(props: any) {
                             <td>Rank Boosting</td>
                             <td>Finished</td>
                             <td className="centered">
-                                <button className="capsule button">Chat</button>
+                                <button className="capsule button" onClick={() => handleModal()}>Chat</button>
                             </td>
                             <td>
                                 <button className="capsule button">Details</button>
@@ -127,6 +136,10 @@ function DetailOrder(props: any) {
                     </Table>
                 </div>
             )}
+            <ChatModal
+                show={modal}
+                onHide={() => showModal(false)}
+            />
         </div>
     );
 }

@@ -20,7 +20,8 @@ import DetailMarket from './Detail-Market';
 import DetailOrder from './Detail-Order';
 import DetailOther from './Detail-Other';
 import DetailProfile from './Detail-Profile';
+import ChatModal from './Chat-Modal';
 
 export {
-    DetailBooster, DetailInvoice, DetailMarket, DetailOrder, DetailOther, DetailProfile, SideBar, Navbar, Footer, Jumbotron, Testimonial, FeaturedBenefit, GameCard, FAQ, Step, AccountCard, LoginModal, FormBoost, Checkout,
+    ChatModal, DetailBooster, DetailInvoice, DetailMarket, DetailOrder, DetailOther, DetailProfile, SideBar, Navbar, Footer, Jumbotron, Testimonial, FeaturedBenefit, GameCard, FAQ, Step, AccountCard, LoginModal, FormBoost, Checkout,
 };

@@ -1,3 +1,6 @@
+/* eslint-disable func-names */
+/* eslint-disable no-use-before-define */
+/* eslint-disable camelcase */
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
@@ -7,12 +10,16 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
+import { useRef } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
+import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
 import TabBar from '../component/Navbar';
 import Footer from '../component/Footer';
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const tawkMessengerRef = useRef(null);
+
   return (
     <>
       <Head>
@@ -24,6 +31,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 
       <Component {...pageProps} />
       <Footer />
+      <TawkMessengerReact
+        propertyId="62d5635eb0d10b6f3e7ce951"
+        widgetId="1g88ooaaq"
+        useRef={tawkMessengerRef}
+      />
     </>
   );
 }
