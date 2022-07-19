@@ -1,12 +1,17 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-console */
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
 import { Container, Row, Col } from 'react-bootstrap';
+import axios from 'axios';
 import {
   Jumbotron, GameCard, FeaturedBenefit, Testimonial, FAQ, Step,
 } from '../component';
 import styles from '../styles/Home.module.css';
 
-function Home() {
+function Home(props) {
+  const { games } = props;
+
   return (
     <main className="py-4">
       <Jumbotron />
@@ -16,14 +21,17 @@ function Home() {
           <h2 className={`${styles['content-subtitle']} text-end`}>What we can handle</h2>
         </Row>
         <Row className="my-5 px-5">
-          <GameCard name="Apex Legend" thumbnail="/apex.png" />
+          {games.map((game) => (
+            <GameCard name={game.name} thumbnail="/apex.png" key={game.id} />
+          ))}
+          {/* <GameCard name="Apex Legend" thumbnail="/apex.png" />
           <GameCard name="Valorant" thumbnail="/valo.png" />
           <GameCard name="New World" thumbnail="/newworld.png" />
           <GameCard name="Dota" thumbnail="/Dota.png" />
           <GameCard name="Black Desert" thumbnail="/Blackdesert.png" />
           <GameCard name="CS:GO" thumbnail="/csgo.png" />
           <GameCard name="Genshin Impact" thumbnail="/Genshin.png" />
-          <GameCard name="COD Cold War" thumbnail="/coldwar.png" />
+          <GameCard name="COD Cold War" thumbnail="/coldwar.png" /> */}
         </Row>
         <Row>
           <FeaturedBenefit />
@@ -54,3 +62,13 @@ function Home() {
 }
 
 export default Home;
+
+export async function getStaticProps() {
+  const games = await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/games').then((res) => res.data.data).catch((res) => console.log(res));
+
+  return {
+    props: {
+      games,
+    },
+  };
+}

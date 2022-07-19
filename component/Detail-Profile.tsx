@@ -1,22 +1,24 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable react/button-has-type */
 import {
     Row, Col, Form,
 } from 'react-bootstrap';
 import Image from 'next/image';
+import styles from './styles/DetailPage.module.css';
 
 function DetailProfile(props: any) {
-    const { role } = props;
+    const { role, userData } = props;
 
     return (
         <div className="mt-4">
             {role === 'user' ? (
-                <Row className="centered">
-                    <Col className="col-md-5 px-3 card">
+                <Row>
+                    <Col className="col-md-5 px-3 card relative-pos">
                         <div className="fullwidth centered-down">
-                            <Image src="/default_photoURL.jpg" width="100" height="100" className="circle" />
-                            <h1>Azzam Izzudin</h1>
-                            <h3>azzamizzudinhasan@gmail.com</h3>
-                            <span>Member since 12 july 2022</span>
+                            <Image src={userData?.photoURL || '/valo_logo.png'} width="180" height="180" className="circle" />
+                            <h1 className={styles['display-name']}>{userData.displayName}</h1>
+                            <h3 className={styles['user-email']}>{userData.email}</h3>
+                            <span className={`${styles['footer-card-profile']} absolute-pos abs-bottom`}>Member since 12 july 2022</span>
                         </div>
                     </Col>
                     <Col className="px-2">

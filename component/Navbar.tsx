@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable no-use-before-define */
@@ -13,7 +15,9 @@
 /* eslint-disable import/no-absolute-path */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
-import { Container, Navbar, Nav } from 'react-bootstrap';
+import {
+    Container, Navbar, Nav, Dropdown,
+} from 'react-bootstrap';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
@@ -21,7 +25,7 @@ import { LoginModal } from '.';
 import { socialMediaLogout } from '../login-auth/auth';
 import styles from './styles/Navbar.module.css';
 
-function TabBar(props: any) {
+function TabBar() {
     const [modal, showModal] = useState(false);
     const [userData, setUserData] = useState<any | null>(null);
 
@@ -32,39 +36,45 @@ function TabBar(props: any) {
     const handleLogout = async () => {
         socialMediaLogout();
         document.cookie = "user=;";
+        document.cookie = "token=;";
         setUserData(null);
+        window.location.replace('/');
     };
 
-    const getDataLogin = (data: any) => {
+    const getDataLogin = (data: any, token: any) => {
         if (data !== undefined) {
-            const dataUser = {
-                displayName: data.displayName, email: data.email, isLogin: data.emailVerified, photoURL: data.photoURL,
+            const store = {
+                user: {
+                    displayName: data.displayName, email: data.email, isLogin: data.emailVerified, photoURL: data.photoURL,
+                },
+                token,
             };
 
             const expiryDate = new Date();
             const month = (expiryDate.getMonth() + 1) % 12;
             expiryDate.setMonth(month);
 
-            document.cookie = 'user=' + JSON.stringify(dataUser) + "; expires=" + expiryDate.toUTCString();
-            const user = getCookie("user");
+            document.cookie = 'store=' + JSON.stringify(store) + "; expires=" + expiryDate.toUTCString();
 
-            if (user !== undefined) {
-                const User = JSON.parse(user);
-                setUserData(User);
+            const dataStore = getCookie("store");
+
+            if (dataStore !== undefined) {
+                const User = JSON.parse(dataStore);
+                setUserData(User.user);
                 showModal(false);
             }
         }
     };
 
     useEffect(() => {
-        const user = getCookie("user");
+        const dataStore = getCookie("store");
 
-        if (user === "") {
+        if (dataStore === "") {
             setUserData(null);
-        } else if (user !== undefined) {
+        } else if (dataStore !== undefined) {
             if (userData === null) {
-                const User = JSON.parse(user);
-                setUserData(User);
+                const User = JSON.parse(dataStore);
+                setUserData(User.user);
             } else {
                 setUserData(userData);
             }
@@ -103,12 +113,11 @@ function TabBar(props: any) {
                             <>
                                 {userData ? (
                                     <Link scroll href="/profile/detail">
-                                        <a className="flex-horizon-centered-right">
-                                            <Image src={userData?.photoURL} width="40" height="40" className="circle" />
-                                            <span className="mx-3">{userData.displayName}</span>
+                                        <a>
+                                            {/* <Image src={userData?.photoURL} width="40" height="40" className="circle" /> */}
+                                            <button className="button capsule mx-3">Profile</button>
                                         </a>
                                     </Link>
-
                                 ) : (
                                     <></>
                                 )}

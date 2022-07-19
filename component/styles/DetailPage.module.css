@@ -1,3 +1,28 @@
+/* Profile */
+.display-name {
+    font-family: var(--secFont);
+    font-weight: 600;
+    margin-top: 20px;
+    font-size: 2em;
+}
+
+.user-email {
+    font-family: var(--thirdFont);
+    font-size: 1.3em;
+    color: var(--yellow);
+    font-weight: 400;
+}
+
+.footer-card-profile {
+    background-color: var(--insideCard);
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+
+}
+
 /* Booster */
 .booster-card-title {
     font-family: var(--primFont);

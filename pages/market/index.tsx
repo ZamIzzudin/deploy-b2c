@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-multi-spaces */
@@ -13,10 +14,12 @@ import {
 } from 'react-bootstrap';
 import { useState } from 'react';
 import Image from 'next/image';
+import axios from 'axios';
 import { AccountCard } from '../../component';
 import styles from '../../styles/Market.module.css';
 
-function Market() {
+function Market(props) {
+    const { Accounts, Servers } = props;
     const [minPrice, setMin] = useState(0);
     const [maxPrice, setMax] = useState(1000);
 
@@ -27,27 +30,6 @@ function Market() {
     function getMinValue(value: any) {
         setMin(value);
     }
-
-    const data = [
-        {
-            id: 15345,
-            current_rank: 'Gold 3',
-            highest_rank: 'Platinum 1',
-            server_region: 'Asia',
-            agent: [1, 3, 4, 2, 2, 5, 6],
-            skins: [1, 5, 6, 7, 4, 3, 4, 6, 3, 2, 2],
-            price: 210.3,
-            rank_emb: '/gold_valo.png',
-        }, {
-            id: 12543,
-            current_rank: 'Gold 1',
-            highest_rank: 'Gold 1',
-            server_region: 'China',
-            agent: [1, 3, 4, 2, 2, 5, 6],
-            skins: [1, 5, 6, 7, 4, 3, 4, 6, 3, 2, 2],
-            price: 160.3,
-            rank_emb: '/gold_valo.png',
-        }];
 
     return (
         <Container className="my-5 py-5 centered-down">
@@ -60,21 +42,10 @@ function Market() {
                             <Form.Group className="mb-3 fullwidth">
                                 <Form.Label>Server</Form.Label>
                                 <Form.Select className="form-layout">
-                                    <option>All</option>
-                                    <option>EU-West</option>
-                                    <option>EU-Nordic & East</option>
-                                    <option>North America</option>
-                                    <option>Oceania</option>
-                                    <option>Turkey</option>
-                                    <option>Russia</option>
-                                    <option>Brazil</option>
-                                    <option>Latin America North</option>
-                                    <option>Latin America South</option>
-                                    <option>Korea</option>
-                                    <option>Japan</option>
-                                    <option>China</option>
-                                    <option>South East Asia (SEA)</option>
-                                    <option>PBE</option>
+                                    {Servers.map((server) => (
+                                        <option key={server.id}>{server.server_name}</option>
+                                    ))}
+
                                 </Form.Select>
                             </Form.Group>
                         </Col>
@@ -142,7 +113,7 @@ function Market() {
                 </Form>
             </Row>
             <Row className={styles['card-container']}>
-                {data.map((i: any) => (
+                {Accounts.map((i: any) => (
                     <AccountCard data={i} />
                 ))}
             </Row>
@@ -151,3 +122,14 @@ function Market() {
 }
 
 export default Market;
+
+export async function getStaticProps() {
+    const Accounts = await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/accounts').then((res) => res.data.data).catch((res) => console.log(res));
+    const Servers = await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/servers').then((res) => res.data.data).catch((res) => console.log(res));
+
+    return {
+        props: {
+            Accounts, Servers,
+        },
+    };
+}

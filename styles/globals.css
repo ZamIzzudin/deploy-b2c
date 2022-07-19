@@ -335,7 +335,14 @@ b {
 
 .relative-pos {
   position: relative;
-  min-height: 100vh;
+}
+
+.absolute-pos {
+  position: absolute;
+}
+
+.abs-bottom {
+  bottom: 0;
 }
 
 .fa-solid {

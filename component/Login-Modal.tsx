@@ -5,6 +5,7 @@
 /* eslint-disable react/destructuring-assignment */
 import { Modal, Row, Col } from 'react-bootstrap';
 import Image from 'next/image';
+import axios from 'axios';
 import { facebookProvider, googleProvider } from '../config/socialAuth';
 import socialMediaAuth from '../login-auth/auth';
 import styles from './styles/LoginModal.module.css';
@@ -12,7 +13,14 @@ import styles from './styles/LoginModal.module.css';
 export default function LoginModal(props: any) {
     const handleLogin = async (provider: any) => {
         const res = await socialMediaAuth(provider);
-        await props.getDataLogin(res);
+        const auth = {
+            username: res.displayName,
+            email: res.email,
+        };
+
+        const token = await axios.post('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/v1/auth', auth).then((response) => response.data.token).catch((response) => console.log(response));
+
+        await props.getDataLogin(res, token);
     };
 
     return (

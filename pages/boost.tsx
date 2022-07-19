@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-use-before-define */
@@ -8,10 +9,12 @@
 /* eslint-disable import/no-unresolved */
 import { Container, Row, Col } from 'react-bootstrap';
 import { useState } from 'react';
+import axios from 'axios';
 import { GameCard, FormBoost, Checkout } from '../component';
 import styles from '../styles/Boost.module.css';
 
-function Order() {
+function Order(props) {
+    const { games } = props;
     const [service, setService] = useState<any>([]);
     const [formType, setFormType] = useState<string>('');
 
@@ -91,3 +94,13 @@ function Order() {
 }
 
 export default Order;
+
+export async function getStaticProps() {
+    const games = await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/games').then((res) => res.data.data).catch((res) => console.log(res));
+
+    return {
+        props: {
+            games,
+        },
+    };
+}

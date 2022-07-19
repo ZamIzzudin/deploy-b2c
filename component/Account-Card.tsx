@@ -7,6 +7,7 @@ import styles from './styles/AccountCard.module.css';
 
 function AccountCard(props: any) {
     const { data, manage } = props;
+
     return (
         <Col className={`${styles['account-card']} card`}>
             <div>
@@ -18,7 +19,7 @@ function AccountCard(props: any) {
                         </h3>
                     </Col>
                     <Col className="flex-right">
-                        <Image src={data.rank_emb} width="90%" height="100%" />
+                        <Image src="/gold_valo.png" width="90%" height="100%" />
                     </Col>
                 </Row>
                 <Row className="centered my-4">
@@ -32,9 +33,9 @@ function AccountCard(props: any) {
                     <Col className={styles['card-left-side']}>
                         <span className={styles['desc-highlight']}>{data.current_rank}</span>
                         <span className={styles['desc-text']}>{data.highest_rank}</span>
-                        <span className={styles['desc-text']}>{data.server_region}</span>
-                        <span className={styles['desc-text']}>{data.agent.length}</span>
-                        <span className={styles['desc-text']}>{data.skins.length}</span>
+                        <span className={styles['desc-text']}>{data.server}</span>
+                        <span className={styles['desc-text']}>{data.agents_count}</span>
+                        <span className={styles['desc-text']}>{data.skins_count}</span>
                     </Col>
                 </Row>
                 <Row className="centered">
@@ -44,7 +45,7 @@ function AccountCard(props: any) {
                             <button className="button capsule mt-4 mb-3">Edit</button>
                         </div>
                     ) : (
-                        <Link scroll href={`market/details/${data.id}`}>
+                        <Link scroll href={`market/details/${data.href.link.slice(71)}`}>
                             <button className="button capsule mt-4 mb-3">See Details</button>
                         </Link>
                     )}
