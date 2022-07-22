@@ -3,16 +3,15 @@
 /* eslint-disable react/button-has-type */
 import { Table, Row, Col } from 'react-bootstrap';
 import { useState } from 'react';
-import ChatModal from './Chat-Modal';
+import DetailModal from './Detail-Modal';
 // import styles from './styles/DetailPage.module.css';
 
 function DetailOrder(props: any) {
     const { role } = props;
     const [modal, showModal] = useState(false);
-
-    const handleModal = () => {
-        showModal(true);
-    };
+    const [modal2, showModal2] = useState(false);
+    const [modal3, showModal3] = useState(false);
+    const [modal4, showModal4] = useState(false);
 
     return (
         <div className="mt-4">
@@ -35,10 +34,10 @@ function DetailOrder(props: any) {
                             <td>Daily Mission</td>
                             <td>On Process</td>
                             <td className="text-center">
-                                <button className="capsule button" onClick={() => handleModal()}>Chat</button>
+                                <button className="capsule button" onClick={() => showModal(true)}>Chat</button>
                             </td>
                             <td className="centered">
-                                <button className="capsule button">Details</button>
+                                <button onClick={() => showModal3(true)} className="capsule button-org-border">Details</button>
                             </td>
                         </tr>
                         <tr>
@@ -47,10 +46,10 @@ function DetailOrder(props: any) {
                             <td>Rank Boosting</td>
                             <td>Finished</td>
                             <td className="text-center">
-                                <button className="capsule button" onClick={() => handleModal()}>Chat</button>
+                                <button className="capsule button-org" onClick={() => showModal2(true)}>Rate</button>
                             </td>
                             <td className="centered">
-                                <button className="capsule button">Details</button>
+                                <button onClick={() => showModal3(true)} className="capsule button-org-border">Details</button>
                             </td>
                         </tr>
                     </tbody>
@@ -75,11 +74,11 @@ function DetailOrder(props: any) {
                             <td>Daily Mission</td>
                             <td>On Process</td>
                             <td className="centered">
-                                <button className="capsule button" onClick={() => handleModal()}>Chat</button>
-                                <button className="capsule button">Finish</button>
+                                <button className="capsule button" onClick={() => showModal(true)}>Chat</button>
+                                <button onClick={() => showModal4(true)} className="capsule button-org">Finish</button>
                             </td>
                             <td>
-                                <button className="capsule button">Details</button>
+                                <button onClick={() => showModal3(true)} className="capsule button-org-border">Details</button>
                             </td>
                         </tr>
                         <tr>
@@ -88,10 +87,10 @@ function DetailOrder(props: any) {
                             <td>Rank Boosting</td>
                             <td>Finished</td>
                             <td className="centered">
-                                <button className="capsule button" onClick={() => handleModal()}>Chat</button>
+                                <button className="capsule button" onClick={() => showModal(true)}>Chat</button>
                             </td>
                             <td>
-                                <button className="capsule button">Details</button>
+                                <button onClick={() => showModal3(true)} className="capsule button-org-border">Details</button>
                             </td>
                         </tr>
                     </tbody>
@@ -122,7 +121,7 @@ function DetailOrder(props: any) {
                                 <td>Daily Mission</td>
                                 <td>Agus</td>
                                 <td>On Process</td>
-                                <td className="centered"><button className="button capsule">Details</button></td>
+                                <td className="centered"><button onClick={() => showModal3(true)} className="button-org-border capsule">Details</button></td>
                             </tr>
                             <tr>
                                 <td>5647353</td>
@@ -130,16 +129,36 @@ function DetailOrder(props: any) {
                                 <td>Daily Mission</td>
                                 <td>Agus</td>
                                 <td>Finished</td>
-                                <td className="centered"><button className="button capsule">Details</button></td>
+                                <td className="centered"><button onClick={() => showModal3(true)} className="button-org-border capsule">Details</button></td>
                             </tr>
                         </tbody>
                     </Table>
                 </div>
             )}
-            <ChatModal
+            <DetailModal
                 show={modal}
                 onHide={() => showModal(false)}
-            />
+            >
+                <h1>Chat</h1>
+            </DetailModal>
+            <DetailModal
+                show={modal2}
+                onHide={() => showModal2(false)}
+            >
+                <h1>Rate</h1>
+            </DetailModal>
+            <DetailModal
+                show={modal3}
+                onHide={() => showModal3(false)}
+            >
+                <h1>Details</h1>
+            </DetailModal>
+            <DetailModal
+                show={modal4}
+                onHide={() => showModal4(false)}
+            >
+                <h1>Finish</h1>
+            </DetailModal>
         </div>
     );
 }

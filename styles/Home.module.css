@@ -1,5 +1,7 @@
 .main-container {
     position: relative;
+    background-color: var(--bg);
+    padding: 8vw;
 }
 
 .main-container::before {
@@ -10,8 +12,8 @@
     height: 0;
     width: 200px;
     position: absolute;
-    top: -50px;
-    right: 0;
+    top: -40px;
+    right: 3vw;
 }
 
 .content-title {

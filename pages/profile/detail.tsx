@@ -20,6 +20,7 @@ function Detail(props) {
     const [role, setRole] = useState('user');
     const [component, setComponent] = useState('order');
 
+    const [token, setToken] = useState<any | null>(null);
     const [userData, setUserData] = useState<any | null>(null);
 
     useEffect(() => {
@@ -27,17 +28,21 @@ function Detail(props) {
 
         if (dataStore === '') {
             setUserData(null);
+            setToken(null);
         } else if (dataStore !== undefined) {
             if (userData === null) {
                 const User = JSON.parse(dataStore);
                 setUserData(User.user);
+                setToken(User.token);
             } else {
                 setUserData(userData);
+                setToken(token);
             }
         } else {
             setUserData(null);
+            setToken(null);
         }
-    }, [userData]);
+    }, [userData, token]);
 
     function getCookie(cName: any) {
         const name = `${cName}=`;
@@ -58,9 +63,9 @@ function Detail(props) {
         <>
             {userData?.isLogin ? (
                 <Container className="py-5">
-                    <Row className="mt-5">
+                    <div className="mt-5">
                         <SideBar role={role} getComponent={getComponent} />
-                    </Row>
+                    </div>
                     <Row>
                         <Col className="centered-down">
                             <Row className="my-3">
@@ -72,11 +77,11 @@ function Detail(props) {
                             </Row>
                             <Row className="full-width centered">
                                 {component === 'profile' && (<DetailProfile role={role} userData={userData} />)}
-                                {component === 'market' && (<DetailMarket role={role} />)}
+                                {component === 'market' && (<DetailMarket role={role} token={token} />)}
                                 {component === 'order' && (<DetailOrder role={role} />)}
                                 {component === 'invoice' && (<DetailInvoice role={role} />)}
-                                {component === 'other' && (<DetailOther role={role} />)}
-                                {component === 'boost' && (<DetailBooster role={role} />)}
+                                {component === 'other' && (<DetailOther role={role} token={token} />)}
+                                {component === 'boost' && (<DetailBooster role={role} token={token} />)}
                             </Row>
                         </Col>
                     </Row>
@@ -92,7 +97,7 @@ function Detail(props) {
 
 export default Detail;
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
     return {
         props: {
             tes: 'ok',

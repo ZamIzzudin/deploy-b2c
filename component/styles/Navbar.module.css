@@ -1,30 +1,42 @@
-.brand-text {
-    margin-right: 100px;
-}
-
 .navbar {
-    padding: 20px 0;
-    background-color: var(--bar);
+    background-color: transparent;
     position: fixed;
     width: 100%;
     top: 0;
-    z-index: 10;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 3vw 0 3vw;
 }
 
-.navbar-link a {
-    font-family: var(--secFont);
-    font-weight: 600;
-    font-size: 1.05em;
-    margin-right: 50px;
-    transition: 0.3s;
+.navbar-collapse {
+    display: flex;
+    align-items: center;
+    width: 80%;
+    justify-content: space-between;
+    padding: 0 3vw 0 10vw;
+}
+
+.navbar-list {
+    align-items: center;
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    gap: 100px;
+}
+
+.navbar-list a {
     position: relative;
+    margin: 0;
+    transition: .3s;
+    font-size: 1.1em;
 }
 
-.navbar-link a:hover {
+.navbar-list a:hover {
     color: var(--primColor);
 }
 
-.navbar-link a::after {
+.navbar-list a::after {
     content: '';
     width: 100%;
     height: 2px;
@@ -38,6 +50,62 @@
     transition: .3s;
 }
 
-.navbar-link a:hover::after {
+.navbar-list a:hover::after {
     transform: scaleX(1);
+}
+
+.close-toogle {
+    display: none
+}
+
+.bar-toogle {
+    display: none;
+}
+
+@media only screen and (max-width: 1000px) {
+    .navbar-collapse {
+        background-color: var(--bg);
+        flex-direction: column;
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 0;
+        justify-content: space-around;
+        transform: translateX(100%);
+        transition: .5s;
+    }
+
+    .show-side-bar {
+        transform: translateX(0);
+    }
+
+    .navbar-list {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .navbar-list a {
+        padding: 20px;
+        width: 50vw;
+        text-align: center;
+    }
+
+    .bar-toogle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2em;
+    }
+
+    .close-toogle {
+        position: absolute;
+        top: 33px;
+        font-size: 2em;
+        right: 5vw;
+        display: flex;
+    }
+
 }

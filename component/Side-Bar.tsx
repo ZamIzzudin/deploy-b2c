@@ -1,12 +1,18 @@
+/* eslint-disable max-len */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-console */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-unused-vars */
-import { Row, Col } from 'react-bootstrap';
+import {
+    Row, Col, Offcanvas, Button,
+} from 'react-bootstrap';
+import { useState } from 'react';
 import styles from './styles/SideBar.module.css';
 
 function SideBar(props: any) {
     const { role, getComponent } = props;
+
+    const [show, setShow] = useState(false);
 
     function setComponent(comp: any) {
         props.getComponent(comp);

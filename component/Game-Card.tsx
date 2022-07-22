@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 /* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
@@ -7,13 +8,15 @@ import Image from 'next/image';
 import styles from './styles/GameCard.module.css';
 
 function GameCard(props: any) {
-    const { name, thumbnail, mini } = props;
+    const {
+        name, thumbnail, mini, remove,
+    } = props;
 
     return (
         <>
             {mini === true ? (
-                <Col className="col-md-3 centered " onClick={() => { props.getData(name); }}>
-                    <Row className={`${styles['card-game-mini']} card-hovering card`}>
+                <Col className="col-md-3 centered relative-pos" onClick={() => { props.getData(name); }}>
+                    <Row className={`${styles['card-game-mini']} ${remove ? ('') : ('card-hovering')} card`}>
                         <Col className="col-md-3">
                             <Image src={`${thumbnail}`} width="145%" height="130%" />
                         </Col>
@@ -21,6 +24,9 @@ function GameCard(props: any) {
                             <h3 className={`${styles['card-name']} text-center`}>{name}</h3>
                         </Col>
                     </Row>
+                    {remove && (
+                        <button onClick={() => props.removeFunc(name)} className={styles['remove-toogle']}>X</button>
+                    )}
                 </Col>
             ) : (
                 <Col className="col-md-2 centered " onClick={() => { props.getData(name); }}>

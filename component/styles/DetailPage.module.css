@@ -40,6 +40,26 @@
     font-size: 2em;
 }
 
+.remove-toogle {
+    background-color: var(--yellow);
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    display: flex;
+    height: 25px;
+    width: 25px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--yellow);
+    transition: .3s;
+}
+
+.remove-toogle:hover {
+    transform: scale(1.1);
+}
+
 /* Order */
 .service-name {
     font-weight: 400;

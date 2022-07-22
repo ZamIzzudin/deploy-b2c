@@ -1,8 +1,13 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
 /* eslint-disable react/button-has-type */
 import { Table } from 'react-bootstrap';
+import { useState } from 'react';
+import DetailModal from './Detail-Modal';
 
 function DetailInvoice(props: any) {
     const { role } = props;
+    const [modal, showModal] = useState(false);
 
     return (
         <div>
@@ -26,7 +31,7 @@ function DetailInvoice(props: any) {
                             <td>Daily Mission</td>
                             <td>Metamask</td>
                             <td className="centered">
-                                <button className="capsule button">Details</button>
+                                <button onClick={() => showModal(true)} className="capsule button-org-border">Details</button>
                             </td>
                         </tr>
                         <tr>
@@ -36,7 +41,7 @@ function DetailInvoice(props: any) {
                             <td>Rank Boosting</td>
                             <td>Paypal</td>
                             <td className="centered">
-                                <button className="capsule button">Details</button>
+                                <button onClick={() => showModal(true)} className="capsule button-org-border">Details</button>
                             </td>
                         </tr>
                     </tbody>
@@ -44,6 +49,12 @@ function DetailInvoice(props: any) {
             ) : (
                 <h1>404 Error</h1>
             )}
+            <DetailModal
+                show={modal}
+                onHide={() => showModal(false)}
+            >
+                <h1>Details</h1>
+            </DetailModal>
         </div>
     );
 }

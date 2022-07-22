@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-unused-vars */
 import { Col, Row } from 'react-bootstrap';
@@ -41,8 +42,8 @@ function AccountCard(props: any) {
                 <Row className="centered">
                     {manage === true ? (
                         <div className="centered">
-                            <button className="button capsule mt-4 mb-3">Delete</button>
-                            <button className="button capsule mt-4 mb-3">Edit</button>
+                            <button onClick={() => { props.setModal('delete'); props.getCurrent(data); }} className="button-org-border capsule mt-4 mb-3">Delete</button>
+                            <button onClick={() => { props.setModal('edit'); props.getCurrent(data); }} className="button capsule mt-4 mb-3">Edit</button>
                         </div>
                     ) : (
                         <Link scroll href={`market/details/${data.href.link.slice(71)}`}>

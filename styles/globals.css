@@ -31,6 +31,11 @@
   font-weight: 600;
 }
 
+main {
+  background-color: skyblue;
+  z-index: 1000;
+}
+
 html,
 body {
   background-color: var(--bg);
@@ -83,9 +88,53 @@ b {
   transition: .5s;
 }
 
+.button-border {
+  border-radius: 5px;
+  font-family: var(--secFont);
+  padding: 8px 32px;
+  background: transparent;
+  border: 2px solid var(--primColor);
+  transition: .5s;
+  color: var(--primColor);
+}
+
+.button-border:hover {
+  background: var(--primColor);
+  color: white;
+}
+
 .button:hover {
   background: transparent;
   color: var(--primColor);
+}
+
+.button-org {
+  border-radius: 5px;
+  font-family: var(--secFont);
+  padding: 8px 32px;
+  background: var(--yellow);
+  border: 2px solid var(--yellow);
+  transition: .5s;
+}
+
+.button-org:hover {
+  background: transparent;
+  color: var(--yellow);
+}
+
+.button-org-border {
+  border-radius: 5px;
+  font-family: var(--secFont);
+  padding: 8px 32px;
+  background: transparent;
+  border: 2px solid var(--yellow);
+  transition: .5s;
+  color: var(--yellow);
+}
+
+.button-org-border:hover {
+  background: var(--yellow);
+  color: white;
 }
 
 .capsule {
@@ -226,7 +275,7 @@ b {
 .flex-horizon-centered-right {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-end;
 }
 
@@ -392,4 +441,8 @@ thead th:first-child {
 thead th:last-child {
   border-radius: 0 15px 0 0;
   border-right: none;
+}
+
+.z-upper {
+  z-index: 100;
 }

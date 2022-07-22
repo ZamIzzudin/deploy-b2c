@@ -26,3 +26,23 @@
     font-size: 1em !important;
     padding: 8px !important;
 }
+
+.remove-toogle {
+    background-color: var(--yellow);
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    height: 25px;
+    width: 25px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--yellow);
+    transition: .3s;
+}
+
+.remove-toogle:hover {
+    transform: scale(1.1);
+}

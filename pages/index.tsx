@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
-import { Container, Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import {
   Jumbotron, GameCard, FeaturedBenefit, Testimonial, FAQ, Step,
@@ -13,9 +13,9 @@ function Home(props) {
   const { games } = props;
 
   return (
-    <main className="py-4">
+    <main className="pt-4">
       <Jumbotron />
-      <Container className={`${styles['main-container']} py-5`}>
+      <div className={`${styles['main-container']} py-5 z-upper`}>
         <Row>
           <h1 className={`${styles['content-title']} text-end mt-5`}>Supported Game</h1>
           <h2 className={`${styles['content-subtitle']} text-end`}>What we can handle</h2>
@@ -56,7 +56,7 @@ function Home(props) {
             <button type="button" className="button capsule mt-3 mb-5">Boost</button>
           </Col>
         </Row>
-      </Container>
+      </div>
     </main>
   );
 }

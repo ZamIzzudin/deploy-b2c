@@ -15,9 +15,6 @@
 /* eslint-disable import/no-absolute-path */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
-import {
-    Container, Navbar, Nav, Dropdown,
-} from 'react-bootstrap';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
@@ -26,6 +23,7 @@ import { socialMediaLogout } from '../login-auth/auth';
 import styles from './styles/Navbar.module.css';
 
 function TabBar() {
+    const [sideBar, setSideBar] = useState(false);
     const [modal, showModal] = useState(false);
     const [userData, setUserData] = useState<any | null>(null);
 
@@ -35,10 +33,10 @@ function TabBar() {
 
     const handleLogout = async () => {
         socialMediaLogout();
-        document.cookie = "user=;";
-        document.cookie = "token=;";
-        setUserData(null);
+        document.cookie = "store=;";
         window.location.replace('/');
+        setUserData(null);
+        console.log(userData);
     };
 
     const getDataLogin = (data: any, token: any) => {
@@ -95,50 +93,93 @@ function TabBar() {
     }
 
     return (
-        <Navbar collapseOnSelect expand="lg" className={styles.navbar}>
-            <Container>
-                <Navbar.Brand className={styles['brand-text']}>
-                    <Image src="/logo.png" width="170" height="60" />
-                </Navbar.Brand>
-                <Navbar.Toggle />
-                <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className={`${styles['navbar-link']} me-auto`}>
-                        <Link scroll href="/">Home</Link>
-                        <Link scroll href="/boost">Boost</Link>
-                        <Link scroll href="/market">Market</Link>
-                        <Link scroll href="/support">Support</Link>
-                    </Nav>
-                    <Navbar.Collapse className="justify-content-end">
-                        {userData ? (
-                            <>
-                                {userData ? (
-                                    <Link scroll href="/profile/detail">
-                                        <a>
-                                            {/* <Image src={userData?.photoURL} width="40" height="40" className="circle" /> */}
-                                            <button className="button capsule mx-3">Profile</button>
-                                        </a>
-                                    </Link>
-                                ) : (
-                                    <></>
-                                )}
-                                <span onClick={() => handleLogout()}>
-                                    <a className="button capsule">Logout</a>
-                                </span>
-                            </>
-                        ) : (
-                            <span onClick={() => handleModal()}>
-                                <a className="button capsule">Login</a>
+        // <Navbar collapseOnSelect expand="lg" variant="dark" className={styles.navbar}>
+        //     <Container>
+        //         <Navbar.Brand className={styles['brand-text']}>
+        //             <Image src="/logo.png" width="170" height="60" />
+        //         </Navbar.Brand>
+        //         <Navbar.Toggle />
+        //         <Navbar.Collapse id="responsive-navbar-nav">
+        //             <Nav className={`${styles['navbar-link']} me-auto`}>
+        //                 <Link scroll href="/">Home</Link>
+        //                 <Link scroll href="/boost">Boost</Link>
+        //                 <Link scroll href="/market">Market</Link>
+        //                 <Link scroll href="/support">Support</Link>
+        //             </Nav>
+        //             <Navbar.Collapse className="justify-content-end">
+        //                 {userData ? (
+        //                     <>
+        //                         {userData ? (
+        //                             <Link scroll href="/profile/detail">
+        //                                 <a>
+        //                                     {/* <Image src={userData?.photoURL} width="40" height="40" className="circle" /> */}
+        //                                     <button className="button-border capsule mx-3">Profile</button>
+        //                                 </a>
+        //                             </Link>
+        //                         ) : (
+        //                             <></>
+        //                         )}
+        //                         <span onClick={() => handleLogout()}>
+        //                             <a className="button capsule">Logout</a>
+        //                         </span>
+        //                     </>
+        //                 ) : (
+        //                     <span onClick={() => handleModal()}>
+        //                         <a className="button capsule">Login</a>
+        //                     </span>
+        //                 )}
+        //             </Navbar.Collapse>
+        //         </Navbar.Collapse>
+        //     </Container>
+        //     <LoginModal
+        //         show={modal}
+        //         onHide={() => showModal(false)}
+        //         getDataLogin={getDataLogin}
+        //     />
+        // </Navbar>
+
+        <nav className={styles.navbar}>
+            <div className={styles['navbar-logo']}>
+                <Image src="/logo.png" width="170" height="60" />
+            </div>
+            <div className={`${styles['navbar-collapse']} ${sideBar && (styles['show-side-bar'])}`}>
+                <div className={styles['close-toogle']} onClick={() => setSideBar(false)}>
+                    <i className="fa-solid fa-xmark" />
+                </div>
+                <div className={styles['navbar-list']} onClick={() => setSideBar(false)}>
+                    <Link href="/" scroll>Home</Link>
+                    <Link href="/boost" scroll>Boost</Link>
+                    <Link href="/market" scroll>Market</Link>
+                    <Link href="/support" scroll>Support</Link>
+                </div>
+                <div>
+                    {userData ? (
+                        <>
+                            <Link scroll href="/profile/detail">
+                                <a>
+                                    <button className="button-border capsule mx-3">Profile</button>
+                                </a>
+                            </Link>
+                            <span onClick={() => handleLogout()}>
+                                <a className="button capsule">Logout</a>
                             </span>
-                        )}
-                    </Navbar.Collapse>
-                </Navbar.Collapse>
-            </Container>
+                        </>
+                    ) : (
+                        <span onClick={() => handleModal()}>
+                            <a className="button capsule">Login</a>
+                        </span>
+                    )}
+                </div>
+            </div>
+            <div className={styles['bar-toogle']} onClick={() => setSideBar(true)}>
+                <i className="fa-solid fa-bars" />
+            </div>
             <LoginModal
                 show={modal}
                 onHide={() => showModal(false)}
                 getDataLogin={getDataLogin}
             />
-        </Navbar>
+        </nav>
     );
 }
 export default TabBar;

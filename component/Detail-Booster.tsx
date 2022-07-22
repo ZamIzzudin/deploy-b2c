@@ -1,3 +1,6 @@
+/* eslint-disable no-shadow */
+/* eslint-disable no-console */
+/* eslint-disable no-self-assign */
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-trailing-spaces */
@@ -5,15 +8,26 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/button-has-type */
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Form } from 'react-bootstrap';
 import { useState } from 'react';
 import GameCard from './Game-Card';
+import DetailModal from './Detail-Modal';
 import styles from './styles/DetailPage.module.css';
 
 function DetailBooster(props: any) {
     const { role } = props;
+    const [modal, showModal] = useState(false);
+    const [modal2, showModal2] = useState(false);
+    const [modal3, showModal3] = useState(false);
+    const [removingGame, setRemovingGame] = useState(false);
+    const [removingService, setRemovingService] = useState(false);
 
+    const [game, setGame] = useState('');
     const [service, setService] = useState<any>([]);
+
+    const [newGameName, setNewGameName] = useState('');
+    const [newGameLogo, setNewGameLogo] = useState('');
+    const [newServiceName, setNewServiceName] = useState('');
 
     function getGame(game: any) {
         const select = game.replace(
@@ -21,6 +35,29 @@ function DetailBooster(props: any) {
             '',
         ).replace(/\s/g, '');
         getService(select);
+    }
+
+    function newGame() {
+        const data = {
+            name: newGameName,
+            logo_img: newGameLogo,
+        };
+
+        console.log(data);
+        showModal(false);
+    }
+
+    function newService() {
+        console.log(newServiceName);
+        showModal2(false);
+    }
+
+    function deleteGame(game) {
+        console.log(game);
+    }
+
+    function deleteService(service, game) {
+        console.log(`${service} : ${game}`);
     }
 
     function getService(Game: any) {
@@ -50,6 +87,8 @@ function DetailBooster(props: any) {
         } else if (Game === 'CODColdWar') {
             setService(CODColdWar);
         }
+
+        setGame(Game);
     }
 
     return (
@@ -68,7 +107,7 @@ function DetailBooster(props: any) {
                                     <span className={styles['booster-card-price']}>$47.0</span>
                                 </Col>
                                 <Col className="centered">
-                                    <button className="button capsule">Details</button>
+                                    <button onClick={() => showModal3(true)} className="button capsule">Details</button>
                                 </Col>
                             </Row>
                         </Row>
@@ -82,7 +121,7 @@ function DetailBooster(props: any) {
                                     <span className={styles['booster-card-price']}>$47.0</span>
                                 </Col>
                                 <Col className="centered">
-                                    <button className="button capsule">Details</button>
+                                    <button onClick={() => showModal3(true)} className="button capsule">Details</button>
                                 </Col>
                             </Row>
                         </Row>
@@ -96,7 +135,7 @@ function DetailBooster(props: any) {
                                     <span className={styles['booster-card-price']}>$47.0</span>
                                 </Col>
                                 <Col className="centered">
-                                    <button className="button capsule">Details</button>
+                                    <button onClick={() => showModal3(true)} className="button capsule">Details</button>
                                 </Col>
                             </Row>
                         </Row>
@@ -110,7 +149,7 @@ function DetailBooster(props: any) {
                                     <span className={styles['booster-card-price']}>$47.0</span>
                                 </Col>
                                 <Col className="centered">
-                                    <button className="button capsule">Details</button>
+                                    <button onClick={() => showModal3(true)} className="button capsule">Details</button>
                                 </Col>
                             </Row>
                         </Row>
@@ -124,7 +163,7 @@ function DetailBooster(props: any) {
                                     <span className={styles['booster-card-price']}>$47.0</span>
                                 </Col>
                                 <Col className="centered">
-                                    <button className="button capsule">Details</button>
+                                    <button onClick={() => showModal3(true)} className="button capsule">Details</button>
                                 </Col>
                             </Row>
                         </Row>
@@ -138,7 +177,7 @@ function DetailBooster(props: any) {
                                     <span className={styles['booster-card-price']}>$47.0</span>
                                 </Col>
                                 <Col className="centered">
-                                    <button className="button capsule">Details</button>
+                                    <button onClick={() => showModal3(true)} className="button capsule">Details</button>
                                 </Col>
                             </Row>
                         </Row>
@@ -147,37 +186,87 @@ function DetailBooster(props: any) {
             )}
             {role === 'admin' && (
                 <div className="centered-down">
-                    <Row className="my-4">
-                        <Col>
-                            <button className="button">+ Add Game</button>
+                    <Row className="my-4 fullwidth">
+                        <Col className="flex-horizon-centered-right">
+                            <button onClick={() => showModal(true)} className="button-border mx-2">Add</button>
+                            {removingGame ? (
+                                <button onClick={() => setRemovingGame(false)} className="button-org-border mx-1">Cancel</button>
+                            ) : (
+                                <button onClick={() => setRemovingGame(true)} className="button-org-border mx-1">Delete</button>
+                            )}
                         </Col>
                     </Row>
                     <Row className="centered mt-4">
-                        <GameCard name="Apex Legend" thumbnail="/apex.png" getData={getGame} mini />
-                        <GameCard name="Valorant" thumbnail="/valo.png" getData={getGame} mini />
-                        <GameCard name="New World" thumbnail="/newworld.png" getData={getGame} mini />
-                        <GameCard name="Dota" thumbnail="/Dota.png" getData={getGame} mini />
-                        <GameCard name="Black Desert" thumbnail="/Blackdesert.png" getData={getGame} mini />
-                        <GameCard name="CS:GO" thumbnail="/csgo.png" getData={getGame} mini />
-                        <GameCard name="Genshin Impact" thumbnail="/Genshin.png" getData={getGame} mini />
-                        <GameCard name="COD Cold War" thumbnail="/coldwar.png" getData={getGame} mini />
+                        <GameCard name="Apex Legend" thumbnail="/apex.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
+                        <GameCard name="Valorant" thumbnail="/valo.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
+                        <GameCard name="Dota" thumbnail="/Dota.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
+                        <GameCard name="New World" thumbnail="/newworld.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
+                        <GameCard name="Black Desert" thumbnail="/Blackdesert.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
+                        <GameCard name="CS:GO" thumbnail="/csgo.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
+                        <GameCard name="Genshin Impact" thumbnail="/Genshin.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
+                        <GameCard name="COD Cold War" thumbnail="/coldwar.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
                     </Row>
                     {service.length > 0 && (
-                        <Row Row className="centeredfullwidth">
-                            <Row className="my-4">
-                                <Col>
-                                    <button className="button">Add Service</button>
+                        <>
+                            <Row className="my-4 fullwidth">
+                                <Col className="flex-horizon-centered-right">
+                                    <button onClick={() => showModal2(true)} className="button-border mx-3">Add Service</button>
+                                    {removingService ? (
+                                        <button onClick={() => setRemovingService(false)} className="button-org-border">Cancel</button>
+                                    ) : (
+                                        <button onClick={() => setRemovingService(true)} className="button-org-border">Delete</button>
+                                    )}
+
                                 </Col>
                             </Row>
-                            {service.map((i: any) => (
-                                <Col className="card centered fit-content card-hovering mx-2">
-                                    <span className={styles['service-name']}>{i.name}</span>
-                                </Col>
-                            ))}
-                        </Row>
+                            <Row>
+                                {service.map((i: any) => (
+                                    <Col className={`card centered fit-content ${removingService ? ('') : ('card-hovering')} mx-2 relative-pos`}>
+                                        <div>
+                                            <span className={styles['service-name']}>{i.name}</span>
+                                        </div>
+                                        {removingService && (<button onClick={() => deleteService(i.name, game)} className={styles['remove-toogle']}>X</button>)}
+                                    </Col>
+                                ))}
+                            </Row>
+                        </>
                     )}
                 </div>
             )}
+            <DetailModal
+                show={modal}
+                onHide={() => showModal(false)}
+            >
+                <h1>Add Game</h1>
+                <Form.Group className="mb-3 fullwidth">
+                    <Form.Label>Name</Form.Label>
+                    <Form.Control className="form-layout mb-4" onChange={(e) => setNewGameName(e.target.value)} />
+                    <Form.Label>Picture</Form.Label>
+                    <Form.Control className="form-layout mb-4" onChange={(e) => setNewGameLogo(e.target.value)} />
+                    <div>
+                        <button onClick={() => newGame()} className="button capsule">Add</button>
+                    </div>
+                </Form.Group>
+            </DetailModal>
+            <DetailModal
+                show={modal2}
+                onHide={() => showModal2(false)}
+            >
+                <h1>Add Service</h1>
+                <Form.Group className="mb-3 fullwidth">
+                    <Form.Label>Name</Form.Label>
+                    <Form.Control className="form-layout mb-4" onChange={(e) => setNewServiceName(e.target.value)} />
+                    <div>
+                        <button onClick={() => newService()} className="button capsule">Add</button>
+                    </div>
+                </Form.Group>
+            </DetailModal>
+            <DetailModal
+                show={modal3}
+                onHide={() => showModal3(false)}
+            >
+                <h1>Details</h1>
+            </DetailModal>
         </div>
     );
 }
