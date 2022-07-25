@@ -7,11 +7,11 @@ import styles from '../styles/Support.module.css';
 
 function Support() {
     return (
-        <Container className="my-5 py-5">
+        <Container className="my-5 pt-5">
             <h1 className="section-title mt-5">Tell Your Problem</h1>
             <span className="section-subtitle ">Send this form and connect with us</span>
             <Row className="mt-5">
-                <Col className="col-md-7 card">
+                <Col className="col-md-7 card col-12">
                     <Row>
                         <Form.Group className="mb-3 col-md-6">
                             <Form.Label>Name</Form.Label>
@@ -41,7 +41,7 @@ function Support() {
                         </div>
                     </Row>
                 </Col>
-                <Col className="col-md-5 py-3 px-4">
+                <Col className="col-md-5 py-3 px-4 col-12">
                     <div className={`${styles['brand-card']} flex-down centered card`}>
                         <h2 className={styles['brand-socmed-text']}>Or tell us in our social media</h2>
                         <div className={styles['brand-socmed-icon']}>

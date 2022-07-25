@@ -25,11 +25,11 @@ function Payment() {
     }, []);
 
     return (
-        <Container className="py-5 my-5">
+        <Container className="pt-3 my-5">
             <h1 className="section-title mt-5 text-center">Checkout</h1>
             <h2 className="section-subtitle text-center mb-5">Finish Your payment to make us process Your order</h2>
-            <Row>
-                <Col className="card mx-2 col-md-7 ">
+            <Row className="px-3 flex-center-start">
+                <Col className="card col-md-7 col-12 mb-4">
                     <h3 className="section-subtitle">Payement Gateaway</h3>
                     <Row>
                         <Col className="p-4">
@@ -103,8 +103,8 @@ function Payment() {
                         </div>
                     </Row>
                 </Col>
-                <Col className="mx-2">
-                    <div className="card bordered full-width">
+                <Col className="col-md-5 col-12">
+                    <div className="w-95 card bordered full-width">
                         <h3 className="section-subtitle">My Order</h3>
                         <Row>
                             {data.service === 'boost' && (

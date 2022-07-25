@@ -34,11 +34,11 @@ function AccountDetails(props) {
     }
 
     return (
-        <Container className="my-5 py-5 ">
+        <Container className="my-5 py-3">
             <h1 className="text-center mt-5 title">Account Details</h1>
             <h2 className="section-subtitle text-center mb-5">Know about the details before make decision</h2>
             <Row>
-                <Col className="flex-down col-md-8">
+                <Col className="flex-down col-md-8 px-4 col-12">
                     <h1 className={styles['server-name']}>
                         {Details.server}
                         {' '}
@@ -49,7 +49,7 @@ function AccountDetails(props) {
                     </h1>
                     <p className={styles['account-desc']}>{Details.description}</p>
                 </Col>
-                <Col className="flex-down-centered-right px-4">
+                <Col className="flex-down-centered-right px-4 col-md-4 col-12">
                     <h2 className={styles['price-tag']}>
                         $
                         {Details.price}
@@ -59,71 +59,77 @@ function AccountDetails(props) {
                     </Link>
                 </Col>
             </Row>
-            <Row className="mt-5">
-                <Col className="card mx-2 center-start">
-                    <h2 className={styles['detail-account-title']}>Agent</h2>
-                    {agents.length > 5 ? (
-                        <Row className="full-width">
-                            <Col className="col-md-6 centered-start">
-                                <div className="text-center">
-                                    {agents.map((i, key) => key % 2 === 0 && (<li className={styles['detail-list']}>{i}</li>))}
-                                </div>
-                            </Col>
-                            <Col className="col-md-6 centered-start">
-                                <div className="text-center">
-                                    {agents.map((i, key) => key % 2 === 1 && (<li className={styles['detail-list']}>{i}</li>))}
+            <Row className="mt-5 px-4">
+                <Col className="col-6 col-md-4 mb-3">
+                    <div className="w-95 center-start card">
+                        <h2 className={styles['detail-account-title']}>Agent</h2>
+                        {agents.length > 5 ? (
+                            <Row className="full-width">
+                                <Col className="col-md-6 centered-start">
+                                    <div className="text-center">
+                                        {agents.map((i, key) => key % 2 === 0 && (<li className={styles['detail-list']}>{i}</li>))}
+                                    </div>
+                                </Col>
+                                <Col className="col-md-6 centered-start">
+                                    <div className="text-center">
+                                        {agents.map((i, key) => key % 2 === 1 && (<li className={styles['detail-list']}>{i}</li>))}
 
-                                </div>
+                                    </div>
+                                </Col>
+                            </Row>
+                        ) : (
+                            <>
+                                {agents.map((i) => <li className={styles['detail-list']}>{i}</li>)}
+                            </>
+                        )}
+                    </div>
+                </Col>
+                <Col className="col-6 col-md-4 mb-3">
+                    <div className="w-95 center-start card">
+                        <h2 className={styles['detail-account-title']}>Skin</h2>
+                        {skins.length > 5 ? (
+                            <Row className="full-width">
+                                <Col className="col-md-6 centered-start">
+                                    <div className="text-center">
+                                        {skins.map((i, key) => key % 2 === 0 && (<li className={styles['detail-list']}>{i}</li>))}
+                                    </div>
+                                </Col>
+                                <Col className="col-md-6 centered-start">
+                                    <div className="text-center">
+                                        {skins.map((i, key) => key % 2 === 1 && (<li className={styles['detail-list']}>{i}</li>))}
+
+                                    </div>
+                                </Col>
+                            </Row>
+                        ) : (
+                            <>
+                                {skins.map((i) => <li className={styles['detail-list']}>{i}</li>)}
+                            </>
+                        )}
+                    </div>
+                </Col>
+                <Col className="col-12 col-md-4 mb-3">
+                    <div className="w-95 center-start card">
+                        <h2 className={styles['detail-account-title']}>Ranked Stats</h2>
+                        <Row className={styles['stats-card']}>
+                            <Col className="flex-down col-8">
+                                <h3 className={styles['stats-card-title']}>Current Rank</h3>
+                                <span className={styles['stats-card-subtitle']}>{Details.current_rank}</span>
+                            </Col>
+                            <Col className="col-4">
+                                <Image src="/gold_valo.png" width="100%" height="100%" />
                             </Col>
                         </Row>
-                    ) : (
-                        <>
-                            {agents.map((i) => <li className={styles['detail-list']}>{i}</li>)}
-                        </>
-                    )}
-                </Col>
-                <Col className="card mx-2 center-start">
-                    <h2 className={styles['detail-account-title']}>Skin</h2>
-                    {skins.length > 5 ? (
-                        <Row className="full-width">
-                            <Col className="col-md-6 centered-start">
-                                <div className="text-center">
-                                    {skins.map((i, key) => key % 2 === 0 && (<li className={styles['detail-list']}>{i}</li>))}
-                                </div>
+                        <Row className={styles['stats-card']}>
+                            <Col className="flex-down col-8">
+                                <h3 className={styles['stats-card-title']}>Highest Rank</h3>
+                                <span className={styles['stats-card-subtitle']}>{Details.highest_rank}</span>
                             </Col>
-                            <Col className="col-md-6 centered-start">
-                                <div className="text-center">
-                                    {skins.map((i, key) => key % 2 === 1 && (<li className={styles['detail-list']}>{i}</li>))}
-
-                                </div>
+                            <Col className="col-4">
+                                <Image src="/diamond_valo.webp" width="100%" height="100%" />
                             </Col>
                         </Row>
-                    ) : (
-                        <>
-                            {skins.map((i) => <li className={styles['detail-list']}>{i}</li>)}
-                        </>
-                    )}
-                </Col>
-                <Col className="card mx-2">
-                    <h2 className={styles['detail-account-title']}>Ranked Stats</h2>
-                    <Row className={styles['stats-card']}>
-                        <Col className="flex-down">
-                            <h3 className={styles['stats-card-title']}>Current Rank</h3>
-                            <span className={styles['stats-card-subtitle']}>{Details.current_rank}</span>
-                        </Col>
-                        <Col>
-                            <Image src="/gold_valo.png" width="100%" height="100%" />
-                        </Col>
-                    </Row>
-                    <Row className={styles['stats-card']}>
-                        <Col className="flex-down">
-                            <h3 className={styles['stats-card-title']}>Highest Rank</h3>
-                            <span className={styles['stats-card-subtitle']}>{Details.highest_rank}</span>
-                        </Col>
-                        <Col>
-                            <Image src="/diamond_valo.webp" width="100%" height="100%" />
-                        </Col>
-                    </Row>
+                    </div>
                 </Col>
             </Row>
         </Container>

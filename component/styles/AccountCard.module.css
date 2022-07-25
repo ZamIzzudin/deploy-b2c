@@ -33,3 +33,9 @@
     color: var(--yellow);
     font-size: 2.3em;
 }
+
+@media only screen and (max-width: 1000px) {
+    .account-card {
+        min-width: 180px;
+    }
+}

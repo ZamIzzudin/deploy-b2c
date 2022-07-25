@@ -20,7 +20,7 @@ function Home(props) {
           <h1 className={`${styles['content-title']} text-end mt-5`}>Supported Game</h1>
           <h2 className={`${styles['content-subtitle']} text-end`}>What we can handle</h2>
         </Row>
-        <Row className="my-5 px-5">
+        <Row className="my-5 px-4">
           {games.map((game) => (
             <GameCard name={game.name} thumbnail="/apex.png" key={game.id} />
           ))}

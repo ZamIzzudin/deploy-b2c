@@ -20,7 +20,8 @@
     "react-bootstrap": "^2.4.0",
     "react-dom": "18.1.0",
     "react-tsparticles": "^2.0.6",
-    "tsparticles": "^2.0.6"
+    "tsparticles": "^2.0.6",
+    "vivus": "^0.4.6"
   },
   "devDependencies": {
     "@types/node": "17.0.39",

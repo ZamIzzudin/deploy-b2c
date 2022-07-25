@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable max-len */
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable no-console */
@@ -29,7 +32,7 @@ function GameCard(props: any) {
                     )}
                 </Col>
             ) : (
-                <Col className="col-md-2 centered " onClick={() => { props.getData(name); }}>
+                <Col className="col-md-2 col-4 centered " onClick={() => { props.getData(name); }}>
                     <div className={`${styles['card-game']} card-hovering card`}>
                         <div>
                             <Image src={`${thumbnail}`} width="145%" height="130%" />

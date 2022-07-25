@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react/button-has-type */
@@ -8,7 +9,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
 import { Container, Row, Col } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { GameCard, FormBoost, Checkout } from '../component';
 import styles from '../styles/Boost.module.css';
@@ -60,6 +61,18 @@ function Order(props) {
         setFormType(type);
     }
 
+    const [w, setW] = useState(1);
+
+    useEffect(() => {
+        if (window.innerWidth < 700) {
+            setW(2);
+        } else if (window.innerWidth < 1200) {
+            setW(3);
+        } else {
+            setW(4);
+        }
+    }, [w]);
+
     return (
         <Container className="my-5 py-5 centered-down">
             <h1 className="section-title mt-5 text-center">Boost</h1>
@@ -74,12 +87,14 @@ function Order(props) {
                 <GameCard name="Genshin Impact" thumbnail="/Genshin.png" getData={getGame} mini />
                 <GameCard name="COD Cold War" thumbnail="/coldwar.png" getData={getGame} mini />
             </Row>
-            <Row className="centered mb-3">
-                {service.map((i: any) => (
-                    <Col className="card fit-content card-hovering mx-2" onClick={() => getForm(i.type)}>
-                        <span className={styles['service-name']}>{i.name}</span>
-                    </Col>
-                ))}
+            <Row className={`${styles['service-slider']} centered mb-3`}>
+                <div className={styles['service-slider-container']}>
+                    {service.map((i: any) => (
+                        <button className="card fit-content card-hovering mx-2" onClick={() => getForm(i.type)}>
+                            <span className={styles['service-name']}>{i.name}</span>
+                        </button>
+                    ))}
+                </div>
             </Row>
             <Row className="mt-3">
                 <Col className="col-md-7 mx-3 card">

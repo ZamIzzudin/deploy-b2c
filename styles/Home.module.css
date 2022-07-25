@@ -13,7 +13,7 @@
     width: 200px;
     position: absolute;
     top: -40px;
-    right: 3vw;
+    left: 3vw;
 }
 
 .content-title {
@@ -45,7 +45,17 @@
 .banner-collapse {
     border-radius: 20px;
     height: fit-content;
-    background: url('/gg.jpg');
+    background: url('/xiao-lantern-festival-genshin-impact-thumb(1).jpg');
     background-size: cover;
-    background-position: 0% 20%;
+    background-position: 0% 8%;
+}
+
+@media only screen and (max-width: 1000px) {
+    .content-title {
+        font-size: 2.5em;
+    }
+
+    .content-subtitle {
+        font-size: .9em;
+    }
 }

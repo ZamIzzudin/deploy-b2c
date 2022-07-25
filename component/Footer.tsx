@@ -14,7 +14,7 @@ function Footer() {
                     </Col>
                     <Col className="col-md-3 col-8">
                         <div className={styles['footer-part']}>
-                            <h1>Supported Games</h1>
+                            <h1 className={styles['list-title']}>Supported Games</h1>
                             <Row>
                                 <Col>
                                     <ul className={styles['footer-list']}>
@@ -38,7 +38,7 @@ function Footer() {
                     <Col className="col-md-1 col-0" />
                     <Col className="col-md-2 col-4">
                         <div className={styles['footer-part']}>
-                            <h1>Legal</h1>
+                            <h1 className={styles['list-title']}>Legal</h1>
                             <ul className={styles['footer-list']}>
                                 <li>Terms of Use</li>
                                 <li>Privacy Policy</li>
@@ -61,10 +61,8 @@ function Footer() {
                 <Row className="mt-3">
                     <Col className={styles['footer-copyright']}>
                         <h3>
-                            Lunar Boost 2022
-                            -
-                            {' '}
-                            <span>All Rights Reserved</span>
+                            Lunar Boost 2022 &copy;
+                            <span> All Rights Reserved</span>
                         </h3>
                     </Col>
                 </Row>

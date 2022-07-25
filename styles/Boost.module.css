@@ -3,3 +3,48 @@
     font-size: 1.1em;
     letter-spacing: .5px;
 }
+
+.game-slider {
+    width: fit-content;
+    width: 110%;
+    max-height: 100px;
+    margin: 0 -1vw;
+    border: 1px solid red;
+}
+
+.game-slider-container {
+    height: 100%;
+    flex-direction: row;
+    display: flex;
+    overflow-x: auto;
+    margin-bottom: 100px;
+}
+
+.game-slider-container::-webkit-scrollbar {
+    height: 5px;
+}
+
+.service-slider {
+    width: fit-content;
+    width: 110%;
+    max-height: 100px;
+    margin: 0 -1vw;
+    background-color: var(--bar);
+    padding: 10px 0;
+    border-radius: 15px;
+}
+
+.service-slider-container {
+    display: flex;
+    width: fit-content;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.service-slider-container::-webkit-scrollbar {
+    height: 5px;
+}
+
+.service-slider-container::-webkit-scrollbar-thumb {
+    background-color: var(--bar);
+}

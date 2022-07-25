@@ -63,6 +63,10 @@
 }
 
 @media only screen and (max-width: 1000px) {
+    .navbar {
+        padding: 40px 5vw 0 5vw;
+    }
+
     .navbar-collapse {
         background-color: var(--bg);
         flex-direction: column;

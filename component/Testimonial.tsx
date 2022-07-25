@@ -1,15 +1,28 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable import/no-unresolved */
+import { useEffect, useState } from 'react';
 import { Splide, SplideTrack, SplideSlide } from '@splidejs/react-splide';
 import styles from './styles/Testimonial.module.css';
 
 function Testimonial() {
+    const [w, setW] = useState(1);
+
+    useEffect(() => {
+        if (window.innerWidth < 700) {
+            setW(1);
+        } else if (window.innerWidth < 1200) {
+            setW(2);
+        } else {
+            setW(3);
+        }
+    }, [w]);
+
     return (
         <Splide
             hasTrack={false}
             options={{
                 type: 'loop',
-                perPage: 3,
+                perPage: w,
                 drag: 'free',
                 snap: true,
                 height: '260px',

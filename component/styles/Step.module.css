@@ -4,7 +4,8 @@
     grid-template-columns: 1fr 4fr;
     padding: 20px;
     transition: .25s;
-    border: 4px solid var(--lightBg);
+    border: 4px solid var(--card);
+    width: 100%;
 }
 
 .card-step:hover {
@@ -67,4 +68,27 @@
 
 .hide {
     color: var(--bg);
+}
+
+@media only screen and (max-width: 1000px) {
+    .dekstop {
+        display: none;
+    }
+
+    .card-step {
+        padding: 0;
+        margin: 10px 0;
+    }
+
+    .step-title {
+        font-size: 1.25em;
+    }
+
+    .step-desc {
+        font-size: 1em;
+    }
+
+    .step-list {
+        font-size: 1em;
+    }
 }

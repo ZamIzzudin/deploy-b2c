@@ -80,3 +80,36 @@
     opacity: .8;
     text-align: justify;
 }
+
+@media only screen and (max-width: 1000px) {
+    .benefit-container {
+        grid-template-areas: 'two''three''one''four''five';
+    }
+
+    .debug5,
+    .debug1 {
+        width: 100%;
+    }
+
+    .debug2 {
+        padding: 0;
+        margin: 20px 0;
+    }
+
+    .benefit-card {
+        margin: 0 10px;
+    }
+
+    .benefit-card-title,
+    .benefit-card-subtitle {
+        text-align: center;
+    }
+
+    .benefit-title {
+        font-size: 2.5em;
+    }
+
+    .benefit-subtitle {
+        font-size: .9em;
+    }
+}

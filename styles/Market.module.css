@@ -15,7 +15,10 @@
 
 .detail-account-title {
     color: var(--yellow);
-    font-size: 1em;
+    font-size: 2em;
+    font-family: var(--secFont);
+    font-weight: 700;
+    margin-bottom: 20px;
 }
 
 .detail-list {
@@ -28,6 +31,7 @@
     margin: 15px 0;
     padding: 15px 15px;
     border-radius: 5px;
+    width: 90%;
 }
 
 .stats-card-title {
@@ -59,3 +63,11 @@
     font-weight: 800;
     font-size: 2.5em;
 }
+
+@media only screen and (max-width: 1000px) {
+    .card-container {
+        margin: 1vw;
+    }
+}
+
+@media only screen and (max-width: 600px) {}

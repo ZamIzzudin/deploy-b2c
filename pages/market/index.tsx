@@ -37,9 +37,9 @@ function Market(props) {
             <span className="section-subtitle">You don't have to start from scratch</span>
             <Row className={`${styles['filter-container']} my-5 py-5 px-3`}>
                 <Form>
-                    <Row>
-                        <Col className="px-5">
-                            <Form.Group className="mb-3 fullwidth">
+                    <Row className="px-3">
+                        <Col className="col-12 col-sm-6 col-md-4">
+                            <Form.Group className="mb-3 fullwidth ">
                                 <Form.Label>Server</Form.Label>
                                 <Form.Select className="form-layout">
                                     {Servers.map((server) => (
@@ -49,7 +49,7 @@ function Market(props) {
                                 </Form.Select>
                             </Form.Group>
                         </Col>
-                        <Col className="px-5">
+                        <Col className="col-6 col-sm-3 px-4 col-md-4">
                             <Form.Group className="fullwidth">
                                 <Form.Label>Min Price</Form.Label>
                                 <h5>
@@ -60,7 +60,7 @@ function Market(props) {
                                 <Form.Range className="form-range" min="0" max="1000" onChange={(e: any) => { getMinValue(e.target.value); }} value={minPrice} />
                             </Form.Group>
                         </Col>
-                        <Col className="px-5">
+                        <Col className="col-6 col-sm-3 px-4 col-md-4">
                             <Form.Group className="fullwidth">
                                 <Form.Label>Max Price</Form.Label>
                                 <h5>
@@ -73,46 +73,46 @@ function Market(props) {
                         </Col>
                     </Row>
                     <Row className={`${styles['rank-container']} centered mt-4`}>
-                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                        <span className="inside-card col-md-2 col-3 card-hovering flex-row centered mb-3">
                             <Image src="/unranked_mini_valo.png" width="35" height="35" />
                             Unranked
                         </span>
-                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                        <span className="inside-card col-md-2 col-3 card-hovering flex-row centered mb-3">
                             <Image src="/iron_mini_valo.png" width="35" height="35" />
                             Iron
                         </span>
-                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                        <span className="inside-card col-md-2 col-3 card-hovering flex-row centered mb-3">
                             <Image src="/bronze_mini_valo.png" width="35" height="35" />
                             Bronze
                         </span>
-                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                        <span className="inside-card col-md-2 col-3 card-hovering flex-row centered mb-3">
                             <Image src="/silver_mini_valo.png" width="35" height="35" />
                             Silver
                         </span>
-                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                        <span className="inside-card col-md-2 col-3 card-hovering flex-row centered mb-3">
                             <Image src="/gold_mini_valo.png" width="35" height="35" />
                             Gold
                         </span>
-                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                        <span className="inside-card col-md-2 col-3 card-hovering flex-row centered mb-3">
                             <Image src="/platinum_mini_valo.png" width="35" height="35" />
                             Platinum
                         </span>
-                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                        <span className="inside-card col-md-2 col-3 card-hovering flex-row centered mb-3">
                             <Image src="/diamond_mini_valo.png" width="35" height="35" />
                             Diamond
                         </span>
-                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                        <span className="inside-card col-md-2 col-3 card-hovering flex-row centered mb-3">
                             <Image src="/immortal_mini_valo.png" width="35" height="35" />
                             Immortal
                         </span>
-                        <span className="inside-card col-md-2 card-hovering flex-row centered mb-3">
+                        <span className="inside-card col-md-2 col-3 card-hovering flex-row centered mb-3">
                             <Image src="/radiant_mini_valo.png" width="35" height="35" />
                             Radiant
                         </span>
                     </Row>
                 </Form>
             </Row>
-            <Row className={styles['card-container']}>
+            <Row className={`${styles['card-container']} centered`}>
                 {Accounts.map((i: any) => (
                     <AccountCard data={i} />
                 ))}

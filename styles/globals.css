@@ -142,7 +142,7 @@ b {
 }
 
 .title {
-  font-size: 4.8em;
+  font-size: 4em;
   font-weight: 901;
   font-family: var(--primFont);
   text-transform: uppercase;
@@ -151,7 +151,7 @@ b {
 
 .section-title {
   font-family: var(--primFont);
-  font-size: 5em;
+  font-size: 4em;
   font-weight: 900;
   font-style: italic;
   text-transform: uppercase;
@@ -195,9 +195,9 @@ b {
   padding: 15px !important;
   border-radius: 15px !important;
   background: var(--card);
-  box-shadow: 0px 0px 40px 5px rgba(20, 20, 50, 0.54) !important;
-  -webkit-box-shadow: 0px 0px 40px 5px rgba(20, 20, 50, 0.54) !important;
-  -moz-box-shadow: 0px 0px 40px 5px rgba(20, 20, 50, 0.54) !important;
+  box-shadow: 0px 0px 50% 5px rgba(20, 20, 50, 0.54) !important;
+  -webkit-box-shadow: 0px 0px 50% 5px rgba(20, 20, 50, 0.54) !important;
+  -moz-box-shadow: 0px 0px 50% 5px rgba(20, 20, 50, 0.54) !important;
 }
 
 .inside-card {
@@ -445,4 +445,57 @@ thead th:last-child {
 
 .z-upper {
   z-index: 100;
+}
+
+.w-90 {
+  width: 90%;
+  height: 100%;
+}
+
+.w-95 {
+  width: 95%;
+}
+
+#jumbo-text {
+  width: 856px;
+  height: 60px;
+  display: block;
+  stroke-linecap: square;
+  fill-opacity: 0;
+  transition: fill-opacity 0.5s ease-in-out;
+}
+
+.finished {
+  fill-opacity: 1 !important;
+}
+
+#jumbo-text-mini {
+  display: none;
+}
+
+@media only screen and (max-width: 1000px) {
+  .title {
+    font-size: 2.5em;
+  }
+
+  .section-title {
+    font-size: 2.5em;
+  }
+
+  .section-subtitle {
+    font-size: .9em;
+  }
+
+  #jumbo-text {
+    display: none;
+  }
+
+  #jumbo-text-mini {
+    display: block;
+    stroke-linecap: square;
+    fill-opacity: 0;
+    transition: fill-opacity 0.5s ease-in-out;
+    width: 389px;
+    height: 130px;
+  }
 }

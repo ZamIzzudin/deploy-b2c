@@ -15,7 +15,7 @@ function Step() {
     return (
         <div>
             <Row>
-                <Col className="px-3">
+                <Col className="px-3 col-md-4 col-12">
                     <button type="button" className={`${styles['card-step']} card`} onClick={() => setStep(1)}>
                         <div className={styles['icon-side']}>
                             <i className="fa-solid fa-clipboard-check fa-2x org-icon" />
@@ -26,7 +26,7 @@ function Step() {
                         </div>
                     </button>
                 </Col>
-                <Col className="px-3">
+                <Col className="px-3 col-md-4 col-12">
                     <button type="button" className={`${styles['card-step']} card`} onClick={() => setStep(2)}>
                         <div className={styles['icon-side']}>
                             <i className="fa-solid fa-money-bill-wave fa-2x org-icon" />
@@ -37,7 +37,7 @@ function Step() {
                         </div>
                     </button>
                 </Col>
-                <Col className="px-3">
+                <Col className="px-3 col-md-4 col-12">
                     <button type="button" className={`${styles['card-step']} card`} onClick={() => setStep(3)}>
                         <div className={styles['icon-side']}>
                             <i className="fa-solid fa-ranking-star fa-2x org-icon" />
@@ -49,65 +49,62 @@ function Step() {
                     </button>
                 </Col>
             </Row>
-            <Row>
-                {step === 1 && (
-                    <>
-                        <Col>
-                            <Image src="/step1.png" width="500%" height="500%" />
-                        </Col>
-                        <Col className="flex-down p-5 my-5">
-                            <h3 className={styles['step-title']}>Select Your Favored Service</h3>
-                            <p className={styles['step-desc']}>First, select your game and method of ranking up. There are various ways to reach your desired goal. Choose the one which fits most to your needs.You can always talk to us on live chat if you need help.</p>
-                            <ul className={styles.list}>
-                                <li>Free additional customizations.</li>
-                                <li>Intuitive and straightforward purchase process.</li>
-                            </ul>
-                            <div>
-                                <button type="button" className="button capsule mt-3">Get Started</button>
-                            </div>
-                        </Col>
-                    </>
-
-                )}
-                {step === 2 && (
-                    <>
-                        <Col>
-                            <Image src="/step2.png" width="500%" height="500%" />
-                        </Col>
-                        <Col className="flex-down p-5 my-5">
-                            <h3 className={styles['step-title']}>Buy with ease</h3>
-                            <p className={styles['step-desc']}>We have the leading payment solution brands at your service to provide you with the most diversified gateway portfolio to fit your needs.We process payments instantly — we can start on your order as soon you finish checkout.</p>
-                            <ul className={styles.list}>
-                                <li>Payments accepted globally.</li>
-                                <li>Safe and encrypted transactions.</li>
-                                <li>Crypto payments are available.</li>
-                            </ul>
-                            <div>
-                                <button type="button" className="button capsule mt-3">Get Started</button>
-                            </div>
-                        </Col>
-                    </>
-                )}
-                {step === 3 && (
-                    <>
-                        <Col>
-                            <Image src="/step3.png" width="500%" height="500%" />
-                        </Col>
-                        <Col className="flex-down p-5 my-5">
-                            <h3 className={styles['step-title']}>Follow Your Rank Increase</h3>
-                            <p className={styles['step-desc']}>You are all set! Lay back and watch your order being fulfilled. Chat directly with your booster and track your order\'s progress.</p>
-                            <ul className={styles.list}>
-                                <li>Live tracking.</li>
-                                <li>Direct chat with your booster.</li>
-                                <li>24/7 Premium live Help.</li>
-                            </ul>
-                            <div>
-                                <button type="button" className="button capsule mt-3">Get Started</button>
-                            </div>
-                        </Col>
-                    </>
-                )}
-            </Row>
+            {step === 1 && (
+                <Row>
+                    <Col className={styles.dekstop}>
+                        <Image src="/step1.png" width="500%" height="500%" />
+                    </Col>
+                    <Col className="flex-down px-5 py-4">
+                        <h3 className={styles['step-title']}>Select Your Favored Service</h3>
+                        <p className={styles['step-desc']}>First, select your game and method of ranking up. There are various ways to reach your desired goal. Choose the one which fits most to your needs.You can always talk to us on live chat if you need help.</p>
+                        <ul className={styles.list}>
+                            <li>Free additional customizations.</li>
+                            <li>Intuitive and straightforward purchase process.</li>
+                        </ul>
+                        <div>
+                            <button type="button" className="button capsule mt-3">Get Started</button>
+                        </div>
+                    </Col>
+                </Row>
+            )}
+            {step === 2 && (
+                <Row>
+                    <Col className={styles.dekstop}>
+                        <Image src="/step2.png" width="500%" height="500%" />
+                    </Col>
+                    <Col className="flex-down px-5 py-4">
+                        <h3 className={styles['step-title']}>Buy with ease</h3>
+                        <p className={styles['step-desc']}>We have the leading payment solution brands at your service to provide you with the most diversified gateway portfolio to fit your needs.We process payments instantly — we can start on your order as soon you finish checkout.</p>
+                        <ul className={styles.list}>
+                            <li>Payments accepted globally.</li>
+                            <li>Safe and encrypted transactions.</li>
+                            <li>Crypto payments are available.</li>
+                        </ul>
+                        <div>
+                            <button type="button" className="button capsule mt-3">Get Started</button>
+                        </div>
+                    </Col>
+                </Row>
+            )}
+            {step === 3 && (
+                <Row>
+                    <Col className={styles.dekstop}>
+                        <Image src="/step3.png" width="500%" height="500%" />
+                    </Col>
+                    <Col className="flex-down px-5 py-4">
+                        <h3 className={styles['step-title']}>Follow Your Rank Increase</h3>
+                        <p className={styles['step-desc']}>You are all set! Lay back and watch your order being fulfilled. Chat directly with your booster and track your order\'s progress.</p>
+                        <ul className={styles.list}>
+                            <li>Live tracking.</li>
+                            <li>Direct chat with your booster.</li>
+                            <li>24/7 Premium live Help.</li>
+                        </ul>
+                        <div>
+                            <button type="button" className="button capsule mt-3">Get Started</button>
+                        </div>
+                    </Col>
+                </Row>
+            )}
         </div>
     );
 }
