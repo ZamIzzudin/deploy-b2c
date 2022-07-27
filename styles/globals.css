@@ -235,6 +235,10 @@ b {
   justify-content: space-around;
 }
 
+.d-i-block {
+  display: inline-block;
+}
+
 .center-horizontal {
   display: flex;
   flex-direction: row;
@@ -252,10 +256,12 @@ b {
 }
 
 .flex-row {
+  display: flex;
   flex-direction: row;
 }
 
 .flex-down {
+  display: flex;
   flex-direction: column;
 }
 
@@ -286,6 +292,18 @@ b {
   justify-content: space-around;
 }
 
+.flex-horizon-centered-start {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.space-between {
+  justify-content: space-between;
+  font-size: 1.05em;
+}
+
 .debug-bg {
   background-color: skyblue;
 }
@@ -301,7 +319,7 @@ b {
 }
 
 .fullwidth {
-  width: 100%;
+  width: 100% !important;
 }
 
 .modal-content {
@@ -347,7 +365,8 @@ b {
   border-radius: 50%;
 }
 
-.checkbox {
+.checkbox,
+.checkbox-prim {
   position: relative;
   width: 40px;
   height: 20px;
@@ -363,7 +382,12 @@ b {
   background: rgba(242, 153, 74, .5);
 }
 
-.checkbox:before {
+.checkbox-prim:checked {
+  background: var(--primColor50);
+}
+
+.checkbox:before,
+.checkbox-prim:before {
   content: "";
   position: absolute;
   width: 20px;
@@ -379,6 +403,11 @@ b {
 
 .checkbox:checked::before {
   background-color: var(--yellow);
+  left: 20px;
+}
+
+.checkbox-prim:checked::before {
+  background-color: var(--primColor);
   left: 20px;
 }
 
@@ -473,6 +502,10 @@ thead th:last-child {
   display: none;
 }
 
+.min-w-155px {
+  min-width: 155px !important;
+}
+
 @media only screen and (max-width: 1000px) {
   .title {
     font-size: 2.5em;
@@ -497,5 +530,9 @@ thead th:last-child {
     transition: fill-opacity 0.5s ease-in-out;
     width: 389px;
     height: 130px;
+  }
+
+  .mobile-detail {
+    background-color: salmon;
   }
 }

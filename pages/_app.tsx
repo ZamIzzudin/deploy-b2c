@@ -10,7 +10,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
 import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
@@ -18,7 +18,15 @@ import TabBar from '../component/Navbar';
 import Footer from '../component/Footer';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const tawkMessengerRef = useRef(null);
+  const tawkMessengerRef = useRef<any>();
+
+  const onLoad = () => {
+    if (tawkMessengerRef.current !== undefined) {
+      if (window.innerWidth < 800 && window.location.href.slice(-6) === 'detail') {
+        tawkMessengerRef.current?.hideWidget();
+      }
+    }
+  };
 
   return (
     <>
@@ -36,6 +44,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         propertyId="62d5635eb0d10b6f3e7ce951"
         widgetId="1g88ooaaq"
         useRef={tawkMessengerRef}
+        ref={tawkMessengerRef}
+        onLoad={onLoad}
       />
     </>
   );

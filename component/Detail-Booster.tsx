@@ -98,7 +98,7 @@ function DetailBooster(props: any) {
             )}
             {role === 'booster' && (
                 <Row className="mt-3 centered">
-                    <Col className="col-md-4 my-3">
+                    <Col className="col-md-4 my-3 col-6">
                         <Row className="card width90">
                             <h2 className={styles['booster-card-title']}>Genshin Impact</h2>
                             <h3 className={styles['booster-card-subtitle']}>Daily Mission</h3>
@@ -112,7 +112,7 @@ function DetailBooster(props: any) {
                             </Row>
                         </Row>
                     </Col>
-                    <Col className="col-md-4 my-3">
+                    <Col className="col-md-4 my-3 col-6">
                         <Row className="card width90">
                             <h2 className={styles['booster-card-title']}>Genshin Impact</h2>
                             <h3 className={styles['booster-card-subtitle']}>Daily Mission</h3>
@@ -126,7 +126,7 @@ function DetailBooster(props: any) {
                             </Row>
                         </Row>
                     </Col>
-                    <Col className="col-md-4 my-3">
+                    <Col className="col-md-4 my-3 col-6">
                         <Row className="card width90">
                             <h2 className={styles['booster-card-title']}>Genshin Impact</h2>
                             <h3 className={styles['booster-card-subtitle']}>Daily Mission</h3>
@@ -140,7 +140,7 @@ function DetailBooster(props: any) {
                             </Row>
                         </Row>
                     </Col>
-                    <Col className="col-md-4 my-3">
+                    <Col className="col-md-4 my-3 col-6">
                         <Row className="card width90">
                             <h2 className={styles['booster-card-title']}>Genshin Impact</h2>
                             <h3 className={styles['booster-card-subtitle']}>Daily Mission</h3>
@@ -154,7 +154,7 @@ function DetailBooster(props: any) {
                             </Row>
                         </Row>
                     </Col>
-                    <Col className="col-md-4 my-3">
+                    <Col className="col-md-4 my-3 col-6">
                         <Row className="card width90">
                             <h2 className={styles['booster-card-title']}>Genshin Impact</h2>
                             <h3 className={styles['booster-card-subtitle']}>Daily Mission</h3>
@@ -168,7 +168,7 @@ function DetailBooster(props: any) {
                             </Row>
                         </Row>
                     </Col>
-                    <Col className="col-md-4 my-3">
+                    <Col className="col-md-4 my-3 col-6">
                         <Row className="card width90">
                             <h2 className={styles['booster-card-title']}>Genshin Impact</h2>
                             <h3 className={styles['booster-card-subtitle']}>Daily Mission</h3>
@@ -206,30 +206,28 @@ function DetailBooster(props: any) {
                         <GameCard name="Genshin Impact" thumbnail="/Genshin.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
                         <GameCard name="COD Cold War" thumbnail="/coldwar.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
                     </Row>
-                    {service.length > 0 && (
-                        <>
-                            <Row className="my-4 fullwidth">
-                                <Col className="flex-horizon-centered-right">
-                                    <button onClick={() => showModal2(true)} className="button-border mx-3">Add Service</button>
-                                    {removingService ? (
-                                        <button onClick={() => setRemovingService(false)} className="button-org-border">Cancel</button>
-                                    ) : (
-                                        <button onClick={() => setRemovingService(true)} className="button-org-border">Delete</button>
-                                    )}
+                    <Row className="my-4 fullwidth">
+                        <Col className="flex-horizon-centered-right">
+                            <button onClick={() => showModal2(true)} className="button-border mx-3">Add Service</button>
+                            {removingService ? (
+                                <button onClick={() => setRemovingService(false)} className="button-org-border">Cancel</button>
+                            ) : (
+                                <button onClick={() => setRemovingService(true)} className="button-org-border">Delete</button>
+                            )}
 
+                        </Col>
+                    </Row>
+                    {service.length > 0 && (
+                        <Row className="gap-2 px-3">
+                            {service.map((i: any) => (
+                                <Col className={`card centered fit-content ${removingService ? ('') : ('card-hovering')} relative-pos`}>
+                                    <div>
+                                        <span className={styles['service-name']}>{i.name}</span>
+                                    </div>
+                                    {removingService && (<button onClick={() => deleteService(i.name, game)} className={styles['remove-toogle']}>X</button>)}
                                 </Col>
-                            </Row>
-                            <Row>
-                                {service.map((i: any) => (
-                                    <Col className={`card centered fit-content ${removingService ? ('') : ('card-hovering')} mx-2 relative-pos`}>
-                                        <div>
-                                            <span className={styles['service-name']}>{i.name}</span>
-                                        </div>
-                                        {removingService && (<button onClick={() => deleteService(i.name, game)} className={styles['remove-toogle']}>X</button>)}
-                                    </Col>
-                                ))}
-                            </Row>
-                        </>
+                            ))}
+                        </Row>
                     )}
                 </div>
             )}

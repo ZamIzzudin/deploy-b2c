@@ -13,37 +13,31 @@ function DetailProfile(props: any) {
         <div className="mt-4">
             {role === 'user' ? (
                 <Row>
-                    <Col className="col-md-5 px-3 card relative-pos">
-                        <div className="fullwidth centered-down">
+                    <Col className="col-md-5 px-3 relative-pos col-12 mb-4">
+                        <div className="fullwidth card center-start flex-down">
                             <Image src={userData?.photoURL || '/valo_logo.png'} width="180" height="180" className="circle" />
                             <h1 className={styles['display-name']}>{userData.displayName}</h1>
-                            <h3 className={styles['user-email']}>{userData.email}</h3>
+                            <h3 className={`${styles['user-email']} mb-5`}>{userData.email}</h3>
                             <span className={`${styles['footer-card-profile']} absolute-pos abs-bottom`}>Member since 12 july 2022</span>
                         </div>
                     </Col>
-                    <Col className="px-2">
+                    <Col className="px-2 col-md-7 col-12">
                         <div className="card fullwidth">
                             <h2>Edit Information</h2>
                             <hr />
                             <Row>
                                 <Form.Group className="mb-3 col-md-6">
-                                    <Form.Label>Name</Form.Label>
+                                    <Form.Label>Username</Form.Label>
                                     <Form.Control type="text" placeholder="Enter Your Name" className="form-layout" />
                                 </Form.Group>
                                 <Form.Group className="mb-3 col-md-6">
-                                    <Form.Label>Name</Form.Label>
+                                    <Form.Label>Discord</Form.Label>
                                     <Form.Control type="text" placeholder="Enter Your Name" className="form-layout" />
                                 </Form.Group>
                             </Row>
                             <Row>
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Name</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter Your Name" className="form-layout" />
-                                </Form.Group>
-                            </Row>
-                            <Row>
-                                <Form.Group className="mb-3">
-                                    <Form.Label>Name</Form.Label>
+                                    <Form.Label>Country</Form.Label>
                                     <Form.Control type="text" placeholder="Enter Your Name" className="form-layout" />
                                 </Form.Group>
                             </Row>

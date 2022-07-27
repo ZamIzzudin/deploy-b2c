@@ -1,78 +1,81 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable max-len */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-console */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-unused-vars */
-import {
-    Row, Col, Offcanvas, Button,
-} from 'react-bootstrap';
 import { useState } from 'react';
 import styles from './styles/SideBar.module.css';
 
 function SideBar(props: any) {
-    const { role, getComponent } = props;
-
-    const [show, setShow] = useState(false);
+    const { role, show, active } = props;
 
     function setComponent(comp: any) {
         props.getComponent(comp);
+        props.close(false);
     }
 
     return (
-        <Row className={`${styles['side-bar-container']} mt-3`}>
-            {role === 'user' && (
-                <Col className={`${styles['list-toogle']}  gap-3`}>
-                    <button className={styles['list-item']} onClick={() => setComponent('profile')}>
-                        <i className="fa-solid fa-user" />
-                        <span className="mx-3">Profile</span>
-                    </button>
-                    <button className={styles['list-item']} onClick={() => setComponent('order')}>
-                        <i className="fa-solid fa-cart-shopping" />
-                        <span className="mx-3">Order</span>
-                    </button>
-                    <button className={styles['list-item']} onClick={() => setComponent('invoice')}>
-                        <i className="fa-solid fa-file-invoice-dollar" />
-                        <span className="mx-3">Invoice</span>
-                    </button>
-                </Col>
-            )}
-            {
-                role === 'booster' && (
-                    <Col className={`${styles['list-toogle']}  gap-3`}>
-                        <button className={styles['list-item']} onClick={() => setComponent('order')}>
+        <>
+            <div className={`${styles['side-bar-container']} ${show ? (styles.show) : ('')} mt-3`}>
+                <span className={`${styles['close-toogle']} mobile`}><i className="fa-solid fa-xmark" onClick={() => props.close(false)} /></span>
+                {role === 'user' && (
+                    <div className={`${styles['list-toogle']}`}>
+                        <button className={`${styles['list-item']} ${active === 'profile' ? (styles.active) : ('')}`} onClick={() => setComponent('profile')}>
+                            <i className="fa-solid fa-user" />
+                            <span className={styles.mobile}>Profile</span>
+                        </button>
+                        <button className={`${styles['list-item']} ${active === 'order' ? (styles.active) : ('')}`} onClick={() => setComponent('order')}>
                             <i className="fa-solid fa-cart-shopping" />
-                            <span className="mx-3">Order</span>
+                            <span className={styles.mobile}>Order</span>
                         </button>
-                        <button className={styles['list-item']} onClick={() => setComponent('boost')}>
-                            <i className="fa-solid fa-bolt" />
-                            <span className="mx-3">Boost</span>
+                        <button className={`${styles['list-item']} ${active === 'invoice' ? (styles.active) : ('')}`} onClick={() => setComponent('invoice')}>
+                            <i className="fa-solid fa-file-invoice-dollar" />
+                            <span className={styles.mobile}>Invoice</span>
                         </button>
-                    </Col>
-                )
-            }
-            {
-                role === 'admin' && (
-                    <Col className={`${styles['list-toogle']}  gap-3`}>
-                        <button className={styles['list-item']} onClick={() => setComponent('order')}>
-                            <i className="fa-solid fa-cart-shopping" />
-                            <span className="mx-3">Order</span>
-                        </button>
-                        <button className={styles['list-item']} onClick={() => setComponent('boost')}>
-                            <i className="fa-solid fa-bolt" />
-                            <span className="mx-3">Boost</span>
-                        </button>
-                        <button className={styles['list-item']} onClick={() => setComponent('market')}>
-                            <i className="fa-solid fa-square-poll-horizontal" />
-                            <span className="mx-3">Market</span>
-                        </button>
-                        <button className={styles['list-item']} onClick={() => setComponent('other')}>
-                            <i className="fa-solid fa-chart-simple" />
-                            <span className="mx-3">Other</span>
-                        </button>
-                    </Col>
-                )
-            }
-        </Row>
+                    </div>
+                )}
+                {
+                    role === 'booster' && (
+                        <div className={`${styles['list-toogle']}  gap-3`}>
+                            <button className={`${styles['list-item']} ${active === 'order' ? (styles.active) : ('')}`} onClick={() => setComponent('order')}>
+                                <i className="fa-solid fa-cart-shopping" />
+                                <span className={styles.mobile}>Order</span>
+                            </button>
+                            <button className={`${styles['list-item']} ${active === 'boost' ? (styles.active) : ('')}`} onClick={() => setComponent('boost')}>
+                                <i className="fa-solid fa-bolt" />
+                                <span className={styles.mobile}>Boost</span>
+                            </button>
+                        </div>
+                    )
+                }
+                {
+                    role === 'admin' && (
+                        <div className={`${styles['list-toogle']}  gap-3`}>
+                            <button className={`${styles['list-item']} ${active === 'order' ? (styles.active) : ('')}`} onClick={() => setComponent('order')}>
+                                <i className="fa-solid fa-cart-shopping" />
+                                <span className={styles.mobile}>Order</span>
+                            </button>
+                            <button className={`${styles['list-item']} ${active === 'boost' ? (styles.active) : ('')}`} onClick={() => setComponent('boost')}>
+                                <i className="fa-solid fa-bolt" />
+                                <span className={styles.mobile}>Boost</span>
+                            </button>
+                            <button className={`${styles['list-item']} ${active === 'market' ? (styles.active) : ('')}`} onClick={() => setComponent('market')}>
+                                <i className="fa-solid fa-square-poll-horizontal" />
+                                <span className={styles.mobile}>Market</span>
+                            </button>
+                            <button className={`${styles['list-item']} ${active === 'other' ? (styles.active) : ('')}`} onClick={() => setComponent('other')}>
+                                <i className="fa-solid fa-chart-simple" />
+                                <span className={styles.mobile}>Other</span>
+                            </button>
+                        </div>
+                    )
+                }
+            </div>
+            <div onClick={() => props.close(false)} className={`${show ? (styles.outer) : ('')} mobile`} />
+        </>
+
     );
 }
 

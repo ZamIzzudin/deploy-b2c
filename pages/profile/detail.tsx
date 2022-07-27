@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable max-len */
 /* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable no-console */
 /* eslint-disable react/prop-types */
@@ -22,6 +25,13 @@ function Detail(props) {
 
     const [token, setToken] = useState<any | null>(null);
     const [userData, setUserData] = useState<any | null>(null);
+
+    const [showSide, setShowSide] = useState(false);
+
+    function closeSide(showing) {
+        setShowSide(showing);
+        console.log(showSide);
+    }
 
     useEffect(() => {
         const dataStore = getCookie('store');
@@ -64,12 +74,13 @@ function Detail(props) {
             {userData?.isLogin ? (
                 <Container className="py-5">
                     <div className="mt-5">
-                        <SideBar role={role} getComponent={getComponent} />
+                        <SideBar role={role} getComponent={getComponent} show={showSide} close={closeSide} active={component} />
                     </div>
                     <Row>
                         <Col className="centered-down">
-                            <Row className="my-3">
-                                <div>
+                            <Row className="my-3 fullwidth">
+                                <div className="flex-row center-start flex-left">
+                                    <span className={styles['show-sidebar']} onClick={() => setShowSide(true)}><i className="fa-solid fa-bars" /></span>
                                     <button className="button capsule" onClick={() => setRole('user')}>User</button>
                                     <button className="button capsule mx-3" onClick={() => setRole('booster')}>Booster</button>
                                     <button className="button capsule" onClick={() => setRole('admin')}>Admin</button>

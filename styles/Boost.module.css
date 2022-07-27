@@ -9,7 +9,6 @@
     width: 110%;
     max-height: 100px;
     margin: 0 -1vw;
-    border: 1px solid red;
 }
 
 .game-slider-container {
@@ -27,15 +26,15 @@
 .service-slider {
     width: fit-content;
     width: 110%;
-    max-height: 100px;
+    height: 90px;
     margin: 0 -1vw;
-    background-color: var(--bar);
-    padding: 10px 0;
     border-radius: 15px;
 }
 
 .service-slider-container {
+    padding: 13px;
     display: flex;
+    height: inherit;
     width: fit-content;
     overflow-x: scroll;
     overflow-y: hidden;
@@ -46,5 +45,32 @@
 }
 
 .service-slider-container::-webkit-scrollbar-thumb {
-    background-color: var(--bar);
+    background-color: var(--bg);
+}
+
+.game-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media only screen and (max-width: 800px) {
+    .game-container {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+
+    .game-container::-webkit-scrollbar {
+        height: 5px;
+    }
+
+    .game-container::-webkit-scrollbar-thumb {
+        background-color: var(--bar);
+    }
+
+    .game-overview {
+        background-color: var(--bar);
+        width: 100vw;
+        margin-left: -2.5vw;
+    }
 }

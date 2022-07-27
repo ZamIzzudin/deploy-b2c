@@ -67,6 +67,7 @@
     letter-spacing: .5px;
 }
 
+/* Market */
 .filter-container {
     background-color: var(--card);
     width: 100%;
@@ -76,4 +77,16 @@
 
 .rank-container {
     gap: 10px;
+}
+
+.card-container {
+    gap: 10px;
+}
+
+
+
+@media only screen and (max-width: 800px) {
+    .card-container {
+        margin: 1vw;
+    }
 }

@@ -93,51 +93,6 @@ function TabBar() {
     }
 
     return (
-        // <Navbar collapseOnSelect expand="lg" variant="dark" className={styles.navbar}>
-        //     <Container>
-        //         <Navbar.Brand className={styles['brand-text']}>
-        //             <Image src="/logo.png" width="170" height="60" />
-        //         </Navbar.Brand>
-        //         <Navbar.Toggle />
-        //         <Navbar.Collapse id="responsive-navbar-nav">
-        //             <Nav className={`${styles['navbar-link']} me-auto`}>
-        //                 <Link scroll href="/">Home</Link>
-        //                 <Link scroll href="/boost">Boost</Link>
-        //                 <Link scroll href="/market">Market</Link>
-        //                 <Link scroll href="/support">Support</Link>
-        //             </Nav>
-        //             <Navbar.Collapse className="justify-content-end">
-        //                 {userData ? (
-        //                     <>
-        //                         {userData ? (
-        //                             <Link scroll href="/profile/detail">
-        //                                 <a>
-        //                                     {/* <Image src={userData?.photoURL} width="40" height="40" className="circle" /> */}
-        //                                     <button className="button-border capsule mx-3">Profile</button>
-        //                                 </a>
-        //                             </Link>
-        //                         ) : (
-        //                             <></>
-        //                         )}
-        //                         <span onClick={() => handleLogout()}>
-        //                             <a className="button capsule">Logout</a>
-        //                         </span>
-        //                     </>
-        //                 ) : (
-        //                     <span onClick={() => handleModal()}>
-        //                         <a className="button capsule">Login</a>
-        //                     </span>
-        //                 )}
-        //             </Navbar.Collapse>
-        //         </Navbar.Collapse>
-        //     </Container>
-        //     <LoginModal
-        //         show={modal}
-        //         onHide={() => showModal(false)}
-        //         getDataLogin={getDataLogin}
-        //     />
-        // </Navbar>
-
         <nav className={styles.navbar}>
             <div className={styles['navbar-logo']}>
                 <Image src="/logo.png" width="170" height="60" />
@@ -152,7 +107,7 @@ function TabBar() {
                     <Link href="/market" scroll>Market</Link>
                     <Link href="/support" scroll>Support</Link>
                 </div>
-                <div>
+                <div onClick={() => setSideBar(false)}>
                     {userData ? (
                         <>
                             <Link scroll href="/profile/detail">

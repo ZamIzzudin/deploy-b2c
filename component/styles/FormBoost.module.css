@@ -1,3 +1,56 @@
 .form-container {
-    min-width: 70vw;
+    width: 100%;
+    height: 100%;
+}
+
+/* Module */
+.container {
+    padding: 20px 30px;
+    border-radius: 15px;
+    width: 100%;
+    background-color: var(--card);
+    margin-bottom: 20px;
+}
+
+.rank-division-container {
+    display: grid;
+    grid-template-areas: "rank division";
+    grid-template-columns: 2fr 1fr;
+}
+
+.rank-container {
+    display: flex;
+    grid-area: rank;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 15px 0 5px 0;
+}
+
+.rank-list,
+.division-list {
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    display: block;
+    border-radius: 5px;
+    background-color: var(--insideCard);
+    transition: .3s;
+}
+
+.rank-list:hover,
+.division-list:hover {
+    background-color: var(--primColor);
+}
+
+.division-container {
+    grid-area: division;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.number-order {
+    font-size: 4em;
+    margin-right: 20px;
 }

@@ -1,23 +1,108 @@
 .list-toogle {
     list-style: none;
     font-size: 1.1em;
-    max-width: fit-content;
+    width: 100% !;
 }
 
 .list-item {
-    margin: 25px 0;
-    background-color: var(--bg);
-    width: 180%;
-    height: 40px;
-    padding: 25px 15px;
+    margin: 25px auto;
+    padding: 15px;
+    gap: 20px;
+    background-color: transparent;
+    width: 85%;
     display: flex;
     align-items: center;
     border-radius: 10px;
-    transition: .3s;
     border: none;
+    transition: .3s;
 }
 
 .list-item:hover {
     background-color: var(--card);
     transform: scale(1.05);
+}
+
+.side-bar-container {
+    padding-top: 5%;
+    background-color: var(--bar);
+    position: fixed;
+    z-index: 1001;
+    top: -3%;
+    left: 0;
+    bottom: 0;
+    right: 75%;
+    transform: translateX(-100%);
+    transition: .3s;
+}
+
+.show {
+    transform: translateX(0);
+}
+
+.close-toogle {
+    position: absolute;
+    right: 5%;
+    top: 3%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5em;
+    border-radius: 5px;
+    transition: .3s;
+}
+
+.close-toogle:hover {
+    background-color: var(--primColor)
+}
+
+.outer {
+    background-color: rgba(0, 0, 0, .5);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    transition: .5s
+}
+
+.active {
+    background-color: var(--primColor);
+}
+
+@media only screen and (max-width: 800px) {
+    .side-bar-container {
+        position: fixed;
+        top: unset;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        padding: 0;
+        transform: translateX(0%);
+        background-color: transparent;
+    }
+
+    .list-toogle {
+        background-color: var(--insideCard);
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        position: relative;
+        max-width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+
+    .list-item {
+        margin: 10px 0;
+        padding: 15px 10px;
+        background-color: transparent;
+        width: fit-content;
+    }
+
+    .mobile {
+        display: none;
+    }
 }
