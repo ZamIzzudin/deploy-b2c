@@ -18,9 +18,9 @@ export default function LoginModal(props: any) {
             email: res.email,
         };
 
-        const token = await axios.post('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/v1/auth', auth).then((response) => response.data.token).catch((response) => console.log(response));
+        const user = await axios.post('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/v1/auth', auth).then((response) => response.data).catch((response) => console.log(response));
 
-        await props.getDataLogin(res, token);
+        await props.getDataLogin(res, user.token, user.role);
     };
 
     return (

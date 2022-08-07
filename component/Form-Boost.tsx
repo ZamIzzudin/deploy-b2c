@@ -2,7 +2,9 @@
 /* eslint-disable consistent-return */
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
-import { IncludeRank, NumberGame } from './Form-Boost-Type';
+import {
+    IncludeRank, NumberGame, Points, PlatformSelect,
+} from './Form-Boost-Type';
 import styles from './styles/FormBoost.module.css';
 
 function FormBoost(props: any) {
@@ -14,6 +16,10 @@ function FormBoost(props: any) {
                     return (<IncludeRank title={f.title} game={f.game} />);
                 } if (f.type === 'numberGame') {
                     return (<NumberGame max={f.max} min={f.min} title={f.title} />);
+                } if (f.type === 'points') {
+                    return (<Points />);
+                } if (f.type === 'platformSelect') {
+                    return (<PlatformSelect />);
                 }
             })}
         </div>

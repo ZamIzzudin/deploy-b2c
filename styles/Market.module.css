@@ -64,6 +64,10 @@
     font-size: 2.5em;
 }
 
+.pagination-container {
+    border: 1px solid salmon;
+}
+
 @media only screen and (max-width: 1000px) {
     .card-container {
         margin: 1vw;

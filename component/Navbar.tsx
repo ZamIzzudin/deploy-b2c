@@ -39,13 +39,14 @@ function TabBar() {
         console.log(userData);
     };
 
-    const getDataLogin = (data: any, token: any) => {
+    const getDataLogin = (data: any, token: any, roles: any) => {
         if (data !== undefined) {
             const store = {
                 user: {
                     displayName: data.displayName, email: data.email, isLogin: data.emailVerified, photoURL: data.photoURL,
                 },
                 token,
+                roles,
             };
 
             const expiryDate = new Date();

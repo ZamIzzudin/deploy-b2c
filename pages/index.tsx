@@ -61,18 +61,10 @@ function Home(props) {
           <h1 className={`${styles['content-title']}  text-end mt-5`}>Supported Game</h1>
           <h2 className={`${styles['content-subtitle']} text-end`}>What we can handle</h2>
         </Row>
-        <Row ref={Row2} className="my-5 px-4">
+        <Row ref={Row2} className="my-5 px-2">
           {games.map((game) => (
-            <GameCard name={game.name} thumbnail="/apex.png" key={game.id} />
+            <GameCard data={game} key={game.id} />
           ))}
-          {/* <GameCard name="Apex Legend" thumbnail="/apex.png" />
-          <GameCard name="Valorant" thumbnail="/valo.png" />
-          <GameCard name="New World" thumbnail="/newworld.png" />
-          <GameCard name="Dota" thumbnail="/Dota.png" />
-          <GameCard name="Black Desert" thumbnail="/Blackdesert.png" />
-          <GameCard name="CS:GO" thumbnail="/csgo.png" />
-          <GameCard name="Genshin Impact" thumbnail="/Genshin.png" />
-          <GameCard name="COD Cold War" thumbnail="/coldwar.png" /> */}
         </Row>
         <Row ref={Row3}>
           <FeaturedBenefit />

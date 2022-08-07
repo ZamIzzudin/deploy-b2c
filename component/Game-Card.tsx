@@ -12,32 +12,32 @@ import styles from './styles/GameCard.module.css';
 
 function GameCard(props: any) {
     const {
-        name, thumbnail, mini, remove,
+        data, mini, remove,
     } = props;
 
     return (
         <>
             {mini === true ? (
-                <Col className="col-md-3 col-4 min-w-155px centered relative-pos" onClick={() => { props.getData(name); }}>
+                <Col className="col-md-3 col-4 min-w-155px centered relative-pos" onClick={() => { props.getData(data.name); }}>
                     <Row className={`${styles['card-game-mini']} ${remove ? ('') : ('card-hovering')} card`}>
                         <Col className={`${styles['thumb-container']} col-md-12`}>
-                            <Image src={`${thumbnail}`} width="145%" height="130%" />
+                            <Image src={`${data.logo_url}`} width="145%" height="130%" />
                         </Col>
                         <Col className={`${styles['text-container']} col-md-12`}>
-                            <h3 className={`${styles['card-name']} text-center`}>{name}</h3>
+                            <h3 className={`${styles['card-name']} text-center`}>{data.name}</h3>
                         </Col>
                     </Row>
                     {remove && (
-                        <button onClick={() => props.removeFunc(name)} className={styles['remove-toogle']}>X</button>
+                        <button onClick={() => props.removeFunc(data.id)} className={styles['remove-toogle']}>X</button>
                     )}
                 </Col>
             ) : (
-                <Col className="col-md-2 col-4 centered " onClick={() => { props.getData(name); }}>
-                    <div className={`${styles['card-game']} card-hovering card`}>
-                        <div>
-                            <Image src={`${thumbnail}`} width="145%" height="130%" />
+                <Col className="col-md-2 col-4 centered " onClick={() => { props.getData(data.name); }}>
+                    <div className={`${styles['card-game']} card-hovering`}>
+                        <div className="px-3">
+                            <Image src={`${data.logo_url}`} width="145%" height="130%" />
                         </div>
-                        <h3 className={`${styles['card-name']} text-center mt-4`}>{name}</h3>
+                        <h3 className={`${styles['card-name']} text-center mt-4`}>{data.name}</h3>
                     </div>
                 </Col>
             )}

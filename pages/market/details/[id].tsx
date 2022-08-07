@@ -19,7 +19,7 @@ function AccountDetails(props) {
     const skins = Details.skin_list.split(' ');
 
     const transaction = {
-        id_account: Details.id,
+        id_account: Details.account_id,
         id_user: '123B',
         total_price: Details.price,
         service: 'Market',
@@ -44,7 +44,7 @@ function AccountDetails(props) {
                         {' '}
                         <span className={styles['id-account']}>
                             #
-                            {Details.id}
+                            {Details.account_id}
                         </span>
                     </h1>
                     <p className={styles['account-desc']}>{Details.description}</p>
@@ -140,10 +140,10 @@ function AccountDetails(props) {
 export default AccountDetails;
 
 export async function getStaticPaths() {
-    const Accounts = await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/accounts').then((res) => res.data.data).catch((res) => console.log(res));
+    const Accounts = await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/accounts').then((res) => res.data.accounts.data).catch((res) => console.log(res));
 
     const paths = Accounts.map((account) => ({
-        params: { id: account.href.link.slice(71) },
+        params: { id: account.id.toString() },
     }));
 
     return {

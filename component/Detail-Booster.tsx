@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable max-len */
 /* eslint-disable no-shadow */
 /* eslint-disable no-console */
 /* eslint-disable no-self-assign */
@@ -9,55 +11,41 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/button-has-type */
 import { Row, Col, Form } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import GameCard from './Game-Card';
 import DetailModal from './Detail-Modal';
 import styles from './styles/DetailPage.module.css';
 
 function DetailBooster(props: any) {
-    const { role } = props;
+    const { role, token } = props;
+
     const [modal, showModal] = useState(false);
     const [modal2, showModal2] = useState(false);
     const [modal3, showModal3] = useState(false);
     const [removingGame, setRemovingGame] = useState(false);
     const [removingService, setRemovingService] = useState(false);
 
-    const [game, setGame] = useState('');
+    const [games, setGames] = useState([
+        {
+            name: null,
+            logo_url: '/valo.png',
+            id: null,
+        },
+    ]);
+    const [selectedGame, setSelectedGame] = useState('');
     const [service, setService] = useState<any>([]);
 
     const [newGameName, setNewGameName] = useState('');
     const [newGameLogo, setNewGameLogo] = useState('');
     const [newServiceName, setNewServiceName] = useState('');
 
-    function getGame(game: any) {
-        const select = game.replace(
-            /[^a-zA-Z0-9,\-.?! ]/g,
-            '',
-        ).replace(/\s/g, '');
-        getService(select);
-    }
+    useEffect(() => {
+        getGames();
+    }, []);
 
-    function newGame() {
-        const data = {
-            name: newGameName,
-            logo_img: newGameLogo,
-        };
-
-        console.log(data);
-        showModal(false);
-    }
-
-    function newService() {
-        console.log(newServiceName);
-        showModal2(false);
-    }
-
-    function deleteGame(game) {
-        console.log(game);
-    }
-
-    function deleteService(service, game) {
-        console.log(`${service} : ${game}`);
+    async function getGames() {
+        await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/games').then((res) => setGames(res.data.data)).catch((res) => console.log(res));
     }
 
     function getService(Game: any) {
@@ -88,7 +76,56 @@ function DetailBooster(props: any) {
             setService(CODColdWar);
         }
 
-        setGame(Game);
+        setSelectedGame(Game);
+    }
+
+    function getSelectedGame(game: any) {
+        const select = game.replace(
+            /[^a-zA-Z0-9,\-.?! ]/g,
+            '',
+        ).replace(/\s/g, '');
+        getService(select);
+    }
+
+    async function newGame() {
+        const data = {
+            name: newGameName,
+            logo_img: newGameLogo,
+        };
+
+        const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/games';
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        };
+
+        await axios.post(url, data, config).then((res) => getGames()).catch((res) => console.log(res));
+
+        showModal(false);
+    }
+
+    function newService() {
+        console.log(newServiceName);
+        showModal2(false);
+    }
+
+    async function deleteGame(id) {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        };
+        const url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/games/${id}`;
+        await axios.delete(url, config).then((res) => getGames()).catch((err) => console.log(err));
+    }
+
+    function deleteService(service, game) {
+        console.log(`${service} : ${game}`);
     }
 
     return (
@@ -197,14 +234,9 @@ function DetailBooster(props: any) {
                         </Col>
                     </Row>
                     <Row className="centered mt-4">
-                        <GameCard name="Apex Legend" thumbnail="/apex.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
-                        <GameCard name="Valorant" thumbnail="/valo.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
-                        <GameCard name="Dota" thumbnail="/Dota.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
-                        <GameCard name="New World" thumbnail="/newworld.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
-                        <GameCard name="Black Desert" thumbnail="/Blackdesert.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
-                        <GameCard name="CS:GO" thumbnail="/csgo.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
-                        <GameCard name="Genshin Impact" thumbnail="/Genshin.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
-                        <GameCard name="COD Cold War" thumbnail="/coldwar.png" getData={getGame} mini remove={removingGame} removeFunc={deleteGame} />
+                        {games.map((game) => (
+                            <GameCard data={game} key={game.id} getData={getSelectedGame} mini remove={removingGame} removeFunc={deleteGame} />
+                        ))}
                     </Row>
                     <Row className="my-4 fullwidth">
                         <Col className="flex-horizon-centered-right">
@@ -224,7 +256,7 @@ function DetailBooster(props: any) {
                                     <div>
                                         <span className={styles['service-name']}>{i.name}</span>
                                     </div>
-                                    {removingService && (<button onClick={() => deleteService(i.name, game)} className={styles['remove-toogle']}>X</button>)}
+                                    {removingService && (<button onClick={() => deleteService(i.name, selectedGame)} className={styles['remove-toogle']}>X</button>)}
                                 </Col>
                             ))}
                         </Row>

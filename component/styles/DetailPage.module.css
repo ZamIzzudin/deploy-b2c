@@ -84,6 +84,17 @@
 }
 
 
+/* Other */
+.server-manage-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.server-manage-list {
+    padding: 10px;
+    border-radius: 8px;
+    background-color: var(--insideCard)
+}
 
 @media only screen and (max-width: 800px) {
     .card-container {

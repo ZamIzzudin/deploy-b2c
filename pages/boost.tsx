@@ -42,7 +42,49 @@ function Order(props) {
     }
 
     function getService(Game: any) {
-        const ApexLegend = [{ name: 'Rank Boosting', type: 'A' }, { name: 'Battlepass Boost', type: 'B' }, { name: 'Level Boost', type: 'C' }];
+        const ApexLegend = [{
+            name: 'Rank Boosting',
+            require: {
+                form: [
+                    {
+                        type: 'points',
+                        game: 'Apex Legend',
+                        title: 'Desire Options',
+                        unit: 'rank',
+                        max: 2000,
+                        min: 1,
+                    },
+                    {
+                        type: 'platformSelect',
+                        game: 'Apex Legend',
+                        title: 'Select Your Platform',
+                        platform: ['PC', 'PSN', 'XBOX', 'MOBILE'],
+                    },
+                ],
+                addons: ['Spesific Character'],
+            },
+        }, { name: 'Battlepass Boost', type: 'B' }, {
+            name: 'Level Boost',
+            require: {
+                form: [
+                    {
+                        type: 'points',
+                        game: 'Apex Legend',
+                        title: 'Desire Options',
+                        unit: 'level',
+                        max: 500,
+                        min: 1,
+                    },
+                    {
+                        type: 'platformSelect',
+                        game: 'Apex Legend',
+                        title: 'Select Your Platform',
+                        platform: ['PC', 'PSN', 'XBOX', 'MOBILE'],
+                    },
+                ],
+                addons: [],
+            },
+        }];
 
         const Valorant = [{
             name: 'Rank Boosting',
@@ -73,8 +115,9 @@ function Order(props) {
                     type: 'numberGame',
                     game: 'Valorant',
                     title: 'Number of Games',
+                    servers: [],
                     max: 5,
-                    min: 0,
+                    min: 1,
                 }],
                 addons: ['Appear Offline on Chat', 'Spesific Agents'],
             },
@@ -83,7 +126,7 @@ function Order(props) {
             require: {
                 form: [
                     { type: 'includeRank', game: 'Valorant', title: 'Current Rank' }, {
-                        type: 'numberGame', game: 'Valorant', title: 'Number of Wins', max: 5, min: 0,
+                        type: 'numberGame', servers: [], game: 'Valorant', title: 'Number of Wins', max: 5, min: 1,
                     },
                 ],
                 addons: ['Appear Offline on Chat', 'Spesific Agents'],
@@ -113,8 +156,9 @@ function Order(props) {
                         type: 'numberGame',
                         game: 'valorant',
                         title: 'Number of Games',
+                        servers: [],
                         max: 5,
-                        min: 0,
+                        min: 1,
                     },
                 ],
                 addons: ['Appear Offline on Chat', 'Net Wins', 'Spesific Agents'],
@@ -127,6 +171,9 @@ function Order(props) {
                         type: 'numberGame',
                         game: 'valorant',
                         title: 'Number of Challenges',
+                        max: 5,
+                        min: 1,
+                        servers: [],
                     },
                 ],
                 addons: ['Appear Offline on Chat', 'Spesific Agents'],
@@ -134,9 +181,96 @@ function Order(props) {
         }];
 
         const NewWorld = [{ name: 'Player Level', type: 'E' }, { name: 'Coins', type: 'F' }, { name: 'Trade Skill', type: 'G' }, { name: 'Gear Score', type: 'H' }, { name: 'Mutated Expeditions', type: 'E' }, { name: 'Weapon Mastery', type: 'I' }, { name: 'Farming Service', type: 'F' }];
-        const Dota = [{ name: 'Placement Matches', type: 'A' }, { name: 'MMR Boost', type: 'B' }, { name: 'Ranked Net Win', type: 'C' }, { name: 'Low Priority', type: 'J' }];
+
+        const Dota = [{ name: 'Placement Matches', type: 'A' }, { name: 'MMR Boost', type: 'B' }, { name: 'Ranked Net Win', type: 'C' }, {
+            name: 'Low Priority',
+            require: {
+                form: [
+                    {
+                        type: 'numberGame',
+                        game: 'valorant',
+                        servers: ['Americas', 'Europe', 'Asia', 'Oceania'],
+                        title: 'Number Of Game',
+                        min: 1,
+                        max: 10,
+                    },
+                ],
+                addons: ['Appear Offline on Chat'],
+            },
+        }];
+
         const BlackDesert = [{ name: 'Hourly Farm', type: 'F' }, { name: 'Questlines', type: 'J' }, { name: 'Energy Point', type: 'F' }, { name: 'Level Boost', type: 'E' }, { name: 'Contribution Points', type: 'F' }, { name: 'Adventure Logs', type: 'G' }];
-        const CSGO = [{ name: 'Macthmaking Rank', type: 'A' }, { name: 'Matchmaking Net Rank', type: 'C' }, { name: 'Wingman Rank', type: 'B' }, { name: 'Dangerzone Rank', type: 'A' }, { name: 'Faceit Level', type: 'D' }];
+
+        const CSGO = [{
+            name: 'Macthmaking Rank',
+            require: {
+                form: [
+                    {
+                        type: 'includeRank',
+                        game: 'CS:GO',
+                        title: 'Current Rank',
+                    },
+                    {
+                        type: 'includeRank',
+                        game: 'CS:GO',
+                        title: 'Desire Rank',
+                    },
+                ],
+                addons: ['Appear Offline on Chat'],
+            },
+        }, {
+            name: 'Matchmaking Net Rank',
+            require: {
+                form: [
+                    {
+                        type: 'includeRank',
+                        game: 'CS:GO',
+                        title: 'Current Rank',
+                    },
+                    {
+                        type: 'numberGame',
+                        game: 'CS:GO',
+                        title: 'Number of Wins',
+                        min: 1,
+                        max: 10,
+                    },
+                ],
+                addons: ['Appear Offline on Chat'],
+            },
+        }, {
+            name: 'Wingman Rank',
+            require: {
+                form: [
+                    {
+                        type: 'includeRank',
+                        game: 'CS:GO',
+                        title: 'Current Rank',
+                    },
+                    {
+                        type: 'includeRank',
+                        game: 'CS:GO',
+                        title: 'Desire Rank',
+                    },
+                ],
+                addons: [],
+            },
+        }, { name: 'Dangerzone Rank', type: 'A' }, {
+            name: 'Faceit Level',
+            require: {
+                form: [
+                    {
+                        type: 'points',
+                        game: 'CS:GO',
+                        title: 'Desire Options',
+                        unit: 'level',
+                        max: 10,
+                        min: 1,
+                    },
+                ],
+                addons: [],
+            },
+        }];
+
         const GenshinImpact = [{ name: 'Daily Mission', type: 'F' }, { name: 'Enhance Weapon', type: 'J' }, { name: 'Adventure Rank', type: 'F' }];
         const CODColdWar = [{ name: 'Camo', type: 'G' }, { name: 'Weapon Level', type: 'J' }, { name: 'Player Level', type: 'F' }];
 
@@ -146,7 +280,7 @@ function Order(props) {
             setService(Valorant);
         } else if (Game === 'NewWorld') {
             setService(NewWorld);
-        } else if (Game === 'Dota') {
+        } else if (Game === 'DOTA2') {
             setService(Dota);
         } else if (Game === 'BlackDesert') {
             setService(BlackDesert);
@@ -181,14 +315,9 @@ function Order(props) {
             <span className="section-subtitle"></span>
             <Row className={`${styles['game-overview']} centered mt-5 mb-3`}>
                 <div className={styles['game-container']}>
-                    <GameCard name="Apex Legend" thumbnail="/apex.png" getData={getGame} mini />
-                    <GameCard name="Valorant" thumbnail="/valo.png" getData={getGame} mini />
-                    <GameCard name="New World" thumbnail="/newworld.png" getData={getGame} mini />
-                    <GameCard name="Dota" thumbnail="/Dota.png" getData={getGame} mini />
-                    <GameCard name="Black Desert" thumbnail="/Blackdesert.png" getData={getGame} mini />
-                    <GameCard name="CS:GO" thumbnail="/csgo.png" getData={getGame} mini />
-                    <GameCard name="Genshin Impact" thumbnail="/Genshin.png" getData={getGame} mini />
-                    <GameCard name="COD Cold War" thumbnail="/coldwar.png" getData={getGame} mini />
+                    {games.map((game) => (
+                        <GameCard data={game} key={game.id} getData={getGame} mini />
+                    ))}
                 </div>
             </Row>
             <Row className={`${styles['service-slider']} centered mb-3`}>

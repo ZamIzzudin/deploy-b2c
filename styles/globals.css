@@ -299,9 +299,25 @@ b {
   justify-content: center;
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
 .space-between {
   justify-content: space-between;
   font-size: 1.05em;
+}
+
+.list-skin {
+  font-size: .85em;
+  font-weight: 400;
+  background-color: var(--insideCard);
+  margin-bottom: 5px;
+  width: fit-content;
 }
 
 .debug-bg {
@@ -485,6 +501,14 @@ thead th:last-child {
   width: 95%;
 }
 
+.active {
+  background-color: var(--primColor) !important;
+}
+
+.active-org {
+  color: var(--yellow) !important;
+}
+
 #jumbo-text {
   width: 856px;
   height: 60px;
@@ -528,7 +552,7 @@ thead th:last-child {
     stroke-linecap: square;
     fill-opacity: 0;
     transition: fill-opacity 0.5s ease-in-out;
-    width: 389px;
+    width: 370px;
     height: 130px;
   }
 

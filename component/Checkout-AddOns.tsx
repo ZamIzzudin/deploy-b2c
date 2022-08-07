@@ -3,7 +3,7 @@ export function DefaultAddOns() {
     return (
         <div className="flex-row">
             <div className="space-between flex-down fullwidth">
-                <span>Priority Booster</span>
+                <span>Play WIth Booster</span>
                 <span>Priority Order</span>
                 <span>Stream Games</span>
             </div>

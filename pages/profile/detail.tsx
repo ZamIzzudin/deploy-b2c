@@ -19,7 +19,6 @@ import {
 import styles from '../../styles/User.module.css';
 
 function Detail(props) {
-    const { tes } = props;
     const [role, setRole] = useState('user');
     const [component, setComponent] = useState('order');
 
@@ -111,7 +110,7 @@ export default Detail;
 export async function getServerSideProps() {
     return {
         props: {
-            tes: 'ok',
+
         },
     };
 }

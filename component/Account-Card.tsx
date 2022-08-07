@@ -3,11 +3,21 @@
 /* eslint-disable no-unused-vars */
 import { Col, Row } from 'react-bootstrap';
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './styles/AccountCard.module.css';
 
 function AccountCard(props: any) {
     const { data, manage } = props;
+    const [skins, setSkins] = useState([]);
+    const [agents, setAgents] = useState([]);
+
+    useEffect(() => {
+        const skinsArr = data.agent_list.split(' ');
+        const agentsArr = data.skin_list.split(' ');
+        setSkins(skinsArr);
+        setAgents(agentsArr);
+    }, []);
 
     return (
         <Col className={`${styles['account-card']} card`}>
@@ -32,21 +42,21 @@ function AccountCard(props: any) {
                         <span className={styles['desc-text']}>Skins</span>
                     </Col>
                     <Col className={styles['card-left-side']}>
-                        <span className={styles['desc-highlight']}>{data.current_rank}</span>
-                        <span className={styles['desc-text']}>{data.highest_rank}</span>
-                        <span className={styles['desc-text']}>{data.server}</span>
-                        <span className={styles['desc-text']}>{data.agents_count}</span>
-                        <span className={styles['desc-text']}>{data.skins_count}</span>
+                        <span className={styles['desc-highlight']}>{data.current_rank.name}</span>
+                        <span className={styles['desc-text']}>{data.highest_rank.name}</span>
+                        <span className={styles['desc-text']}>{data.server.name}</span>
+                        <span className={styles['desc-text']}>{agents.length}</span>
+                        <span className={styles['desc-text']}>{skins.length}</span>
                     </Col>
                 </Row>
                 <Row className="centered">
                     {manage === true ? (
-                        <div className="centered">
+                        <div className="centered gap-3">
                             <button onClick={() => { props.setModal('delete'); props.getCurrent(data); }} className="button-org-border capsule mt-4 mb-3">Delete</button>
                             <button onClick={() => { props.setModal('edit'); props.getCurrent(data); }} className="button capsule mt-4 mb-3">Edit</button>
                         </div>
                     ) : (
-                        <Link scroll href={`market/details/${data.href.link.slice(71)}`}>
+                        <Link scroll href={`market/details/${data.id}`}>
                             <button className="button capsule mt-4 mb-3">See Details</button>
                         </Link>
                     )}

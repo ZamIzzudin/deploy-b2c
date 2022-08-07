@@ -58,8 +58,19 @@ export function NumberGame({ max, min, title }) {
     );
 }
 
-export function TypeC() {
+export function Points() {
     return (
-        <h1>Form 3</h1>
+        <div className={styles.container}>
+            <h1>Form 3</h1>
+        </div>
+
+    );
+}
+
+export function PlatformSelect() {
+    return (
+        <div className={styles.container}>
+            <h1>Form 4</h1>
+        </div>
     );
 }
