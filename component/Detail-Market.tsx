@@ -72,7 +72,7 @@ function DetailMarket(props: any) {
     const [addMoreAgents, setAddMoreAgents] = useState('');
 
     const [paginationPage, setPaginationPage] = useState(1);
-    const pagination = [];
+    const pagination: any = [];
 
     useEffect(() => {
         getData();
@@ -212,6 +212,7 @@ function DetailMarket(props: any) {
 
         const response = await axios.get(url).then((res) => res.data.accounts).catch((res) => console.log(res));
         setAccounts(response);
+        setPaginationPage(1);
     }
 
     function clearFilter() {
@@ -258,7 +259,7 @@ function DetailMarket(props: any) {
 
     for (let i = 1; i <= accounts.last_page; i++) {
         pagination.push(
-            <Pagination.Item key={i} active={i === paginationPage} onClick={() => handlePagination(i)}>
+            <Pagination.Item className="pagination-items mx-1" key={i} active={i === paginationPage} onClick={() => handlePagination(i)}>
                 {i}
             </Pagination.Item>,
         );
@@ -343,14 +344,14 @@ function DetailMarket(props: any) {
                         {accounts.last_page && (
                             <Col>
                                 <Pagination className={styles['pagination-container']}>
-                                    {paginationPage !== 1 && (
-                                        <Pagination.Prev onClick={() => handlePagination(paginationPage - 1)} />
+                                    {paginationPage > 1 && (
+                                        <Pagination.Prev className="mx-1" onClick={() => handlePagination(paginationPage - 1)} />
                                     )}
 
                                     {pagination}
 
                                     {paginationPage !== accounts.last_page && (
-                                        <Pagination.Next onClick={() => handlePagination(paginationPage + 1)} />
+                                        <Pagination.Next className="mx-1" onClick={() => handlePagination(paginationPage + 1)} />
                                     )}
                                 </Pagination>
                             </Col>

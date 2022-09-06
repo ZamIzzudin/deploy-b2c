@@ -18,7 +18,7 @@ import {
 } from '../../component';
 import styles from '../../styles/User.module.css';
 
-function Detail(props) {
+function Detail() {
     const [role, setRole] = useState('user');
     const [component, setComponent] = useState('order');
 
@@ -29,7 +29,6 @@ function Detail(props) {
 
     function closeSide(showing) {
         setShowSide(showing);
-        console.log(showSide);
     }
 
     useEffect(() => {
@@ -88,7 +87,7 @@ function Detail(props) {
                             <Row className="full-width centered">
                                 {component === 'profile' && (<DetailProfile role={role} userData={userData} />)}
                                 {component === 'market' && (<DetailMarket role={role} token={token} />)}
-                                {component === 'order' && (<DetailOrder role={role} />)}
+                                {component === 'order' && (<DetailOrder role={role} token={token} />)}
                                 {component === 'invoice' && (<DetailInvoice role={role} />)}
                                 {component === 'other' && (<DetailOther role={role} token={token} />)}
                                 {component === 'boost' && (<DetailBooster role={role} token={token} />)}

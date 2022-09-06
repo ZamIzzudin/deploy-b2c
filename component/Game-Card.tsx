@@ -7,6 +7,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/destructuring-assignment */
 import { Col, Row } from 'react-bootstrap';
+import Link from 'next/link';
 import Image from 'next/image';
 import styles from './styles/GameCard.module.css';
 
@@ -32,13 +33,15 @@ function GameCard(props: any) {
                     )}
                 </Col>
             ) : (
-                <Col className="col-md-2 col-4 centered " onClick={() => { props.getData(data.name); }}>
-                    <div className={`${styles['card-game']} card-hovering`}>
-                        <div className="px-3">
-                            <Image src={`${data.logo_url}`} width="145%" height="130%" />
+                <Col className="col-md-2 col-4 centered">
+                    <Link href="/boost">
+                        <div className={`${styles['card-game']} card-hovering`}>
+                            <div className="px-3">
+                                <Image src={`${data.logo_url}`} width="145%" height="130%" />
+                            </div>
+                            <h3 className={`${styles['card-name']} text-center mt-4`}>{data.name}</h3>
                         </div>
-                        <h3 className={`${styles['card-name']} text-center mt-4`}>{data.name}</h3>
-                    </div>
+                    </Link>
                 </Col>
             )}
         </>

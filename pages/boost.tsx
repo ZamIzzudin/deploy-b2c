@@ -33,6 +33,10 @@ function Order(props) {
         addons: [],
     });
 
+    const [currentRank, setCurrentRank] = useState();
+    const [desireRank, setDesireRank] = useState();
+    const [numberGame, setNumberGame] = useState();
+
     function getGame(game: any) {
         const select = game.replace(
             /[^a-zA-Z0-9,\-.?! ]/g,
@@ -51,8 +55,8 @@ function Order(props) {
                         game: 'Apex Legend',
                         title: 'Desire Options',
                         unit: 'rank',
-                        max: 2000,
-                        min: 1,
+                        start: 1,
+                        to: 2000,
                     },
                     {
                         type: 'platformSelect',
@@ -72,8 +76,8 @@ function Order(props) {
                         game: 'Apex Legend',
                         title: 'Desire Options',
                         unit: 'level',
-                        max: 500,
-                        min: 1,
+                        start: 1,
+                        to: 500,
                     },
                     {
                         type: 'platformSelect',
@@ -274,7 +278,7 @@ function Order(props) {
         const GenshinImpact = [{ name: 'Daily Mission', type: 'F' }, { name: 'Enhance Weapon', type: 'J' }, { name: 'Adventure Rank', type: 'F' }];
         const CODColdWar = [{ name: 'Camo', type: 'G' }, { name: 'Weapon Level', type: 'J' }, { name: 'Player Level', type: 'F' }];
 
-        if (Game === 'ApexLegend') {
+        if (Game === 'ApexLegends') {
             setService(ApexLegend);
         } else if (Game === 'Valorant') {
             setService(Valorant);
@@ -297,6 +301,26 @@ function Order(props) {
         setFormType(type);
     }
 
+    function getDataForm(data) {
+        if (data.CurrentRank !== undefined) {
+            setCurrentRank(data.CurrentRank);
+        } else {
+            setCurrentRank(undefined);
+        }
+
+        if (data.DesireRank !== undefined) {
+            setDesireRank(data.DesireRank);
+        } else {
+            setDesireRank(undefined);
+        }
+
+        if (data.NumberofGames !== undefined) {
+            setNumberGame(data.NumberofGames);
+        } else {
+            setNumberGame(undefined);
+        }
+    }
+
     const [w, setW] = useState(1);
 
     useEffect(() => {
@@ -312,6 +336,7 @@ function Order(props) {
     return (
         <Container className="my-5 py-5 centered-down">
             <h1 className="section-title mt-5 text-center">Boost</h1>
+            <span className="section-subtitle">What we can help you</span>
             <span className="section-subtitle"></span>
             <Row className={`${styles['game-overview']} centered mt-5 mb-3`}>
                 <div className={styles['game-container']}>
@@ -331,10 +356,10 @@ function Order(props) {
             </Row>
             <Row className="mt-3 flex-horizon-centered-start gap-3 px-3 fullwidth">
                 <Col className="col-md-7 col-12 mx-3">
-                    <FormBoost form={formType?.form} />
+                    <FormBoost form={formType?.form} getData={getDataForm} />
                 </Col>
                 <Col className="col-md-4 col-12 mr-3 flex-horizon-centered-start">
-                    <Checkout form={formType?.addons} />
+                    <Checkout form={formType?.addons} numberGame={numberGame} currentRank={currentRank} desireRank={desireRank} />
                 </Col>
             </Row>
         </Container>

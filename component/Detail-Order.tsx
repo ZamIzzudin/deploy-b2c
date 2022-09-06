@@ -1,17 +1,44 @@
+/* eslint-disable max-len */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react/button-has-type */
-import { Table, Row, Col } from 'react-bootstrap';
-import { useState } from 'react';
+import {
+    Table, Row, Col, Form,
+} from 'react-bootstrap';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 import DetailModal from './Detail-Modal';
 // import styles from './styles/DetailPage.module.css';
 
 function DetailOrder(props: any) {
-    const { role } = props;
+    const { role, token } = props;
     const [modal, showModal] = useState(false);
     const [modal2, showModal2] = useState(false);
     const [modal3, showModal3] = useState(false);
     const [modal4, showModal4] = useState(false);
+
+    const [typeOrder, setTypeOrder] = useState('boost');
+    const [order, setOrder] = useState([]);
+
+    // async function getTypeByOrder() {
+    //     const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/account/checkout';
+
+    //     const config = {
+    //         headers: {
+    //             Authorization: `Bearer ${token}`,
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json',
+    //         },
+    //     };
+
+    //     await axios.get(url, config).then((res) => setOrder(res.data.data)).catch((err) => console.log(err));
+    // }
+
+    // useEffect(() => {
+    //     getTypeByOrder();
+    // }, [typeOrder]);
 
     return (
         <div className="mt-4">
@@ -99,8 +126,14 @@ function DetailOrder(props: any) {
             {role === 'admin' && (
                 <div>
                     <Row className="mb-4">
-                        <Col>
-                            filter
+                        <Col className="center-start">
+                            <Form.Group className="mx-3 width150px">
+                                <Form.Label>Order Type</Form.Label>
+                                <Form.Select className="form-layout" onChange={(e) => setTypeOrder(e.target.value)}>
+                                    <option value="boost">Boost</option>
+                                    <option value="account">Account</option>
+                                </Form.Select>
+                            </Form.Group>
                         </Col>
                     </Row>
                     <Table>

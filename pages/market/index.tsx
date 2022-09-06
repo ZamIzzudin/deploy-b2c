@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable react/button-has-type */
@@ -37,7 +38,7 @@ function Market(props) {
     const [maxPrice, setMax] = useState(1000);
 
     const [paginationPage, setPaginationPage] = useState(1);
-    const pagination = [];
+    const pagination: any = [];
 
     function getMaxValue(value: any) {
         setMax(value);
@@ -78,12 +79,14 @@ function Market(props) {
         setPaginationPage(page);
     }
 
-    for (let i = 1; i <= accounts?.last_page; i++) {
-        pagination?.push(
-            <Pagination.Item key={i} active={i === paginationPage} onClick={() => handlePagination(i)}>
-                {i}
-            </Pagination.Item>,
-        );
+    if (accounts.last_page > 0) {
+        for (let i = 1; i <= accounts.last_page; i++) {
+            pagination.push(
+                <Pagination.Item className="pagination-items mx-1" key={i} active={i === paginationPage} onClick={() => handlePagination(i)}>
+                    {i}
+                </Pagination.Item>,
+            );
+        }
     }
 
     return (
@@ -160,13 +163,13 @@ function Market(props) {
                     <Col>
                         <Pagination className={styles['pagination-container']}>
                             {paginationPage !== 1 && (
-                                <Pagination.Prev onClick={() => handlePagination(paginationPage - 1)} />
+                                <Pagination.Prev className="mx-1" onClick={() => handlePagination(paginationPage - 1)} />
                             )}
 
                             {pagination}
 
                             {paginationPage !== accounts.last_page && (
-                                <Pagination.Next onClick={() => handlePagination(paginationPage + 1)} />
+                                <Pagination.Next className="mx-1" onClick={() => handlePagination(paginationPage + 1)} />
                             )}
                         </Pagination>
                     </Col>

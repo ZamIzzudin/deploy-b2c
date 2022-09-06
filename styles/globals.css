@@ -449,6 +449,29 @@ b {
   width: 90%;
 }
 
+.width150px {
+  min-width: 150px !important;
+}
+
+.pagination-items a {
+  background-color: var(--card);
+  color: white;
+}
+
+.page-link:hover {
+  background-color: var(--yellow50);
+  color: white;
+}
+
+.page-item.active .page-link {
+  background-color: var(--yellow) !important;
+}
+
+.page-link {
+  background-color: var(--card) !important;
+  border: none;
+}
+
 .table {
   border-radius: 15px !important;
   background-color: var(--card) !important;
@@ -490,6 +513,11 @@ thead th:last-child {
 
 .z-upper {
   z-index: 100;
+}
+
+.w-50 {
+  width: 50%;
+  height: 100%;
 }
 
 .w-90 {

@@ -19,6 +19,11 @@ function AccountCard(props: any) {
         setAgents(agentsArr);
     }, []);
 
+    function seeDetails() {
+        localStorage.clear();
+        localStorage.setItem('account', JSON.stringify(data));
+    }
+
     return (
         <Col className={`${styles['account-card']} card`}>
             <div>
@@ -56,8 +61,8 @@ function AccountCard(props: any) {
                             <button onClick={() => { props.setModal('edit'); props.getCurrent(data); }} className="button capsule mt-4 mb-3">Edit</button>
                         </div>
                     ) : (
-                        <Link scroll href={`market/details/${data.id}`}>
-                            <button className="button capsule mt-4 mb-3">See Details</button>
+                        <Link href="/market/details" className="centered">
+                            <button onClick={() => seeDetails()} className="button capsule mt-4 mb-3">See Details</button>
                         </Link>
                     )}
                 </Row>

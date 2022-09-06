@@ -12,18 +12,12 @@
     margin-bottom: 20px;
 }
 
-.rank-division-container {
-    display: grid;
-    grid-template-areas: "rank division";
-    grid-template-columns: 2fr 1fr;
-}
-
 .rank-container {
     display: flex;
-    grid-area: rank;
     justify-content: space-around;
     align-items: center;
     flex-wrap: wrap;
+    gap: 4px;
     padding: 15px 0 5px 0;
 }
 
@@ -53,4 +47,30 @@
 .number-order {
     font-size: 4em;
     margin-right: 20px;
+}
+
+.point-range-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.point-button {
+    background-color: var(--insideCard);
+    border: none;
+    border-radius: 5px;
+    width: 35px;
+    height: 35px;
+    margin: 0 10px;
+}
+
+.platform-button {
+    background-color: var(--insideCard);
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-right: 20px;
+    transition: .4s;
+}
+
+.platform-button:hover {
+    background-color: var(--primColor);
 }

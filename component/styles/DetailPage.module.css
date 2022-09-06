@@ -91,9 +91,41 @@
 }
 
 .server-manage-list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 10px;
     border-radius: 8px;
     background-color: var(--insideCard)
+}
+
+.delete-button {
+    background-color: transparent;
+    border: none;
+    color: var(--yellow);
+    padding: 3px 10px;
+    border-radius: 15px;
+    transition: .3s;
+    font-weight: 700;
+}
+
+.update-button {
+    background-color: transparent;
+    border: none;
+    color: var(--primColor);
+    padding: 3px 10px;
+    border-radius: 15px;
+    transition: .3s;
+}
+
+.delete-button:hover {
+    background-color: var(--yellow);
+    color: white;
+}
+
+.update-button:hover {
+    background-color: var(--primColor);
+    color: white;
 }
 
 @media only screen and (max-width: 800px) {

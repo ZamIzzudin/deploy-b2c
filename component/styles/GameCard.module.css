@@ -62,9 +62,8 @@
     width: 200px;
     height: 150px;
     z-index: 10;
-    opacity: .2;
+    opacity: .12;
     transform: rotate(15deg);
-    border: 1px solid white;
     background-color: var(--bg);
 }
 
