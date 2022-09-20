@@ -6,14 +6,20 @@
 /* eslint-disable import/no-unresolved */
 import { Row, Col } from 'react-bootstrap';
 import axios from 'axios';
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Jumbotron, GameCard, FeaturedBenefit, Testimonial, FAQ, Step,
 } from '../component';
 import styles from '../styles/Home.module.css';
 
-function Home(props) {
-  const { games } = props;
+function Home() {
+  const [games, setGames] = useState([
+    {
+      name: null,
+      logo_url: '/valo.png',
+      id: null,
+    },
+  ]);
 
   const Row1 = useRef(null);
   const Row2 = useRef(null);
@@ -22,6 +28,10 @@ function Home(props) {
   const Row5 = useRef(null);
   const Row6 = useRef(null);
   const Row7 = useRef(null);
+
+  async function getGames() {
+    await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/games').then((res) => setGames(res.data.data)).catch((res) => console.log(res));
+  }
 
   useEffect(() => {
     async function animate() {
@@ -51,6 +61,7 @@ function Home(props) {
       }
     }
     animate();
+    getGames();
   }, []);
 
   return (
@@ -95,13 +106,3 @@ function Home(props) {
 }
 
 export default Home;
-
-export async function getStaticProps() {
-  const games = await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/games').then((res) => res.data.data).catch((res) => console.log(res));
-
-  return {
-    props: {
-      games,
-    },
-  };
-}

@@ -58,8 +58,8 @@ function AccountDetails() {
                         {Details.server.name}
                         {' '}
                         <span className={styles['id-account']}>
-                            #
-                            {Details.id}
+                            /
+                            Server
                         </span>
                     </h1>
                     <p className={styles['account-desc']}>{Details.description}</p>
@@ -137,7 +137,7 @@ function AccountDetails() {
                                     <span className={styles['stats-card-subtitle']}>{Details.current_rank.name}</span>
                                 </Col>
                                 <Col className="col-4">
-                                    <Image src="/gold_valo.png" width="100%" height="100%" />
+                                    <Image src={Details.current_rank.badge} width="100%" height="100%" />
                                 </Col>
                             </Row>
                             <Row className={styles['stats-card']}>
@@ -146,7 +146,7 @@ function AccountDetails() {
                                     <span className={styles['stats-card-subtitle']}>{Details.highest_rank.name}</span>
                                 </Col>
                                 <Col className="col-4">
-                                    <Image src="/diamond_valo.webp" width="100%" height="100%" />
+                                    <Image src={Details.highest_rank.badge} width="100%" height="100%" />
                                 </Col>
                             </Row>
                         </div>

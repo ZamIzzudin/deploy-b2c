@@ -96,7 +96,7 @@ function TabBar() {
     return (
         <nav className={styles.navbar}>
             <div className={styles['navbar-logo']}>
-                <Image src="/logo.png" width="170" height="60" />
+                <Image src="/logo.png" width="120" height="45" />
             </div>
             <div className={`${styles['navbar-collapse']} ${sideBar && (styles['show-side-bar'])}`}>
                 <div className={styles['close-toogle']} onClick={() => setSideBar(false)}>
@@ -106,7 +106,6 @@ function TabBar() {
                     <Link href="/" scroll>Home</Link>
                     <Link href="/boost" scroll>Boost</Link>
                     <Link href="/market" scroll>Market</Link>
-                    <Link href="/support" scroll>Support</Link>
                 </div>
                 <div onClick={() => setSideBar(false)}>
                     {userData ? (

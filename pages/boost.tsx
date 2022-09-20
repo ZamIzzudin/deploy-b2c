@@ -14,8 +14,15 @@ import axios from 'axios';
 import { GameCard, FormBoost, Checkout } from '../component';
 import styles from '../styles/Boost.module.css';
 
-function Order(props) {
-    const { games } = props;
+function Order() {
+    const [games, setGames] = useState([
+        {
+            name: null,
+            logo_url: '/valo.png',
+            id: null,
+        },
+    ]);
+
     const [service, setService] = useState<any>([]);
     const [formType, setFormType] = useState<any>({
         form: [
@@ -33,9 +40,11 @@ function Order(props) {
         addons: [],
     });
 
-    const [currentRank, setCurrentRank] = useState();
-    const [desireRank, setDesireRank] = useState();
-    const [numberGame, setNumberGame] = useState();
+    const [orderForm, setOrderForm] = useState<any>([]);
+
+    async function getGames() {
+        await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/games').then((res) => setGames(res.data.data)).catch((res) => console.log(res));
+    }
 
     function getGame(game: any) {
         const select = game.replace(
@@ -65,7 +74,6 @@ function Order(props) {
                         platform: ['PC', 'PSN', 'XBOX', 'MOBILE'],
                     },
                 ],
-                addons: ['Spesific Character'],
             },
         }, { name: 'Battlepass Boost', type: 'B' }, {
             name: 'Level Boost',
@@ -86,7 +94,6 @@ function Order(props) {
                         platform: ['PC', 'PSN', 'XBOX', 'MOBILE'],
                     },
                 ],
-                addons: [],
             },
         }];
 
@@ -105,7 +112,6 @@ function Order(props) {
                         title: 'Desire Rank',
                     },
                 ],
-                addons: ['Appear Offline on Chat', 'Spesific Agents'],
             },
         }, {
             name: 'Placement',
@@ -123,7 +129,6 @@ function Order(props) {
                     max: 5,
                     min: 1,
                 }],
-                addons: ['Appear Offline on Chat', 'Spesific Agents'],
             },
         }, {
             name: 'Competitive Net Wins',
@@ -133,7 +138,6 @@ function Order(props) {
                         type: 'numberGame', servers: [], game: 'Valorant', title: 'Number of Wins', max: 5, min: 1,
                     },
                 ],
-                addons: ['Appear Offline on Chat', 'Spesific Agents'],
             },
         }, {
             name: 'Derank',
@@ -150,7 +154,6 @@ function Order(props) {
                         title: 'Desire Rank',
                     },
                 ],
-                addons: ['Appear Offline on Chat', 'Spesific Agents'],
             },
         }, {
             name: 'Unrated Wins',
@@ -165,7 +168,6 @@ function Order(props) {
                         min: 1,
                     },
                 ],
-                addons: ['Appear Offline on Chat', 'Net Wins', 'Spesific Agents'],
             },
         }, {
             name: 'Challenges',
@@ -180,7 +182,6 @@ function Order(props) {
                         servers: [],
                     },
                 ],
-                addons: ['Appear Offline on Chat', 'Spesific Agents'],
             },
         }];
 
@@ -220,7 +221,6 @@ function Order(props) {
                         title: 'Desire Rank',
                     },
                 ],
-                addons: ['Appear Offline on Chat'],
             },
         }, {
             name: 'Matchmaking Net Rank',
@@ -239,7 +239,6 @@ function Order(props) {
                         max: 10,
                     },
                 ],
-                addons: ['Appear Offline on Chat'],
             },
         }, {
             name: 'Wingman Rank',
@@ -256,7 +255,6 @@ function Order(props) {
                         title: 'Desire Rank',
                     },
                 ],
-                addons: [],
             },
         }, { name: 'Dangerzone Rank', type: 'A' }, {
             name: 'Faceit Level',
@@ -271,7 +269,6 @@ function Order(props) {
                         min: 1,
                     },
                 ],
-                addons: [],
             },
         }];
 
@@ -302,23 +299,7 @@ function Order(props) {
     }
 
     function getDataForm(data) {
-        if (data.CurrentRank !== undefined) {
-            setCurrentRank(data.CurrentRank);
-        } else {
-            setCurrentRank(undefined);
-        }
-
-        if (data.DesireRank !== undefined) {
-            setDesireRank(data.DesireRank);
-        } else {
-            setDesireRank(undefined);
-        }
-
-        if (data.NumberofGames !== undefined) {
-            setNumberGame(data.NumberofGames);
-        } else {
-            setNumberGame(undefined);
-        }
+        setOrderForm(data);
     }
 
     const [w, setW] = useState(1);
@@ -331,6 +312,7 @@ function Order(props) {
         } else {
             setW(4);
         }
+        getGames();
     }, [w]);
 
     return (
@@ -338,6 +320,7 @@ function Order(props) {
             <h1 className="section-title mt-5 text-center">Boost</h1>
             <span className="section-subtitle">What we can help you</span>
             <span className="section-subtitle"></span>
+            {/* Game Filter */}
             <Row className={`${styles['game-overview']} centered mt-5 mb-3`}>
                 <div className={styles['game-container']}>
                     {games.map((game) => (
@@ -345,6 +328,7 @@ function Order(props) {
                     ))}
                 </div>
             </Row>
+            {/* Service Filter */}
             <Row className={`${styles['service-slider']} centered mb-3`}>
                 <div className={styles['service-slider-container']}>
                     {service.map((i: any) => (
@@ -354,12 +338,15 @@ function Order(props) {
                     ))}
                 </div>
             </Row>
+            {/* Form */}
             <Row className="mt-3 flex-horizon-centered-start gap-3 px-3 fullwidth">
+                {/* Isi Form */}
                 <Col className="col-md-7 col-12 mx-3">
                     <FormBoost form={formType?.form} getData={getDataForm} />
                 </Col>
+                {/* View Form */}
                 <Col className="col-md-4 col-12 mr-3 flex-horizon-centered-start">
-                    <Checkout form={formType?.addons} numberGame={numberGame} currentRank={currentRank} desireRank={desireRank} />
+                    <Checkout form={formType?.addons} orderForm={orderForm} />
                 </Col>
             </Row>
         </Container>
@@ -367,13 +354,3 @@ function Order(props) {
 }
 
 export default Order;
-
-export async function getStaticProps() {
-    const games = await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/games').then((res) => res.data.data).catch((res) => console.log(res));
-
-    return {
-        props: {
-            games,
-        },
-    };
-}

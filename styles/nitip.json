@@ -1,0 +1,38 @@
+[
+    {
+        "name": "Rank Boosting",
+        "require": {
+            "order-options": {
+                {
+                    "type": "includeRank",
+                    "rank": [],
+                    "title": "Current Rank"
+                },
+                {
+                    "type": "GameNumber",
+                    "maxGameOrder": 5,
+                    "minGameOrder": 1,
+                    "title": "Number Of Games"
+                }
+            }
+        }
+    },
+    {
+        "name": "Placement",
+        "require": {
+            "order-options": {
+                {
+                    "type": "includeRank",
+                    "rank": [],
+                    "title": "Current Rank"
+                },
+                {
+                    "type": "GameNumber",
+                    "maxGameOrder": 5,
+                    "minGameOrder": 1,
+                    "title": "Number Of Games"
+                }
+            }
+        }
+    }
+]

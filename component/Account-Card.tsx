@@ -28,30 +28,36 @@ function AccountCard(props: any) {
         <Col className={`${styles['account-card']} card`}>
             <div>
                 <Row className="centered">
-                    <Col>
+                    <Col className={`${styles['top-card-account']} flex-down col-md-7`}>
                         <h3 className={styles['price-text']}>
                             $
                             {data.price}
                         </h3>
+                        <div>
+                            <span>
+                                {data.current_rank.name}
+                            </span>
+                            <span className={styles['server-text']}>
+                                {' / '}
+                                {data.server.name}
+                            </span>
+                        </div>
+
                     </Col>
                     <Col className="flex-right">
-                        <Image src="/gold_valo.png" width="90%" height="100%" />
+                        <Image src={data.current_rank.badge} width="100%" height="100%" />
                     </Col>
                 </Row>
-                <Row className="centered my-4">
+                <Row className="centered mt-4 mb-2">
                     <Col className={styles['card-right-side']}>
-                        <span className={styles['desc-highlight']}>Current Rank</span>
                         <span className={styles['desc-text']}>Highest Rank</span>
-                        <span className={styles['desc-text']}>Server Region</span>
-                        <span className={styles['desc-text']}>Agent</span>
                         <span className={styles['desc-text']}>Skins</span>
+                        <span className={styles['desc-text']}>Agent</span>
                     </Col>
                     <Col className={styles['card-left-side']}>
-                        <span className={styles['desc-highlight']}>{data.current_rank.name}</span>
                         <span className={styles['desc-text']}>{data.highest_rank.name}</span>
-                        <span className={styles['desc-text']}>{data.server.name}</span>
-                        <span className={styles['desc-text']}>{agents.length}</span>
                         <span className={styles['desc-text']}>{skins.length}</span>
+                        <span className={styles['desc-text']}>{agents.length}</span>
                     </Col>
                 </Row>
                 <Row className="centered">

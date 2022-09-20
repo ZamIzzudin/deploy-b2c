@@ -21,53 +21,77 @@ import {
     Container, Row, Col, Form, Pagination,
 } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import axios from 'axios';
 import { AccountCard } from '../../component';
 import styles from '../../styles/Market.module.css';
 
-function Market(props) {
-    const { Accounts, Servers, Ranks } = props;
+function Market() {
+    const [accounts, setAccounts] = useState({ last_page: 0, data: [] });
+    const [Ranks, setRanks] = useState([{ name: '', id: 0, badge: 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/storage/images/rank-badges/valorant/unranked.png' }]);
+    const [Servers, setServers] = useState([{ id: 0, server_name: '' }]);
 
-    const [accounts, setAccounts] = useState(Accounts);
-
-    const [filterRank, setFilterRank] = useState(0);
-    const [filterServer, setFilterServer] = useState<any>(0);
+    const [filterRank, setFilterRank] = useState('99');
+    const [filterServer, setFilterServer] = useState<any>('99');
     const [filterSort, setFilterSort] = useState('asc');
-    const [minPrice, setMin] = useState(0);
-    const [maxPrice, setMax] = useState(1000);
+    // const [minPrice, setMin] = useState(0);
+    // const [maxPrice, setMax] = useState(1000);
 
     const [paginationPage, setPaginationPage] = useState(1);
     const pagination: any = [];
 
-    function getMaxValue(value: any) {
-        setMax(value);
+    async function getAccount() {
+        const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/accounts';
+
+        await axios.get(url).then((res) => setAccounts(res.data.accounts)).catch((err) => console.log(err));
     }
 
-    function getMinValue(value: any) {
-        setMin(value);
+    async function getRank() {
+        const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/ranks';
+
+        await axios.get(url).then((res) => setRanks(res.data.ranks.data)).catch((err) => console.log(err));
     }
+
+    async function getServer() {
+        const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/servers';
+
+        await axios.get(url).then((res) => setServers(res.data.data)).catch((err) => console.log(err));
+    }
+
+    // function getMaxValue(value: any) {
+    //     setMax(value);
+    // }
+
+    // function getMinValue(value: any) {
+    //     setMin(value);
+    // }
 
     async function getAccountbyFilter() {
         let url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/accounts/?sortOrder=${filterSort}`;
 
-        if (filterRank !== 0) {
-            url += `&rank=${filterRank}`;
-        }
-        if (filterServer !== 0) {
-            url += `&server_region=${filterServer}`;
-        }
+        console.log(filterRank);
+        if (filterRank === '99' || filterServer === '99') {
+            getAccount();
+            setFilterRank('0');
+            setFilterServer('0');
+        } else {
+            if (filterRank !== '99') {
+                url += `&rank=${filterRank}`;
+            }
+            if (filterServer !== '99') {
+                url += `&server_region=${filterServer}`;
+            }
 
-        const response = await axios.get(url).then((res) => res.data.accounts).catch((res) => console.log(res));
-        setAccounts(response);
-        setPaginationPage(1);
+            const response = await axios.get(url).then((res) => res.data.accounts).catch((res) => console.log(res));
+            setAccounts(response);
+            setPaginationPage(1);
+        }
     }
 
     function clearFilter() {
-        setFilterRank(0);
-        setFilterServer(0);
-        setMin(0);
-        setMax(1000);
+        setFilterRank('99');
+        setFilterServer('99');
+        // setMin(0);
+        // setMax(1000);
         setFilterSort('asc');
     }
 
@@ -89,24 +113,47 @@ function Market(props) {
         }
     }
 
+    useEffect(() => {
+        getAccount();
+        getServer();
+        getRank();
+    }, []);
+
+    useEffect(() => {
+        getAccountbyFilter();
+    }, [filterRank, filterServer, filterSort]);
+
     return (
         <Container className="mt-5 pt-5 centered-down">
             <h1 className="section-title mt-5 text-center">Market</h1>
             <span className="section-subtitle">You don't have to start from scratch</span>
-            <Row className={`${styles['filter-container']} mt-5 pt-5 px-3`}>
+            <Row className={`${styles['filter-container']} mt-5 py-4 px-2`}>
                 <Form>
                     <Row className="px-3">
-                        <Col className="col-12 col-sm-6 col-md-4">
+                        <Col className="col-12 col-sm-4 px-4 col-md-6">
                             <Form.Group className="mb-3 fullwidth ">
                                 <Form.Label>Server</Form.Label>
-                                <Form.Select className="form-layout" onChange={(e) => setFilterServer(e.target.value)}>
+                                <Form.Select className="form-layout" value={filterServer} onChange={(e) => setFilterServer(e.target.value)}>
+                                    <option value="99">All</option>
                                     {Servers.map((server) => (
                                         <option value={server.id} key={server.id}>{server.server_name}</option>
                                     ))}
                                 </Form.Select>
                             </Form.Group>
                         </Col>
-                        <Col className="col-6 col-sm-3 px-4 col-md-4">
+                        <Col className="col-12 col-sm-4 px-4 col-md-6">
+                            <Form.Group className="mb-3 fullwidth ">
+                                <Form.Label>Rank</Form.Label>
+                                <Form.Select className="form-layout" value={filterRank} onChange={(e) => setFilterRank(e.target.value)}>
+                                    <option value="99">All</option>
+                                    {Ranks.map((rank) => (
+                                        <option value={rank.id} key={rank.id}>{rank.name}</option>
+                                    ))}
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+
+                        {/* <Col className="col-6 col-sm-3 px-4 col-md-6">
                             <Form.Group className="fullwidth">
                                 <Form.Label>Min Price</Form.Label>
                                 <h5>
@@ -117,7 +164,7 @@ function Market(props) {
                                 <Form.Range className="form-range" min="0" max="1000" onChange={(e: any) => { getMinValue(e.target.value); }} value={minPrice} />
                             </Form.Group>
                         </Col>
-                        <Col className="col-6 col-sm-3 px-4 col-md-4">
+                        <Col className="col-6 col-sm-3 px-4 col-md-6">
                             <Form.Group className="fullwidth">
                                 <Form.Label>Max Price</Form.Label>
                                 <h5>
@@ -127,23 +174,24 @@ function Market(props) {
                                 </h5>
                                 <Form.Range min="0" max="1000" onChange={(e: any) => { getMaxValue(e.target.value); }} value={maxPrice} />
                             </Form.Group>
-                        </Col>
+                        </Col> */}
                     </Row>
-                    <Row className={`${styles['rank-container']} centered mt-4`}>
-                        {Ranks.ranks.data.map((rank) => (
+
+                    {/* <Row className={`${styles['rank-container']} centered mt-4`}>
+                        {Ranks.map((rank) => (
                             <span className={`inside-card col-md-2 col-3 card-hovering flex-row centered mb-3 ${filterRank === rank.id ? ('active') : ('')}`} onClick={() => setFilterRank(rank.id)} key={rank.id}>
-                                <Image src="/unranked_mini_valo.png" width="35" height="35" />
+                                <Image src={rank.badge} width="35" height="35" />
                                 {rank.name}
                             </span>
                         ))}
-                    </Row>
+                    </Row> */}
                 </Form>
-                <Row className="my-4">
+                {/* <Row className="my-4">
                     <Col>
                         <button className="capsule button mx-3" onClick={() => getAccountbyFilter()}>Search</button>
                         <button className="capsule button-org" onClick={() => clearFilter()}>Clear</button>
                     </Col>
-                </Row>
+                </Row> */}
             </Row>
             <Row className="fullwidth my-4">
                 <Col className="gap-4 debug fullwidth flex-horizon-centered-right">
@@ -180,14 +228,3 @@ function Market(props) {
 }
 
 export default Market;
-
-export async function getStaticProps() {
-    const Accounts = await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/accounts').then((res) => res.data.accounts).catch((res) => console.log(res));
-    const Servers = await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/servers').then((res) => res.data.data).catch((res) => console.log(res));
-    const Ranks = await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/ranks').then((res) => res.data).catch((res) => console.log(res));
-    return {
-        props: {
-            Servers, Accounts, Ranks,
-        },
-    };
-}

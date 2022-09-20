@@ -1,33 +1,16 @@
 /* eslint-disable react/prop-types */
-export function DefaultAddOns() {
+export default function OptionalAddons(props) {
+    const { data } = props;
     return (
         <div className="flex-row">
             <div className="space-between flex-down fullwidth">
-                <span>Play WIth Booster</span>
-                <span>Priority Order</span>
-                <span>Stream Games</span>
-            </div>
-            <div className="space-between flex-down gap-3">
-                <input type="checkbox" className="checkbox" />
-                <input type="checkbox" className="checkbox" />
-                <input type="checkbox" className="checkbox" />
-            </div>
-        </div>
-    );
-}
-
-export function OptionalAddons(props) {
-    const { name } = props;
-    return (
-        <div className="flex-row">
-            <div className="space-between flex-down fullwidth">
-                {name.map((e) => (
-                    <span>{e}</span>
+                {data.map((e) => (
+                    <span key={e.id}>{e.name}</span>
                 ))}
             </div>
             <div className="space-between flex-down gap-3">
-                {name.map(() => (
-                    <input type="checkbox" className="checkbox-prim" />
+                {data.map((e) => (
+                    <input key={e.id} type="checkbox" className="checkbox" />
                 ))}
             </div>
         </div>

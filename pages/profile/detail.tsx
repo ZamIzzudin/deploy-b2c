@@ -105,11 +105,3 @@ function Detail() {
 }
 
 export default Detail;
-
-export async function getServerSideProps() {
-    return {
-        props: {
-
-        },
-    };
-}

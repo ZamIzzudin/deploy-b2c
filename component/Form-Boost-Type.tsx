@@ -25,7 +25,6 @@ export function IncludeRank({ title, game, getData }) {
     }
 
     useEffect(() => {
-        sendData(1, title);
         getRank();
     }, []);
 
