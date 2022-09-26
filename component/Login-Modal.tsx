@@ -3,14 +3,19 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
 /* eslint-disable react/destructuring-assignment */
-import { Modal, Row, Col } from 'react-bootstrap';
+import {
+    Modal, Row, Col, Form,
+} from 'react-bootstrap';
 import Image from 'next/image';
 import axios from 'axios';
-import { facebookProvider, googleProvider } from '../config/socialAuth';
+import { useState } from 'react';
+import { googleProvider } from '../config/socialAuth';
 import socialMediaAuth from '../login-auth/auth';
 import styles from './styles/LoginModal.module.css';
 
 export default function LoginModal(props: any) {
+    const [selectOption, setSelectionOption] = useState('login');
+
     const handleLogin = async (provider: any) => {
         const res = await socialMediaAuth(provider);
         const auth = {
@@ -32,24 +37,43 @@ export default function LoginModal(props: any) {
         >
             <Modal.Body>
                 <Row>
-                    <h1 className={styles['Login-Header']}>Login</h1>
-                    <h2 className={styles['Login-Subheader']}>Let us identify you</h2>
-                </Row>
-                <Row className="my-4 px-5">
-                    <Col className="centered-down">
-                        <button className={styles['Socmed-Button']} onClick={() => handleLogin(facebookProvider)}>
-                            <span className={styles['Provider-Logo']}><Image src="/facebook_logo.png" width="25%" height="25%" /></span>
-                            Lanjutkan dengan Facebook
-                        </button>
-                        <button className={styles['Socmed-Button']} onClick={() => handleLogin(googleProvider)}>
-                            <span className={styles['Provider-Logo']}><Image src="/google_logo.png" width="25%" height="25%" /></span>
-                            Lanjutkan dengan Google
-                        </button>
+                    <Col className={`${styles['modal-header']} mb-3`}>
+                        <button className={`${styles['option-button']} ${selectOption === 'login' && (styles.active)}`} onClick={() => setSelectionOption('login')}>Login</button>
+                        <button className={`${styles['option-button']} ${selectOption === 'register' && (styles.active)}`} onClick={() => setSelectionOption('register')}>Register</button>
                     </Col>
                 </Row>
                 <Row>
-                    <Col className={`${styles['Login-Footer']} px-3`}>
-                        <button onClick={props.onHide} className="button capsule">Close</button>
+                    {selectOption === 'login' ? (
+                        <Col className={`${styles['form-container']} col-md-8 flex-down`}>
+                            <span className="mb-3">Login with Account</span>
+                            <Form.Group className="fullwidth">
+                                <Form.Control className="form-layout mb-3" placeholder="Email" type="email" />
+                                <Form.Control className="form-layout mb-3" placeholder="Password" type="password" />
+                                <div className="centered">
+                                    <button className="button capsule fullwidth">Login</button>
+                                </div>
+                            </Form.Group>
+                        </Col>
+                    ) : (
+                        <Col className={`${styles['form-container']} col-md-8 flex-down`}>
+                            <span className="mb-3">Create new Account</span>
+                            <Form.Group className="fullwidth">
+                                <Form.Control className="form-layout mb-3" placeholder="Email" />
+                                <Form.Control className="form-layout mb-3" placeholder="Password" />
+                                <div className="centered">
+                                    <button className="button capsule fullwidth">Register</button>
+                                </div>
+                            </Form.Group>
+                        </Col>
+                    )}
+                    <Col>
+                        <Col className=" flex-down center-start">
+                            <span className="mb-3">Or</span>
+                            <button className={styles['Socmed-Button']} onClick={() => handleLogin(googleProvider)}>
+                                <span className={styles['Provider-Logo']}><Image src="/google_logo.png" width="25%" height="25%" /></span>
+                                Google
+                            </button>
+                        </Col>
                     </Col>
                 </Row>
             </Modal.Body>

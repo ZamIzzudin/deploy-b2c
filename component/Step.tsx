@@ -5,7 +5,8 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable max-len */
 import { Col, Row } from 'react-bootstrap';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
 import styles from './styles/Step.module.css';
 
@@ -62,7 +63,7 @@ function Step() {
                             <li>Intuitive and straightforward purchase process.</li>
                         </ul>
                         <div>
-                            <button type="button" className="button capsule mt-3">Get Started</button>
+                            <button type="button" className="button capsule mt-3"><Link href="/boost">Get Started</Link></button>
                         </div>
                     </Col>
                 </Row>
@@ -81,7 +82,7 @@ function Step() {
                             <li>Crypto payments are available.</li>
                         </ul>
                         <div>
-                            <button type="button" className="button capsule mt-3">Get Started</button>
+                            <button type="button" className="button capsule mt-3"><Link href="/boost">Get Started</Link></button>
                         </div>
                     </Col>
                 </Row>
@@ -100,7 +101,7 @@ function Step() {
                             <li>24/7 Premium live Help.</li>
                         </ul>
                         <div>
-                            <button type="button" className="button capsule mt-3">Get Started</button>
+                            <button type="button" className="button capsule mt-3"><Link href="/boost">Get Started</Link></button>
                         </div>
                     </Col>
                 </Row>

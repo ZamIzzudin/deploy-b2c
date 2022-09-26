@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable no-console */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -21,7 +22,7 @@ export function IncludeRank({ title, game, getData }) {
     async function getRank() {
         const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/ranks';
 
-        await axios.get(url).then((res) => setRanks(res.data.ranks.data)).catch((err) => console.log(err));
+        await axios.get(url).then((res) => { setRanks(res.data.ranks.data); }).catch((err) => console.log(err));
     }
 
     useEffect(() => {
@@ -31,7 +32,7 @@ export function IncludeRank({ title, game, getData }) {
     return (
         <div className={styles.container}>
             <div>
-                <h1>{title}</h1>
+                <h1 className={styles['title-form']}>{title}</h1>
                 <span>{game}</span>
             </div>
             <div className={styles['rank-division-container']}>

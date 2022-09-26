@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable max-len */
 /* eslint-disable react/self-closing-comp */
+import Link from 'next/link';
 import styles from './styles/FeaturedBenefit.module.css';
 
 function FeaturedBenefit() {
@@ -18,7 +19,7 @@ function FeaturedBenefit() {
                 <h3 className={styles['benefit-subtitle']}>The most satisfying in-game service.</h3>
                 <p className={styles['benefit-desc']}>Forget about frustrating games and reach your deserved rank effortlessly. Whether you're purchasing our Boosting services, you are privileged to all premium features.</p>
                 <div>
-                    <button type="button" className="button capsule">Get Started</button>
+                    <button type="button" className="button capsule"><Link href="/boost">Get Started</Link></button>
                 </div>
             </div>
             <div className={styles.debug3}>

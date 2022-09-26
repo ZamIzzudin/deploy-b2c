@@ -74,3 +74,8 @@
 .platform-button:hover {
     background-color: var(--primColor);
 }
+
+.title-form {
+    font-size: 1.8em;
+    font-weight: 700;
+}

@@ -5,3 +5,8 @@
 .fullwidth {
     min-width: 100%;
 }
+
+.checkout-title {
+    font-size: 1.8em;
+    font-weight: 700;
+}

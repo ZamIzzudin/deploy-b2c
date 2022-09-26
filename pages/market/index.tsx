@@ -33,8 +33,6 @@ function Market() {
     const [filterRank, setFilterRank] = useState('99');
     const [filterServer, setFilterServer] = useState<any>('99');
     const [filterSort, setFilterSort] = useState('asc');
-    // const [minPrice, setMin] = useState(0);
-    // const [maxPrice, setMax] = useState(1000);
 
     const [paginationPage, setPaginationPage] = useState(1);
     const pagination: any = [];
@@ -57,14 +55,6 @@ function Market() {
         await axios.get(url).then((res) => setServers(res.data.data)).catch((err) => console.log(err));
     }
 
-    // function getMaxValue(value: any) {
-    //     setMax(value);
-    // }
-
-    // function getMinValue(value: any) {
-    //     setMin(value);
-    // }
-
     async function getAccountbyFilter() {
         let url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/accounts/?sortOrder=${filterSort}`;
 
@@ -85,14 +75,6 @@ function Market() {
             setAccounts(response);
             setPaginationPage(1);
         }
-    }
-
-    function clearFilter() {
-        setFilterRank('99');
-        setFilterServer('99');
-        // setMin(0);
-        // setMax(1000);
-        setFilterSort('asc');
     }
 
     async function handlePagination(page) {

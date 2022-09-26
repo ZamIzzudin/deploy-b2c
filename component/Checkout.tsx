@@ -32,7 +32,7 @@ function Checkout(props: any) {
 
     return (
         <div className="fullwidth centered flex-down card">
-            <h3 className="text-center">
+            <h3 className={styles['checkout-title']}>
                 Checkout
             </h3>
 

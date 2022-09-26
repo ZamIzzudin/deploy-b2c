@@ -23,6 +23,7 @@ import { socialMediaLogout } from '../login-auth/auth';
 import styles from './styles/Navbar.module.css';
 
 function TabBar() {
+    const [scrollY, setScrollY] = useState(0);
     const [sideBar, setSideBar] = useState(false);
     const [modal, showModal] = useState(false);
     const [userData, setUserData] = useState<any | null>(null);
@@ -36,7 +37,6 @@ function TabBar() {
         document.cookie = "store=;";
         window.location.replace('/');
         setUserData(null);
-        console.log(userData);
     };
 
     const getDataLogin = (data: any, token: any, roles: any) => {
@@ -93,10 +93,23 @@ function TabBar() {
         return res;
     }
 
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrollY(window.scrollY);
+        };
+
+        handleScroll();
+
+        window.addEventListener("scroll", handleScroll);
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
+
     return (
-        <nav className={styles.navbar}>
+        <nav className={`${styles.navbar} ${scrollY > 150 && (styles['scroll-dekstop'])}`}>
             <div className={styles['navbar-logo']}>
-                <Image src="/logo.png" width="120" height="45" />
+                <Image src="/logo.png" width="125" height="45" />
             </div>
             <div className={`${styles['navbar-collapse']} ${sideBar && (styles['show-side-bar'])}`}>
                 <div className={styles['close-toogle']} onClick={() => setSideBar(false)}>
@@ -107,12 +120,12 @@ function TabBar() {
                     <Link href="/boost" scroll>Boost</Link>
                     <Link href="/market" scroll>Market</Link>
                 </div>
-                <div onClick={() => setSideBar(false)}>
+                <div className={styles['navbar-button']} onClick={() => setSideBar(false)}>
                     {userData ? (
                         <>
                             <Link scroll href="/profile/detail">
                                 <a>
-                                    <button className="button-border capsule mx-3">Profile</button>
+                                    <button className="button-border capsule">Profile</button>
                                 </a>
                             </Link>
                             <span onClick={() => handleLogout()}>

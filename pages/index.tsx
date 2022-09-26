@@ -38,25 +38,25 @@ function Home() {
       if (Row1.current) {
         const sr = (await import('scrollreveal')).default;
         sr().reveal(Row1.current, {
-          delay: 300, mobile: false, reset: true, distance: '100px',
+          delay: 200, mobile: false, distance: '100px',
         });
         sr().reveal(Row2.current, {
-          delay: 300, mobile: false, reset: true, distance: '100px',
+          delay: 200, mobile: false, distance: '100px',
         });
         sr().reveal(Row3.current, {
-          delay: 300, mobile: false, reset: true, distance: '100px',
+          delay: 200, mobile: false, distance: '100px',
         });
         sr().reveal(Row4.current, {
-          delay: 300, mobile: false, reset: true, distance: '100px',
+          delay: 200, mobile: false, distance: '100px',
         });
         sr().reveal(Row5.current, {
-          delay: 300, mobile: false, reset: true, distance: '100px',
+          delay: 200, mobile: false, distance: '100px',
         });
         sr().reveal(Row6.current, {
-          delay: 300, mobile: false, reset: true, distance: '100px',
+          delay: 200, mobile: false, distance: '100px',
         });
         sr().reveal(Row7.current, {
-          delay: 300, mobile: false, reset: true,
+          delay: 200, mobile: false,
         });
       }
     }
@@ -96,8 +96,8 @@ function Home() {
         </Row>
         <Row ref={Row7} className={`${styles['banner-collapse']} full-width centered`}>
           <Col className={`${styles['banner-bg']} centered-down`}>
-            <h3 className={`${styles['content-title']} ${styles['banner-title']} text-end mt-5`}>Order Now</h3>
-            <button type="button" className="button capsule mt-3 mb-5">Boost</button>
+            <h3 className={`${styles['content-title']} ${styles['banner-title']} text-end mt-5`}>Discord Channel</h3>
+            <button type="button" className="button capsule mt-3 mb-5">Join Now</button>
           </Col>
         </Row>
       </div>

@@ -6,6 +6,7 @@
 /* eslint-disable react/button-has-type */
 import { useEffect } from 'react';
 import Vivus from 'vivus';
+import Link from 'next/link';
 import styles from './styles/Jumbotron.module.css';
 
 function Jumbotron() {
@@ -79,8 +80,8 @@ function Jumbotron() {
                 </div>
                 <p className="desc">Reach your dream rank effortlessly with our safe boosting services or instanly buy an account on our market.</p>
                 <div className={styles['jumbotron-button-container']}>
-                    <button type="button" className="button capsule">Boost</button>
-                    <button type="button" className="button capsule">Market</button>
+                    <button type="button" className="button capsule"><Link href="/boost">Boost</Link></button>
+                    <button type="button" className="button capsule"><Link href="/market">Market</Link></button>
                 </div>
             </div>
             <video className={styles.video} width="100%" height="100%" autoPlay loop muted poster="/valorant-episode-3-lobby-screen-thumb.jpg">

@@ -1,28 +1,29 @@
-.Login-Header {
-    font-family: var(--primFont);
-    font-style: italic;
-    text-transform: uppercase;
-    font-weight: 800;
-    text-align: center;
-    font-size: 4em;
+.modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    padding-bottom: 16px;
+    display: flex;
+    justify-content: flex-start;
 }
 
-.Login-Subheader {
+.option-button {
+    border: none;
+    background-color: transparent;
     font-family: var(--secFont);
-    color: var(--yellow);
-    font-size: 1em;
-    text-align: center;
-    letter-spacing: .5px;
+    margin-right: 20px;
+}
+
+.option-button:focus {
+    outline: none;
 }
 
 .Socmed-Button {
     position: relative;
     color: grey;
     border: none;
-    padding: .5em .5em .5em .5em;
+    padding: .5em .5em .5em 2em;
     border-radius: 5px;
-    margin: 10px 0;
-    width: 100%;
+    width: 80%;
+    text-align: center;
 }
 
 .Provider-Logo {
@@ -30,8 +31,17 @@
     left: 5%;
 }
 
+.form-container {
+    padding-right: 16px;
+    border-right: 1px solid rgba(255, 255, 255, 0.5);
+}
+
 .Login-Footer {
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
+}
+
+.active {
+    color: var(--primColor);
 }
