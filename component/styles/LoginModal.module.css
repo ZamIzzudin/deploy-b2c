@@ -45,3 +45,29 @@
 .active {
     color: var(--primColor);
 }
+
+.show-password-button {
+    border: none;
+    background-color: var(--form);
+    height: 100%;
+    padding: 6px 10px;
+    border-radius: 4px;
+}
+
+.show-password-button:focus {
+    outline: none;
+}
+
+@media only screen and (max-width: 765px) {
+    .form-container {
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        padding-bottom: 16px;
+        margin-bottom: 8px;
+        padding-right: 0;
+    }
+
+    .Socmed-Button {
+        width: 60%;
+    }
+}

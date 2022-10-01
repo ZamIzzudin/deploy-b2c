@@ -252,7 +252,7 @@ function DetailBooster(props: any) {
                     {service.length > 0 && (
                         <Row className="gap-2 px-3">
                             {service.map((i: any) => (
-                                <Col className={`card centered fit-content ${removingService ? ('') : ('card-hovering')} relative-pos`}>
+                                <Col key={i.name} className={`card centered fit-content ${removingService ? ('') : ('card-hovering')} relative-pos`}>
                                     <div>
                                         <span className={styles['service-name']}>{i.name}</span>
                                     </div>

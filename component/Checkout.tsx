@@ -1,63 +1,117 @@
-/* eslint-disable react/button-has-type */
+/* eslint-disable react/jsx-no-bind */
 /* eslint-disable max-len */
-/* eslint-disable no-alert */
 /* eslint-disable no-console */
-/* eslint-disable no-unused-vars */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
-/* eslint-disable no-use-before-define */
-import axios from 'axios';
-import { useState, useEffect } from 'react';
+/* eslint-disable no-unused-vars */
 import { Row, Col } from 'react-bootstrap';
-import OptionalAddons from './Checkout-AddOns';
-import { RankView } from './Checkout-OrderView';
-import styles from './styles/Checkout.module.css';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { OptionalAddons } from '../component';
+import {
+    DoubleIncludeRank, RankAndGame, NumberGame, Point,
+} from './Checkout-Overview';
 
 function Checkout(props: any) {
     const {
-        form, orderForm,
+        details, flow, orderType, addOns, form, game,
     } = props;
 
-    const [addOns, setAddOns] = useState([]);
+    const [price, setPrice] = useState<any>('50.00');
+    const [overviewDetails, setOverviewDetails] = useState<any>([]);
+    const [selectedAddOns, setSelectedAddOns] = useState<any>({});
 
-    async function getAddOns() {
-        const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/add-ons';
+    function setupOverview() {
+        const overviews = form?.map((overview) => overview.type);
+        const count = {};
 
-        await axios.get(url).then((res) => setAddOns(res.data.data)).catch((err) => alert(err.message));
+        overviews.forEach((overview) => {
+            count[overview] = (count[overview] || 0) + 1;
+        });
+
+        setOverviewDetails(count);
+    }
+
+    function setAddOns(addon, status) {
+        const selected = selectedAddOns;
+        selected[addon] = status;
+
+        setSelectedAddOns(selected);
+    }
+
+    function getDataCheckout() {
+        const dataDetails = {
+            total_price: '',
+            game: {},
+            type: '',
+            service: 'Boost',
+            addOns: {},
+        };
+        dataDetails.type = orderType;
+        dataDetails.game = game;
+        dataDetails.total_price = price;
+
+        details.forEach((detail) => {
+            dataDetails[detail.title] = detail.name || detail.numberGame || { start: detail.start, to: detail.to };
+        });
+
+        dataDetails.addOns = selectedAddOns;
+
+        localStorage.setItem('data', JSON.stringify(dataDetails));
     }
 
     useEffect(() => {
-        getAddOns();
-    }, []);
+        setupOverview();
+    }, [orderType]);
 
     return (
         <div className="fullwidth centered flex-down card">
-            <h3 className={styles['checkout-title']}>
+            <h3>
                 Checkout
             </h3>
+            <h5 className="text-org">
+                {orderType}
+            </h5>
+            <Row className="mt-3 fullwidth">
+                {overviewDetails?.includeRank === 2 && (
+                    <DoubleIncludeRank details={details} />
+                )}
+                {overviewDetails?.includeRank === 1 && overviewDetails?.gameNumber === 1 && (
+                    <RankAndGame details={details} />
+                )}
+                {overviewDetails?.includeRank === undefined && overviewDetails?.gameNumber === 1 && (
+                    <NumberGame details={details} />
+                )}
+                {overviewDetails.points > 0 && (
+                    <Point details={details} />
+                )}
+            </Row>
 
-            {orderForm.map((order) => (
-                <RankView data={order} />
-            ))}
-
-            <Row className={`my-5 ${styles.fullwidth}`}>
-                <div className={styles['radio-form']}>
-                    {addOns?.length > 0 && (
-                        <OptionalAddons data={addOns} />
-                    )}
+            <Row className="my-5 fullwidth">
+                <div className="fullwidth">
+                    {addOns?.map((item) => (
+                        <OptionalAddons key={item.name} data={item} getAddOns={setAddOns} />
+                    ))}
                 </div>
             </Row>
 
-            <Row className={styles.fullwidth}>
-                <Col className={styles['total-amount']}>
-                    <h4>Total Amount</h4>
+            <Row className="fullwidth px-3">
+                <Col>
+                    <h4 className="fullwidth text-left">Total Amount</h4>
                 </Col>
                 <Col>
-                    <h4 className={styles.righted}> $50.00</h4>
+                    <h4 className="fullwidth text-right">
+                        $
+                        {price}
+                    </h4>
                 </Col>
             </Row>
 
-            <button className="button capsule mt-4">Pay Now</button>
+            <Row className="mt-3">
+                <Link href="/payment">
+                    <button type="button" className="button capsule" onClick={() => getDataCheckout()}>Pay Now</button>
+                </Link>
+            </Row>
         </div>
     );
 }

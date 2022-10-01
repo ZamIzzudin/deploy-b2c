@@ -16,56 +16,36 @@ import {
 import styles from './styles/FormBoost.module.css';
 
 function FormBoost(props: any) {
-    const { form, getData } = props;
+    const {
+        form, getData, ranks, servers,
+    } = props;
 
-    const [dataForm, setDataForm] = useState<any>([]);
-    const [typeItems, setTypeItems] = useState<any>([]);
+    const [typeForm, setTypeForm] = useState<any>(form);
 
-    function setData(data, type) {
-        if (typeItems.length > 0) {
-            if (typeItems.includes(type)) {
-                const newArr = dataForm.map((arr, i) => {
-                    const oneType = Object.keys(arr)[0];
-                    if (oneType === type) {
-                        return { ...arr, [type]: data };
-                    }
-                    return arr;
-                });
-
-                setDataForm(newArr);
-            } else {
-                const item = {};
-                item[type] = data;
-                setDataForm([...dataForm, item]);
-                setTypeItems([...typeItems, type]);
-            }
-        } else {
-            const item = {};
-            item[type] = data;
-            setDataForm([item]);
-            setTypeItems([...typeItems, type]);
-        }
-    }
-
-    function sendData(data) {
+    function setData(data, title) {
+        data.title = title;
         getData(data);
     }
 
+    function reRender(data) {
+        setTypeForm(data);
+    }
+
     useEffect(() => {
-        sendData(dataForm);
-    }, [dataForm]);
+        reRender(form);
+    }, [form]);
 
     return (
         <div className={styles['form-container']}>
-            {form?.map((f) => {
+            {typeForm?.map((f) => {
                 if (f.type === 'includeRank') {
-                    return (<IncludeRank title={f.title} game={f.game} getData={setData} />);
-                } if (f.type === 'numberGame') {
-                    return (<NumberGame max={f.max} min={f.min} title={f.title} getData={setData} />);
+                    return (<IncludeRank key={f.title} title={f.title} game={f.game} getData={setData} ranks={ranks} />);
+                } if (f.type === 'gameNumber') {
+                    return (<NumberGame key={f.title} max={f.max} min={f.min} title={f.title} getData={setData} />);
                 } if (f.type === 'points') {
-                    return (<Points start={f.start} to={f.to} title={f.title} type={f.type} unit={f.unit} getData={setData} />);
+                    return (<Points key={f.title} start={f.start} to={f.to} title={f.title} unit={f.unit} getData={setData} />);
                 } if (f.type === 'platformSelect') {
-                    return (<PlatformSelect game={f.game} title={f.title} platforms={f.platform} getData={setData} />);
+                    return (<PlatformSelect key={f.title} game={f.game} title={f.title} platforms={f.platform} getData={setData} />);
                 }
             })}
         </div>

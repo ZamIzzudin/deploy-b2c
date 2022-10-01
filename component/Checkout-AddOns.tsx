@@ -1,17 +1,19 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
+import { useState } from 'react';
+
 export default function OptionalAddons(props) {
-    const { data } = props;
+    const { data, getAddOns } = props;
+
+    const [checked, setChecked] = useState<any>(false);
+
     return (
-        <div className="flex-row">
+        <div className="flex-row mb-2">
             <div className="space-between flex-down fullwidth">
-                {data.map((e) => (
-                    <span key={e.id}>{e.name}</span>
-                ))}
+                <span>{data.name}</span>
             </div>
-            <div className="space-between flex-down gap-3">
-                {data.map((e) => (
-                    <input key={e.id} type="checkbox" className="checkbox" />
-                ))}
+            <div className="space-between flex-down">
+                <input type="checkbox" className="checkbox" onChange={(e) => { getAddOns(data.name, !checked); setChecked(!checked); }} />
             </div>
         </div>
     );

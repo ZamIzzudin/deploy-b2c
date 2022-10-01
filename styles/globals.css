@@ -279,6 +279,13 @@ b {
   justify-content: center;
 }
 
+.flex-down-start-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
 .flex-horizon-centered-right {
   display: flex;
   flex-direction: row;
@@ -290,7 +297,7 @@ b {
   flex-direction: column;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
 }
 
 .flex-horizon-centered-start {
@@ -329,6 +336,10 @@ b {
   background-color: green;
 }
 
+.debug-border {
+  border: 1px solid white;
+}
+
 .full-width {
   width: 100%;
   min-height: 200px;
@@ -337,6 +348,18 @@ b {
 
 .fullwidth {
   width: 100% !important;
+}
+
+.pr-1 {
+  padding-right: 6px;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
 }
 
 .modal-content {
@@ -471,6 +494,10 @@ b {
 .page-link {
   background-color: var(--card) !important;
   border: none;
+}
+
+.none {
+  cursor: pointer;
 }
 
 .table {

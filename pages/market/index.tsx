@@ -178,9 +178,9 @@ function Market() {
             <Row className="fullwidth my-4">
                 <Col className="gap-4 debug fullwidth flex-horizon-centered-right">
                     <span>Sort By</span>
-                    <span className={filterSort === 'asc' ? ('active-org') : ('')} onClick={() => { setFilterSort('asc'); getAccountbyFilter(); }}>ASC</span>
+                    <span className={filterSort === 'asc' ? ('active-org') : ('none')} onClick={() => { setFilterSort('asc'); getAccountbyFilter(); }}>ASC</span>
                     <span>||</span>
-                    <span className={filterSort === 'desc' ? ('active-org') : ('')} onClick={() => { setFilterSort('desc'); getAccountbyFilter(); }}>DESC</span>
+                    <span className={filterSort === 'desc' ? ('active-org') : ('none')} onClick={() => { setFilterSort('desc'); getAccountbyFilter(); }}>DESC</span>
                 </Col>
             </Row>
             <Row className={`${styles['card-container']} centered`}>

@@ -4,25 +4,6 @@
     letter-spacing: .5px;
 }
 
-.game-slider {
-    width: fit-content;
-    width: 110%;
-    max-height: 100px;
-    margin: 0 -1vw;
-}
-
-.game-slider-container {
-    height: 100%;
-    flex-direction: row;
-    display: flex;
-    overflow-x: auto;
-    margin-bottom: 100px;
-}
-
-.game-slider-container::-webkit-scrollbar {
-    height: 5px;
-}
-
 .service-slider {
     width: fit-content;
     width: 110%;
@@ -48,26 +29,17 @@
     background-color: var(--bg);
 }
 
-.game-container {
-    display: flex;
-    flex-wrap: wrap;
+.game-overview {
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.checkout-title {
+    font-size: 1.8em;
+    font-weight: 700;
 }
 
 @media only screen and (max-width: 800px) {
-    .game-container {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-    }
-
-    .game-container::-webkit-scrollbar {
-        height: 5px;
-    }
-
-    .game-container::-webkit-scrollbar-thumb {
-        background-color: var(--bar);
-    }
-
     .game-overview {
         background-color: var(--bar);
         width: 100vw;

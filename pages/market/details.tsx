@@ -30,12 +30,15 @@ function AccountDetails() {
     function storingData() {
         const transaction = {
             id_account: Details.account_id,
-            id_user: '123B',
             total_price: Details.price,
             service: 'Market',
             type: 'Valorant Account',
             rank: Details.current_rank.id,
-            picture: '/valorant.png',
+            game: {
+                id: 2,
+                name: 'Valorant',
+                logo_url: 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/storage/images/game-logo/valo.png',
+            },
         };
 
         localStorage.setItem('data', JSON.stringify(transaction));
@@ -46,6 +49,7 @@ function AccountDetails() {
         setDetails(JSON.parse(preData));
         setAgents(JSON.parse(preData).agent_list.split(' '));
         setSkins(JSON.parse(preData).skin_list.split(' '));
+        localStorage.setItem('data', '');
     }, []);
 
     return (
@@ -84,19 +88,19 @@ function AccountDetails() {
                                     <Row className="full-width">
                                         <Col className="col-md-6 centered-start">
                                             <div className="text-center">
-                                                {agents.map((i, key) => key % 2 === 0 && (<li className={styles['detail-list']}>{i}</li>))}
+                                                {agents.map((i, key) => key % 2 === 0 && (<li key={i} className={styles['detail-list']}>{i}</li>))}
                                             </div>
                                         </Col>
                                         <Col className="col-md-6 centered-start">
                                             <div className="text-center">
-                                                {agents.map((i, key) => key % 2 === 1 && (<li className={styles['detail-list']}>{i}</li>))}
+                                                {agents.map((i, key) => key % 2 === 1 && (<li key={i} className={styles['detail-list']}>{i}</li>))}
 
                                             </div>
                                         </Col>
                                     </Row>
                                 ) : (
                                     <>
-                                        {agents.map((i) => <li className={styles['detail-list']}>{i}</li>)}
+                                        {agents.map((i) => <li key={i} className={styles['detail-list']}>{i}</li>)}
                                     </>
                                 )}
                             </div>
@@ -110,19 +114,19 @@ function AccountDetails() {
                                     <Row className="full-width">
                                         <Col className="col-md-6 centered-start">
                                             <div className="text-center">
-                                                {skins.map((i, key) => key % 2 === 0 && (<li className={styles['detail-list']}>{i}</li>))}
+                                                {skins.map((i, key) => key % 2 === 0 && (<li key={i} className={styles['detail-list']}>{i}</li>))}
                                             </div>
                                         </Col>
                                         <Col className="col-md-6 centered-start">
                                             <div className="text-center">
-                                                {skins.map((i, key) => key % 2 === 1 && (<li className={styles['detail-list']}>{i}</li>))}
+                                                {skins.map((i, key) => key % 2 === 1 && (<li key={i} className={styles['detail-list']}>{i}</li>))}
 
                                             </div>
                                         </Col>
                                     </Row>
                                 ) : (
                                     <>
-                                        {skins.map((i) => <li className={styles['detail-list']}>{i}</li>)}
+                                        {skins.map((i) => <li key={i} className={styles['detail-list']}>{i}</li>)}
                                     </>
                                 )}
                             </div>

@@ -40,7 +40,10 @@ function Payment() {
         service: null,
         type: null,
         rank: null,
-        picture: '/valorant.png',
+        game: {
+            name: null,
+            logo_url: '/kosong.png'
+        },
     };
 
     const [data, setData] = useState(plain);
@@ -53,6 +56,7 @@ function Payment() {
             setUser(JSON.parse(userData));
         }
         setData(JSON.parse(predata));
+        console.log(JSON.parse(predata));
     }, []);
 
     async function paymentForm() {
@@ -95,7 +99,7 @@ function Payment() {
             <h1 className="section-title mt-5 text-center">Checkout</h1>
             <h2 className="section-subtitle text-center mb-5">Finish Your payment to make us process Your order</h2>
             {user.roles.length > 0 ? (
-                <Row className="px-3 flex-center-start">
+                <Row className="flex-center-start">
                     <Col className="card col-md-7 col-12 mb-4">
                         <h3 className="section-subtitle">Payement Gateaway</h3>
                         <Row>
@@ -175,25 +179,15 @@ function Payment() {
                     <Col className="col-md-5 col-12">
                         <div className="w-95 card bordered full-width">
                             <h3 className="section-subtitle">My Order</h3>
-                            <Row>
-                                {data.service === 'boost' && (
-                                    <span>ini boost</span>
-                                )}
-                            </Row>
                             <hr />
-                            <Row className="flex-row">
-                                <Col className="mx-2 col-md-3">
-                                    <Image src={data.picture} width="100%" height="100%" />
+                            <Row>
+                                <Col className="col-md-6">
+                                    <Image src={data.game.logo_url} width="100%" height="100%" />
                                 </Col>
-                                <Col className="flex-down flex-left px-3">
-                                    <h5 className={styles['service-type']}>{data.type}</h5>
-                                    <span className={styles['service-desc']}>{data.rank}</span>
+                                <Col className="centered-down">
+                                    <h5 className={styles['service-type']}>{data.game.name}</h5>
+                                    <span className={styles['service-desc']}>{data.type}</span>
                                 </Col>
-                                {data.service === 'boost' && (
-                                    <Col className="col-md-4 debug-bg mx-2">
-                                        <span>detail</span>
-                                    </Col>
-                                )}
                             </Row>
                             <hr />
                             <Row>
