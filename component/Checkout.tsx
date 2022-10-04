@@ -17,7 +17,7 @@ function Checkout(props: any) {
         details, flow, orderType, addOns, form, game,
     } = props;
 
-    const [price, setPrice] = useState<any>('50.00');
+    const [price, setPrice] = useState<any>(50.00);
     const [overviewDetails, setOverviewDetails] = useState<any>([]);
     const [selectedAddOns, setSelectedAddOns] = useState<any>({});
 
@@ -52,7 +52,7 @@ function Checkout(props: any) {
         dataDetails.total_price = price;
 
         details.forEach((detail) => {
-            dataDetails[detail.title] = detail.name || detail.numberGame || { start: detail.start, to: detail.to };
+            dataDetails[detail.title] = detail.name || detail.numberGame || detail.server || detail.platform || { start: detail.start, to: detail.to };
         });
 
         dataDetails.addOns = selectedAddOns;

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-console */
 /* eslint-disable react/button-has-type */
@@ -28,6 +29,8 @@ export default function LoginModal(props: any) {
             username: res.displayName,
             email: res.email,
         };
+
+        const { uid } = res;
 
         const user = await axios.post('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/v1/auth', auth).then((response) => response.data).catch((response) => console.log(response));
 

@@ -11,7 +11,7 @@
 /* eslint-disable import/no-unresolved */
 import { useState, useEffect } from 'react';
 import {
-    IncludeRank, NumberGame, Points, PlatformSelect,
+    IncludeRank, NumberGame, Points, PlatformSelect, ServerSelect,
 } from './Form-Boost-Type';
 import styles from './styles/FormBoost.module.css';
 
@@ -39,15 +39,18 @@ function FormBoost(props: any) {
         <div className={styles['form-container']}>
             {typeForm?.map((f) => {
                 if (f.type === 'includeRank') {
-                    return (<IncludeRank key={f.title} title={f.title} game={f.game} getData={setData} ranks={ranks} />);
+                    return (<IncludeRank key={f.title} title={f.title} getData={setData} ranks={ranks} />);
                 } if (f.type === 'gameNumber') {
                     return (<NumberGame key={f.title} max={f.max} min={f.min} title={f.title} getData={setData} />);
                 } if (f.type === 'points') {
                     return (<Points key={f.title} start={f.start} to={f.to} title={f.title} unit={f.unit} getData={setData} />);
                 } if (f.type === 'platformSelect') {
-                    return (<PlatformSelect key={f.title} game={f.game} title={f.title} platforms={f.platform} getData={setData} />);
+                    return (<PlatformSelect key={f.title} title={f.title} platforms={f.platforms} getData={setData} />);
                 }
             })}
+            {servers !== undefined && (
+                <ServerSelect servers={servers} getData={setData} />
+            )}
         </div>
     );
 }

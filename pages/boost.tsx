@@ -65,6 +65,7 @@ function Order() {
 
     function getData(data) {
         const tempDetails = checkoutDetail;
+        const indexing = checkoutDetail.length;
         checkoutDetail?.forEach((item, index) => {
             if (item.title === data.title) {
                 tempDetails[index] = data;
@@ -72,6 +73,10 @@ function Order() {
                 setFlow(flow + 1);
             }
         });
+        if (data.title === 'Server Require' || data.title === 'Platform Require') {
+            tempDetails[indexing] = data;
+            tempDetails[indexing] = data;
+        }
     }
 
     function setupOrderRequire(service) {
@@ -83,7 +88,7 @@ function Order() {
     function setupCheckoutDetail() {
         const detailsForm = requireOrder;
         const type = detailsForm?.map((item) => {
-            const typeForm = { title: item.title };
+            const typeForm = { title: item.title, server: null, platform: null };
 
             return typeForm;
         });

@@ -1,3 +1,4 @@
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable no-console */
 /* eslint-disable no-use-before-define */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -14,6 +15,7 @@ import {
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
+import { PayPalButton } from 'react-paypal-button-v2';
 import styles from '../styles/Payment.module.css';
 
 function Payment() {
@@ -23,7 +25,7 @@ function Payment() {
     const [City, setCity] = useState('');
     const [zipCode, setZip] = useState('');
     const [Address, setAddress] = useState('');
-    const [paymentMethod, setPayment] = useState('');
+    const [paymentMethod, setPayment] = useState('Metamask');
 
     const [user, setUser] = useState({
         roles: [],
@@ -32,11 +34,12 @@ function Payment() {
     });
 
     const [accForm, setAcc] = useState(false);
+    const [scriptLoaded, setScriptLoaded] = useState<any>(false);
 
     const plain = {
         id_account: null,
         full_name: null,
-        total_price: null,
+        total_price: 0,
         service: null,
         type: null,
         rank: null,
@@ -47,17 +50,6 @@ function Payment() {
     };
 
     const [data, setData] = useState(plain);
-
-    useEffect(() => {
-        const predata = localStorage.getItem('data') || '';
-        const userData = getCookie('store');
-
-        if (userData !== '') {
-            setUser(JSON.parse(userData));
-        }
-        setData(JSON.parse(predata));
-        console.log(JSON.parse(predata));
-    }, []);
 
     async function paymentForm() {
         const form = {
@@ -78,8 +70,17 @@ function Payment() {
                     'Content-Type': 'application/json'
                 }
             };
-            const url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/account/checkout/${data.id_account}`;
-            await axios.post(url, form, config).then(() => { global.location.href = '/profile/detail'; }).catch((err) => console.log(err));
+
+            if (data.service === 'Boost') {
+                const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/boosts';
+                await axios.post(url, data, config).then(async (res) => {
+                    const url2 = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/boost/checkout/${res.data.data.id}`;
+                    await axios.post(url2, form, config).then(() => { global.location.href = '/profile/detail'; }).catch((err) => console.log(err));
+                }).catch((err) => console.log(err));
+            } else {
+                const url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/account/checkout/${data.id_account}`;
+                await axios.post(url, form, config).then(() => { global.location.href = '/profile/detail'; }).catch((err) => console.log(err));
+            }
         }
     }
 
@@ -93,6 +94,29 @@ function Payment() {
         });
         return res;
     }
+
+    useEffect(() => {
+        const predata = localStorage.getItem('data') || '';
+        const userData = getCookie('store');
+
+        if (userData !== '') {
+            setUser(JSON.parse(userData));
+        }
+        setData(JSON.parse(predata));
+        console.log(JSON.parse(predata));
+
+        // Setup Script Paypal
+        const setUpPaypal = () => {
+            const script = document.createElement('script');
+            const client_id = 'AQJ0lMVFFLnfP5_iWaFZ7CVBwWnW_Ye4PALwEq3uCNl9uEi2Riehni2YETl5kHBWeJ2bdSwCWhfZIusx';
+            script.src = `https://www.paypal.com/sdk/js?client-id=${client_id}`;
+            script.type = 'text/javascript';
+            script.async = true;
+            script.onload = () => setScriptLoaded(true);
+            document.body.appendChild(script);
+        };
+        setUpPaypal();
+    }, []);
 
     return (
         <Container className="pt-3 my-5">
@@ -172,7 +196,11 @@ function Payment() {
                             </div>
                             <span className={styles['sub-mini-text']}>Further information will be requested after payment.</span>
                             <div className="centered mt-4 mb-2">
-                                <button className="button capsule" onClick={() => paymentForm()}>Pay Now</button>
+                                {paymentMethod === 'Paypal' && scriptLoaded ? (
+                                    <PayPalButton amount={data.total_price} onSuccess={(details) => console.log(details)} />
+                                ) : (
+                                    <button className="button capsule" onClick={() => paymentForm()}>Pay Now</button>
+                                )}
                             </div>
                         </Row>
                     </Col>

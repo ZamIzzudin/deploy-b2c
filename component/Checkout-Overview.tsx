@@ -6,22 +6,21 @@ import { Row, Col } from 'react-bootstrap';
 export function DoubleIncludeRank({ details }) {
     return (
         <Row className="centered">
-            {details?.map((detail, index) => (
-                <Col className={`${index === 0 && ('col-md-8')} centered pr-1`}>
-                    <Row className="flex-horizon fullwidth">
-                        <Col className="centered-down gap-2">
-                            <Image src={detail.badge || '/kosong.png'} width={65} height={65} />
-                            <span>{detail.name}</span>
-                        </Col>
-                        {index === 0 && (
-                            <Col className="centered">
-                                <Image src="/arrow.png" width={50} height={25} />
-                            </Col>
-
-                        )}
-                    </Row>
-                </Col>
-            ))}
+            <Col className="centered pr-1">
+                <Row className="flex-horizon fullwidth">
+                    <Col className="centered-down gap-2 ">
+                        <Image src={details[0].badge || '/kosong.png'} width={65} height={65} />
+                        <span>{details[0].name}</span>
+                    </Col>
+                    <Col className="centered">
+                        <Image src="/arrow.png" width={50} height={25} />
+                    </Col>
+                    <Col className="centered-down gap-2">
+                        <Image src={details[1].badge || '/kosong.png'} width={65} height={65} />
+                        <span>{details[1].name}</span>
+                    </Col>
+                </Row>
+            </Col>
         </Row>
     );
 }

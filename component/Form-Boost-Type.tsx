@@ -12,10 +12,11 @@ import { Form, Row, Col } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
+import { send } from 'process';
 import styles from './styles/FormBoost.module.css';
 
 export function IncludeRank({
-    title, game, getData, ranks,
+    title, getData, ranks,
 }) {
     const [clearRanks, setClearRanks] = useState<any>([]);
     const [selectedRank, setSelectedRank] = useState<any>(ranks[0]);
@@ -66,7 +67,6 @@ export function IncludeRank({
         <div className={styles.container}>
             <div>
                 <h1 className={styles['title-form']}>{title}</h1>
-                <span>{game}</span>
             </div>
             <Row className={styles['rank-division-container']}>
                 <Col className={`${styles['rank-container']} col-md-6 gap-2`}>
@@ -100,8 +100,7 @@ export function NumberGame({
     return (
         <div className={styles.container}>
             <div>
-                <span className={styles['number-order']}>{num}</span>
-                <h1 className="d-i-block">{title}</h1>
+                <h1 className={styles['title-form']}>{title}</h1>
             </div>
             <div>
                 <Form.Group>
@@ -152,7 +151,7 @@ export function Points({
 
     return (
         <div className={styles.container}>
-            <h1>{title}</h1>
+            <h1 className={styles['title-form']}>{title}</h1>
             <div className={`${styles['point-range-container']} my-3`}>
                 <Form.Group className="w-50 px-3 centered-down">
                     <span>
@@ -187,19 +186,51 @@ export function Points({
 }
 
 export function PlatformSelect({
-    game, title, platforms, getData,
+    title, platforms, getData,
 }) {
-    function sendData(data, type) {
-        const str = type.replace(/\s/g, '');
-        getData(data, str);
+    function sendData(data) {
+        const newData = { platform: data };
+        getData(newData, 'Platform Require');
     }
+
+    const [selected, setSelected] = useState<any>(platforms[0]);
+
+    useEffect(() => {
+        sendData(platforms[0]);
+    }, [platforms]);
     return (
         <div className={styles.container}>
-            <h1>{title}</h1>
-            <h5>{game}</h5>
-            {/* <div className="mt-4 mb-2">
-                {platforms.map((platform) => <span onClick={() => sendData(platform, title)} className={styles['platform-button']}>{platform}</span>)}
-            </div> */}
+            <h1 className={styles['title-form']}>{title}</h1>
+            <div className="mt-4 mb-2">
+                {platforms.map((platform) => <span key={platform} onClick={() => { sendData(platform); setSelected(platform); }} className={`${styles['platform-button']} ${platform === selected ? (styles.active) : ('')}`}>{platform}</span>)}
+            </div>
+        </div>
+    );
+}
+
+export function ServerSelect({
+    servers, getData,
+}) {
+    function sendData(data) {
+        const newData = { server: data };
+        getData(newData, 'Server Require');
+    }
+
+    const [selected, setSelected] = useState<any>();
+
+    useEffect(() => {
+        if (servers !== undefined) {
+            setSelected(servers[0]?.name);
+        }
+        sendData(servers[0]?.name);
+    }, [servers]);
+
+    return (
+        <div className={styles.container}>
+            <h1 className={styles['title-form']}>Select Your Server</h1>
+            <div className="mt-4 mb-2">
+                {servers.map((server) => <span key={server.name} onClick={() => { sendData(server.name); setSelected(server.name); }} className={`${styles['platform-button']} ${server.name === selected ? (styles.active) : ('')}`}>{server.name}</span>)}
+            </div>
         </div>
     );
 }
