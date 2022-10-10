@@ -1,3 +1,5 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-console */
@@ -9,9 +11,9 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import axios from 'axios';
 import Image from 'next/image';
 import { Container, Row, Col } from 'react-bootstrap';
+import { SDetailAccount } from '../../component/Skeleton-Loading';
 import styles from '../../styles/Market.module.css';
 
 function AccountDetails() {
@@ -78,7 +80,7 @@ function AccountDetails() {
                     </Link>
                 </Col>
             </Row>
-            {Details.price > 0 && (
+            {Details.price > 0 ? (
                 <Row className="mt-5 px-4">
                     {agents.length > 0 && (
                         <Col className="col-6 col-md-4 mb-3">
@@ -156,8 +158,9 @@ function AccountDetails() {
                         </div>
                     </Col>
                 </Row>
+            ) : (
+                <SDetailAccount />
             )}
-
         </Container>
 
     );

@@ -18,11 +18,10 @@ import DetailInvoice from './Detail-Invoice';
 import DetailMarket from './Detail-Market';
 import DetailOrder from './Detail-Order';
 import DetailOther from './Detail-Other';
-import DetailProfile from './Detail-Profile';
 import DetailModal from './Detail-Modal';
 import OptionalAddons from './Checkout-AddOns';
 import Checkout from './Checkout';
 
 export {
-    Checkout, OptionalAddons, DetailModal, DetailBooster, DetailInvoice, DetailMarket, DetailOrder, DetailOther, DetailProfile, SideBar, Navbar, Footer, Jumbotron, Testimonial, FeaturedBenefit, GameCard, FAQ, Step, AccountCard, LoginModal, FormBoost,
+    Checkout, OptionalAddons, DetailModal, DetailBooster, DetailInvoice, DetailMarket, DetailOrder, DetailOther, SideBar, Navbar, Footer, Jumbotron, Testimonial, FeaturedBenefit, GameCard, FAQ, Step, AccountCard, LoginModal, FormBoost,
 };

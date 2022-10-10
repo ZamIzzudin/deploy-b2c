@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-console */
@@ -18,10 +19,15 @@ import styles from './styles/LoginModal.module.css';
 
 export default function LoginModal(props: any) {
     const [selectOption, setSelectionOption] = useState('login');
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [rePassword, setRePassword] = useState('');
 
     const [showPass, setShowPass] = useState(false);
+    const [showRePass, setShowRePass] = useState(false);
+
+    const [errorMsg, setErrorMsg] = useState(false);
 
     const handleLogin = async (provider: any) => {
         const res = await socialMediaAuth(provider);
@@ -32,13 +38,53 @@ export default function LoginModal(props: any) {
 
         const { uid } = res;
 
-        const user = await axios.post('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/v1/auth', auth).then((response) => response.data).catch((response) => console.log(response));
+        const url = `${process.env.API}/v1/auth`;
 
-        await props.getDataLogin(res, user.token, user.role);
+        await axios.post(url, auth).then((response) => {
+            props.getDataLogin(res, response.data.token, response.data.role);
+        }).catch((response) => alert(response));
     };
 
-    async function handleLoginAccount() {
-        console.log(`${email} ${password}`);
+    async function handleLoginAccount(e) {
+        e.preventDefault();
+        const auth = {
+            password,
+            email,
+        };
+
+        const url = `${process.env.API}/v1/auth/login`;
+
+        await axios.post(url, auth).then((response) => {
+            props.getDataLogin({ emailVerified: true }, response.data.token, response.data.role);
+        }).catch((err) => { setErrorMsg(true); });
+    }
+
+    async function handleRegisterAccount(e) {
+        e.preventDefault();
+        const auth = {
+            username,
+            email,
+            password,
+            password_confirmation: rePassword,
+        };
+
+        const url = `${process.env.API}/v1/auth/register`;
+        if (password === rePassword) {
+            const user = await axios.post(url, auth).then((response) => response.data).catch((response) => console.log(response));
+            await props.getDataLogin({ emailVerified: true }, user.token, user.role);
+        } else {
+            setErrorMsg(true);
+        }
+    }
+
+    function clearState() {
+        setUsername('');
+        setEmail('');
+        setPassword('');
+        setRePassword('');
+        setShowPass(false);
+        setShowRePass(false);
+        setErrorMsg(false);
     }
 
     return (
@@ -50,8 +96,8 @@ export default function LoginModal(props: any) {
             <Modal.Body>
                 <Row>
                     <Col className={`${styles['modal-header']} mb-3`}>
-                        <button className={`${styles['option-button']} ${selectOption === 'login' && (styles.active)}`} onClick={() => setSelectionOption('login')}>Login</button>
-                        <button className={`${styles['option-button']} ${selectOption === 'register' && (styles.active)}`} onClick={() => setSelectionOption('register')}>Register</button>
+                        <button className={`${styles['option-button']} ${selectOption === 'login' && (styles.active)}`} onClick={() => { setSelectionOption('login'); clearState(); }}>Login</button>
+                        <button className={`${styles['option-button']} ${selectOption === 'register' && (styles.active)}`} onClick={() => { setSelectionOption('register'); clearState(); }}>Register</button>
                     </Col>
                 </Row>
                 <Row>
@@ -60,42 +106,63 @@ export default function LoginModal(props: any) {
                             <span className="mb-3">
                                 Login with Account
                             </span>
-                            <Form.Group className="fullwidth">
-                                <Form.Control className="form-layout mb-3" placeholder="Email" type="email" onChange={(e) => setEmail(e.target.value)} />
-                                <InputGroup>
-                                    <Form.Control type={showPass ? ('type') : ('password')} className="form-layout mb-3" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-                                    <button className={styles['show-password-button']} onClick={() => { setShowPass(!showPass); }}>
-                                        {showPass ? (
-                                            <i className="fa-regular fa-eye" />
-                                        ) : (
-                                            <i className="fa-regular fa-eye-slash" />
-                                        )}
-                                    </button>
-                                </InputGroup>
-                                <div className="centered">
-                                    <button className="button capsule fullwidth" onClick={() => handleLoginAccount()}>Login</button>
-                                </div>
-                            </Form.Group>
+                            {errorMsg && (
+                                <span className="mb-3 error-message">Cannot Login</span>
+                            )}
+                            <Form onSubmit={(e) => handleLoginAccount(e)}>
+                                <Form.Group className="fullwidth">
+                                    <Form.Control required className="form-layout mb-3" placeholder="Email" type="email" onChange={(e) => setEmail(e.target.value)} />
+                                    <InputGroup>
+                                        <Form.Control required type={showPass ? ('type') : ('password')} className="form-layout mb-3" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+                                        <button className={styles['show-password-button']} onClick={() => { setShowPass(!showPass); }}>
+                                            {showPass ? (
+                                                <i className="fa-regular fa-eye" />
+                                            ) : (
+                                                <i className="fa-regular fa-eye-slash" />
+                                            )}
+                                        </button>
+                                    </InputGroup>
+                                    <div className="centered">
+                                        <button className="button capsule fullwidth" type="submit">Login</button>
+                                    </div>
+                                </Form.Group>
+                            </Form>
                         </Col>
                     ) : (
                         <Col className={`${styles['form-container']} col-12 col-md-8 col-sm-12 flex-down`}>
                             <span className="mb-3">Create new Account</span>
-                            <Form.Group className="fullwidth">
-                                <Form.Control className="form-layout mb-3" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-                                <InputGroup>
-                                    <Form.Control type={showPass ? ('type') : ('password')} className="form-layout mb-3" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-                                    <button className={styles['show-password-button']} onClick={() => { setShowPass(!showPass); }}>
-                                        {showPass ? (
-                                            <i className="fa-regular fa-eye" />
-                                        ) : (
-                                            <i className="fa-regular fa-eye-slash" />
-                                        )}
-                                    </button>
-                                </InputGroup>
-                                <div className="centered">
-                                    <button className="button capsule fullwidth" onClick={() => handleLoginAccount()}>Register</button>
-                                </div>
-                            </Form.Group>
+                            <Form onSubmit={(e) => handleRegisterAccount(e)}>
+                                <Form.Group className="fullwidth">
+                                    <Form.Control required className="form-layout mb-3" placeholder="Email" type="email" onChange={(e) => setEmail(e.target.value)} />
+                                    <Form.Control required className="form-layout mb-3" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
+                                    {errorMsg && (
+                                        <span className="mb-3 error-message">Your Password Doesn`t Match</span>
+                                    )}
+                                    <InputGroup>
+                                        <Form.Control required type={showPass ? ('type') : ('password')} className="form-layout mb-3" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+                                        <button className={styles['show-password-button']} onClick={() => { setShowPass(!showPass); }}>
+                                            {showPass ? (
+                                                <i className="fa-regular fa-eye" />
+                                            ) : (
+                                                <i className="fa-regular fa-eye-slash" />
+                                            )}
+                                        </button>
+                                    </InputGroup>
+                                    <InputGroup>
+                                        <Form.Control required type={showRePass ? ('type') : ('password')} className="form-layout mb-3" placeholder="Rewrite Password" onChange={(e) => setRePassword(e.target.value)} />
+                                        <button className={styles['show-password-button']} onClick={() => { setShowRePass(!showRePass); }}>
+                                            {showRePass ? (
+                                                <i className="fa-regular fa-eye" />
+                                            ) : (
+                                                <i className="fa-regular fa-eye-slash" />
+                                            )}
+                                        </button>
+                                    </InputGroup>
+                                    <div className="centered">
+                                        <button className="button capsule fullwidth" type="submit">Register</button>
+                                    </div>
+                                </Form.Group>
+                            </Form>
                         </Col>
                     )}
                     <Col>

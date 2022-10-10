@@ -62,19 +62,19 @@ function DetailMarket(props: any) {
     }, [filterRank, filterServer, filterSort]);
 
     async function getServer() {
-        const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/servers';
+        const url = `${process.env.API}/servers`;
 
         await axios.get(url).then((res) => setServers(res.data.data)).catch((err) => console.log(err));
     }
 
     async function getRank() {
-        const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/ranks';
+        const url = `${process.env.API}/ranks`;
 
         await axios.get(url).then((res) => setRanks(res.data.ranks.data)).catch((err) => console.log(err));
     }
 
     async function getAccount() {
-        await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/accounts').then((res) => setAccounts(res.data.accounts)).catch((res) => console.log(res));
+        await axios.get(`${process.env.API}/accounts`).then((res) => setAccounts(res.data.accounts)).catch((res) => console.log(res));
     }
 
     function setModal(type) {
@@ -118,7 +118,7 @@ function DetailMarket(props: any) {
             in_stocks: '1',
         };
 
-        const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/accounts';
+        const url = `${process.env.API}/accounts`;
 
         await axios.post(url, data, config).then((res) => {
             clearData();
@@ -147,7 +147,7 @@ function DetailMarket(props: any) {
             screenshots: newScreenshoot,
         };
 
-        const url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/accounts/${id}`;
+        const url = `${process.env.API}/accounts/${id}`;
 
         await axios.put(url, data, config).then((res) => {
             showModal(false);
@@ -157,7 +157,7 @@ function DetailMarket(props: any) {
     }
 
     async function deleteAccount(id) {
-        const url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/accounts/${id}`;
+        const url = `${process.env.API}/accounts/${id}`;
 
         const config = {
             headers: {
@@ -186,7 +186,7 @@ function DetailMarket(props: any) {
     }
 
     async function getAccountbyFilter() {
-        let url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/accounts/?sortOrder=${filterSort}`;
+        let url = `${process.env.API}/accounts/?sortOrder=${filterSort}`;
 
         console.log(filterRank);
         if (filterRank === '99' || filterServer === '99') {
@@ -234,7 +234,7 @@ function DetailMarket(props: any) {
     }
 
     async function handlePagination(page) {
-        const url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/accounts?page=${page}`;
+        const url = `${process.env.API}/accounts?page=${page}`;
 
         await axios.get(url).then((res) => setAccounts(res.data.accounts)).catch((res) => console.log(res));
 

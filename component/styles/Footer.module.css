@@ -1,5 +1,5 @@
 .Footer {
-    padding: 40px 0 10px 0;
+    padding: 40px 0 0 0;
     width: 100%;
     background-color: var(--bar);
     z-index: 10;
@@ -9,7 +9,6 @@
 .col {
     justify-content: center;
     flex-direction: column;
-    min-height: 150px;
 }
 
 .brand-overview {
@@ -33,7 +32,10 @@
 
 .footer-part {
     width: 100%;
-    padding-left: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
 }
 
 .footer-part h1 {
@@ -42,20 +44,28 @@
     color: var(--primColor);
     font-weight: 700;
     margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
 }
 
 .footer-list {
     font-size: 1.1em;
-    width: 85%;
+    width: 100%;
     list-style: none;
     padding-left: 0;
+    text-align: center;
 }
 
 .footer-list li {
     font-weight: 400;
 }
 
+.footer-copyright {
+    padding: 8px 0;
+}
+
 .footer-copyright h3 {
+    margin: 0;
     font-family: var(--thirdFont);
     font-size: 1.1em;
     font-weight: 550;
@@ -68,6 +78,13 @@
 }
 
 @media only screen and (max-width: 600px) {
+    .Footer {
+        background-color: var(--bg);
+        padding: 0;
+        padding-top: 32px;
+        border-top: 1px solid var(--insideCard);
+    }
+
     .brand-overview {
         justify-content: center;
     }
@@ -79,6 +96,10 @@
 
     .brand-text {
         margin: 0;
+    }
+
+    .footer-part {
+        padding: 0;
     }
 
     .list-title,

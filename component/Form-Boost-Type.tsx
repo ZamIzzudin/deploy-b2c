@@ -50,7 +50,7 @@ export function IncludeRank({
     }
 
     async function getRank() {
-        const url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/ranks/${selectedRank.id + selectedDivision}`;
+        const url = `${process.env.API}/ranks/${selectedRank.id + selectedDivision}`;
 
         await axios.get(url).then((res) => sendData(res.data.data)).catch((err) => console.log(err));
     }

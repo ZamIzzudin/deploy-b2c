@@ -23,10 +23,11 @@ import {
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { AccountCard } from '../../component';
+import { SAccountList } from '../../component/Skeleton-Loading';
 import styles from '../../styles/Market.module.css';
 
 function Market() {
-    const [accounts, setAccounts] = useState({ last_page: 0, data: [] });
+    const [accounts, setAccounts] = useState({ last_page: 1, data: [] });
     const [Ranks, setRanks] = useState([{ name: '', id: 0, badge: 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/storage/images/rank-badges/valorant/unranked.png' }]);
     const [Servers, setServers] = useState([{ id: 0, server_name: '' }]);
 
@@ -38,25 +39,25 @@ function Market() {
     const pagination: any = [];
 
     async function getAccount() {
-        const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/accounts';
+        const url = `${process.env.API}/accounts`;
 
         await axios.get(url).then((res) => setAccounts(res.data.accounts)).catch((err) => console.log(err));
     }
 
     async function getRank() {
-        const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/ranks';
+        const url = `${process.env.API}/ranks`;
 
         await axios.get(url).then((res) => setRanks(res.data.ranks.data)).catch((err) => console.log(err));
     }
 
     async function getServer() {
-        const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/servers';
+        const url = `${process.env.API}/servers`;
 
         await axios.get(url).then((res) => setServers(res.data.data)).catch((err) => console.log(err));
     }
 
     async function getAccountbyFilter() {
-        let url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/accounts/?sortOrder=${filterSort}`;
+        let url = `${process.env.API}/accounts/?sortOrder=${filterSort}`;
 
         console.log(filterRank);
         if (filterRank === '99' || filterServer === '99') {
@@ -78,7 +79,7 @@ function Market() {
     }
 
     async function handlePagination(page) {
-        const url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/accounts?page=${page}`;
+        const url = `${process.env.API}/accounts?page=${page}`;
 
         await axios.get(url).then((res) => setAccounts(res.data.accounts)).catch((res) => console.log(res));
 
@@ -183,11 +184,15 @@ function Market() {
                     <span className={filterSort === 'desc' ? ('active-org') : ('none')} onClick={() => { setFilterSort('desc'); getAccountbyFilter(); }}>DESC</span>
                 </Col>
             </Row>
-            <Row className={`${styles['card-container']} centered`}>
-                {accounts.data.map((i: any, index) => (
-                    <AccountCard data={i} key={index} />
-                ))}
-            </Row>
+            {accounts.data.length > 0 ? (
+                <Row className={`${styles['card-container']} centered`}>
+                    {accounts.data.map((i: any, index) => (
+                        <AccountCard data={i} key={index} />
+                    ))}
+                </Row>
+            ) : (
+                <SAccountList />
+            )}
             <Row className="mt-4 mb-3">
                 {accounts.last_page && (
                     <Col>

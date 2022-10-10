@@ -2,13 +2,13 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 
 const firebaseConfig = {
-    apiKey: 'AIzaSyBUS4vcB7jK6vKKyY-YOJjCfQbdmekzNg0',
-    authDomain: 'fir-lunar.firebaseapp.com',
-    projectId: 'fir-lunar',
-    storageBucket: 'fir-lunar.appspot.com',
-    messagingSenderId: '617548211760',
-    appId: '1:617548211760:web:96140374a85bd60893eff5',
-    measurementId: 'G-ZWVG6H42WB',
+    apiKey: process.env.F_API_KEY,
+    authDomain: process.env.F_AUTH_DOMAIN,
+    projectId: process.env.F_PROJECT_ID,
+    storageBucket: process.env.F_STORAGE_BUCKET,
+    messagingSenderId: process.env.F_MESSAGE_ID,
+    appId: process.env.F_APP_ID,
+    measurementId: process.env.F_MEASURE_ID,
 };
 
 if (!firebase.apps.length) {

@@ -67,9 +67,11 @@ function AccountCard(props: any) {
                             <button onClick={() => { props.setModal('edit'); props.getCurrent(data); }} className="button capsule mt-4 mb-3">Edit</button>
                         </div>
                     ) : (
-                        <Link href="/market/details" className="centered">
-                            <button onClick={() => seeDetails()} className="button capsule mt-4 mb-3">See Details</button>
-                        </Link>
+                        <div className="centered">
+                            <Link href="/market/details" className="centered">
+                                <button onClick={() => seeDetails()} className="button capsule mt-4 mb-3 w-90">See Details</button>
+                            </Link>
+                        </div>
                     )}
                 </Row>
             </div>

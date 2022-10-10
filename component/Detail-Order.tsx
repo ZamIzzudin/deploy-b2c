@@ -23,7 +23,7 @@ function DetailOrder(props: any) {
     const [order, setOrder] = useState([]);
 
     // async function getTypeByOrder() {
-    //     const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/account/checkout';
+    //     const url = `${process.env.API}/account/checkout`;
 
     //     const config = {
     //         headers: {

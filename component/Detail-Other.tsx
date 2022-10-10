@@ -40,14 +40,14 @@ function DetailOther(props: any) {
     const [modal6, showModal6] = useState(false);
 
     async function getGames() {
-        const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/games';
+        const url = `${process.env.API}/games`;
 
         await axios.get(url).then((res) => setGames(res.data.data)).catch((err) => console.log(err));
     }
 
     // Manage Server
     async function getServer() {
-        await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/servers').then((res) => setServers(res.data.data)).catch((err) => console.log(err));
+        await axios.get(`${process.env.API}/servers`).then((res) => setServers(res.data.data)).catch((err) => console.log(err));
     }
 
     async function deleteServer(server) {
@@ -59,7 +59,7 @@ function DetailOther(props: any) {
             },
         };
 
-        const url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/servers/${server}`;
+        const url = `${process.env.API}/servers/${server}`;
 
         await axios.delete(url, config).then((res) => {
             getServer();
@@ -67,7 +67,7 @@ function DetailOther(props: any) {
     }
 
     async function addServer() {
-        const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/servers';
+        const url = `${process.env.API}/servers`;
 
         const config = {
             headers: {
@@ -91,7 +91,7 @@ function DetailOther(props: any) {
     }
 
     async function getCurrentServer(id) {
-        const url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/servers/${id}`;
+        const url = `${process.env.API}/servers/${id}`;
 
         await axios.get(url).then((res) => {
             setCurrentServer(res.data.data.id);
@@ -103,7 +103,7 @@ function DetailOther(props: any) {
     }
 
     async function updateServer() {
-        const url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/servers/${currentServer}`;
+        const url = `${process.env.API}/servers/${currentServer}`;
 
         const config = {
             headers: {
@@ -128,7 +128,7 @@ function DetailOther(props: any) {
 
     // Manage Rank
     async function getRanks() {
-        await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/ranks').then((res) => setRanks(res.data.ranks.data)).catch((res) => console.log(res));
+        await axios.get(`${process.env.API}/ranks`).then((res) => setRanks(res.data.ranks.data)).catch((res) => console.log(res));
     }
 
     function getCurrentRank(id) {
@@ -150,7 +150,7 @@ function DetailOther(props: any) {
         showModal5(false);
         showModal6(true);
 
-        const url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/ranks/${id}`;
+        const url = `${process.env.API}/ranks/${id}`;
 
         await axios.get(url).then((res) => {
             setNameRank(res.data.data.name);
@@ -160,7 +160,7 @@ function DetailOther(props: any) {
     }
 
     async function addRank() {
-        const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/ranks';
+        const url = `${process.env.API}/ranks`;
 
         const config = {
             headers: {
@@ -184,7 +184,7 @@ function DetailOther(props: any) {
     }
 
     async function updateRank() {
-        const url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/ranks/${selectedRank}`;
+        const url = `${process.env.API}/ranks/${selectedRank}`;
 
         const config = {
             headers: {
@@ -210,7 +210,7 @@ function DetailOther(props: any) {
     }
 
     async function deleteRank(id) {
-        const url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/ranks/${id}`;
+        const url = `${process.env.API}/ranks/${id}`;
 
         const config = {
             headers: {

@@ -60,6 +60,27 @@
     transform: scale(1.1);
 }
 
+.service-slider {
+    width: fit-content;
+    width: 110%;
+    height: 90px;
+    margin: 0 -1vw;
+    border-radius: 15px;
+}
+
+.service-slider-container {
+    padding: 13px;
+    display: flex;
+    height: inherit;
+    width: fit-content;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.service-slider-container::-webkit-scrollbar {
+    height: 5px;
+}
+
 /* Order */
 .service-name {
     font-weight: 400;

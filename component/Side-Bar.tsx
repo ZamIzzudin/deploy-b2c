@@ -22,10 +22,6 @@ function SideBar(props: any) {
                 <span className={`${styles['close-toogle']} mobile`}><i className="fa-solid fa-xmark" onClick={() => props.close(false)} /></span>
                 {role === 'user' && (
                     <div className={`${styles['list-toogle']}`}>
-                        <button className={`${styles['list-item']} ${active === 'profile' ? (styles.active) : ('')}`} onClick={() => setComponent('profile')}>
-                            <i className="fa-solid fa-user" />
-                            <span className={styles.mobile}>Profile</span>
-                        </button>
                         <button className={`${styles['list-item']} ${active === 'order' ? (styles.active) : ('')}`} onClick={() => setComponent('order')}>
                             <i className="fa-solid fa-cart-shopping" />
                             <span className={styles.mobile}>Order</span>

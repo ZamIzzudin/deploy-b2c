@@ -40,60 +40,43 @@ function DetailBooster(props: any) {
     const [newGameLogo, setNewGameLogo] = useState('');
     const [newServiceName, setNewServiceName] = useState('');
 
+    const [boostOrder, setBoostOrder] = useState([{ id: undefined }]);
+
     useEffect(() => {
         getGames();
+        getBoostOrderList();
+        getService({ name: 'Valorant' });
     }, []);
 
+    async function getBoostOrderList() {
+        const url = `${process.env.API}/boosts`;
+
+        await axios.get(url).then((res) => setBoostOrder(res.data)).catch((err) => console.log(err));
+    }
+
     async function getGames() {
-        await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/games').then((res) => setGames(res.data.data)).catch((res) => console.log(res));
+        await axios.get(`${process.env.API}/games`).then((res) => setGames(res.data.data)).catch((res) => console.log(res));
     }
 
-    function getService(Game: any) {
-        const ApexLegend = [{ name: 'Rank Boosting', type: 'A' }, { name: 'Battlepass Boost', type: 'B' }, { name: 'Level Boost', type: 'C' }];
-        const Valorant = [{ name: 'Rank Boosting', type: 'A' }, { name: 'Placement', type: 'C' }, { name: 'Competitive Net Wins', type: 'D' }, { name: 'Derank', type: 'A' }, { name: 'Unrated Wins', type: 'B' }, { name: 'Challenges', type: 'D' }, { name: 'Smurf Account', type: 'C' }];
-        const NewWorld = [{ name: 'Player Level', type: 'E' }, { name: 'Coins', type: 'F' }, { name: 'Trade Skill', type: 'G' }, { name: 'Gear Score', type: 'H' }, { name: 'Mutated Expeditions', type: 'E' }, { name: 'Weapon Mastery', type: 'I' }, { name: 'Farming Service', type: 'F' }];
-        const Dota = [{ name: 'Placement Matches', type: 'A' }, { name: 'MMR Boost', type: 'B' }, { name: 'Ranked Net Win', type: 'C' }, { name: 'Low Priority', type: 'J' }];
-        const BlackDesert = [{ name: 'Hourly Farm', type: 'F' }, { name: 'Questlines', type: 'J' }, { name: 'Energy Point', type: 'F' }, { name: 'Level Boost', type: 'E' }, { name: 'Contribution Points', type: 'F' }, { name: 'Adventure Logs', type: 'G' }];
-        const CSGO = [{ name: 'Macthmaking Rank', type: 'A' }, { name: 'Matchmaking Net Rank', type: 'C' }, { name: 'Wingman Rank', type: 'B' }, { name: 'Dangerzone Rank', type: 'A' }, { name: 'Faceit Level', type: 'D' }];
-        const GenshinImpact = [{ name: 'Daily Mission', type: 'F' }, { name: 'Enhance Weapon', type: 'J' }, { name: 'Adventure Rank', type: 'F' }];
-        const CODColdWar = [{ name: 'Camo', type: 'G' }, { name: 'Weapon Level', type: 'J' }, { name: 'Player Level', type: 'F' }];
-
-        if (Game === 'ApexLegend') {
-            setService(ApexLegend);
-        } else if (Game === 'Valorant') {
-            setService(Valorant);
-        } else if (Game === 'NewWorld') {
-            setService(NewWorld);
-        } else if (Game === 'Dota') {
-            setService(Dota);
-        } else if (Game === 'BlackDesert') {
-            setService(BlackDesert);
-        } else if (Game === 'CSGO') {
-            setService(CSGO);
-        } else if (Game === 'GenshinImpact') {
-            setService(GenshinImpact);
-        } else if (Game === 'CODColdWar') {
-            setService(CODColdWar);
-        }
-
-        setSelectedGame(Game);
-    }
-
-    function getSelectedGame(game: any) {
-        const select = game.replace(
+    async function getService(game: any) {
+        const slugGame = game.name.replace(
             /[^a-zA-Z0-9,\-.?! ]/g,
-            '',
-        ).replace(/\s/g, '');
-        getService(select);
+            '-',
+        ).replace(/\s/g, '-').toLowerCase();
+
+        const url = `${process.env.API}/boosting/${slugGame}`;
+
+        await axios.get(url).then((res) => setService(res.data.boost_options)).catch((err) => console.log(err));
     }
 
+    // CRUD
     async function newGame() {
         const data = {
             name: newGameName,
             logo_img: newGameLogo,
         };
 
-        const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/games';
+        const url = `${process.env.API}/games`;
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -120,7 +103,7 @@ function DetailBooster(props: any) {
                 'Content-Type': 'application/json',
             },
         };
-        const url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/games/${id}`;
+        const url = `${process.env.API}/games/${id}`;
         await axios.delete(url, config).then((res) => getGames()).catch((err) => console.log(err));
     }
 
@@ -135,7 +118,12 @@ function DetailBooster(props: any) {
             )}
             {role === 'booster' && (
                 <Row className="mt-3 centered">
-                    <Col className="col-md-4 my-3 col-6">
+                    {boostOrder[0].id !== undefined ? (
+                        <span>Ada Order</span>
+                    ) : (
+                        <span>No Order Yet</span>
+                    )}
+                    {/* <Col className="col-md-4 my-3 col-6">
                         <Row className="card width90">
                             <h2 className={styles['booster-card-title']}>Genshin Impact</h2>
                             <h3 className={styles['booster-card-subtitle']}>Daily Mission</h3>
@@ -148,77 +136,7 @@ function DetailBooster(props: any) {
                                 </Col>
                             </Row>
                         </Row>
-                    </Col>
-                    <Col className="col-md-4 my-3 col-6">
-                        <Row className="card width90">
-                            <h2 className={styles['booster-card-title']}>Genshin Impact</h2>
-                            <h3 className={styles['booster-card-subtitle']}>Daily Mission</h3>
-                            <Row className="centered gap-3 mt-3">
-                                <Col className="centered">
-                                    <span className={styles['booster-card-price']}>$47.0</span>
-                                </Col>
-                                <Col className="centered">
-                                    <button onClick={() => showModal3(true)} className="button capsule">Details</button>
-                                </Col>
-                            </Row>
-                        </Row>
-                    </Col>
-                    <Col className="col-md-4 my-3 col-6">
-                        <Row className="card width90">
-                            <h2 className={styles['booster-card-title']}>Genshin Impact</h2>
-                            <h3 className={styles['booster-card-subtitle']}>Daily Mission</h3>
-                            <Row className="centered gap-3 mt-3">
-                                <Col className="centered">
-                                    <span className={styles['booster-card-price']}>$47.0</span>
-                                </Col>
-                                <Col className="centered">
-                                    <button onClick={() => showModal3(true)} className="button capsule">Details</button>
-                                </Col>
-                            </Row>
-                        </Row>
-                    </Col>
-                    <Col className="col-md-4 my-3 col-6">
-                        <Row className="card width90">
-                            <h2 className={styles['booster-card-title']}>Genshin Impact</h2>
-                            <h3 className={styles['booster-card-subtitle']}>Daily Mission</h3>
-                            <Row className="centered gap-3 mt-3">
-                                <Col className="centered">
-                                    <span className={styles['booster-card-price']}>$47.0</span>
-                                </Col>
-                                <Col className="centered">
-                                    <button onClick={() => showModal3(true)} className="button capsule">Details</button>
-                                </Col>
-                            </Row>
-                        </Row>
-                    </Col>
-                    <Col className="col-md-4 my-3 col-6">
-                        <Row className="card width90">
-                            <h2 className={styles['booster-card-title']}>Genshin Impact</h2>
-                            <h3 className={styles['booster-card-subtitle']}>Daily Mission</h3>
-                            <Row className="centered gap-3 mt-3">
-                                <Col className="centered">
-                                    <span className={styles['booster-card-price']}>$47.0</span>
-                                </Col>
-                                <Col className="centered">
-                                    <button onClick={() => showModal3(true)} className="button capsule">Details</button>
-                                </Col>
-                            </Row>
-                        </Row>
-                    </Col>
-                    <Col className="col-md-4 my-3 col-6">
-                        <Row className="card width90">
-                            <h2 className={styles['booster-card-title']}>Genshin Impact</h2>
-                            <h3 className={styles['booster-card-subtitle']}>Daily Mission</h3>
-                            <Row className="centered gap-3 mt-3">
-                                <Col className="centered">
-                                    <span className={styles['booster-card-price']}>$47.0</span>
-                                </Col>
-                                <Col className="centered">
-                                    <button onClick={() => showModal3(true)} className="button capsule">Details</button>
-                                </Col>
-                            </Row>
-                        </Row>
-                    </Col>
+                    </Col> */}
                 </Row>
             )}
             {role === 'admin' && (
@@ -233,9 +151,9 @@ function DetailBooster(props: any) {
                             )}
                         </Col>
                     </Row>
-                    <Row className="centered mt-4">
+                    <Row className="mt-5 mb-3 fullwidth">
                         {games.map((game) => (
-                            <GameCard data={game} key={game.id} getData={getSelectedGame} mini remove={removingGame} removeFunc={deleteGame} />
+                            <GameCard data={game} key={game.id} getData={getService} mini remove={removingGame} removeFunc={deleteGame} />
                         ))}
                     </Row>
                     <Row className="my-4 fullwidth">
@@ -249,18 +167,19 @@ function DetailBooster(props: any) {
 
                         </Col>
                     </Row>
-                    {service.length > 0 && (
-                        <Row className="gap-2 px-3">
+                    <Row className={`${styles['service-slider']} centered mb-3`}>
+                        <div className={styles['service-slider-container']}>
                             {service.map((i: any) => (
-                                <Col key={i.name} className={`card centered fit-content ${removingService ? ('') : ('card-hovering')} relative-pos`}>
-                                    <div>
-                                        <span className={styles['service-name']}>{i.name}</span>
-                                    </div>
-                                    {removingService && (<button onClick={() => deleteService(i.name, selectedGame)} className={styles['remove-toogle']}>X</button>)}
-                                </Col>
+                                <button key={i.name} className={`card fit-content mx-2 ${removingService ? ('') : ('card-hovering')} relative-pos`}>
+                                    <span className={styles['service-name']}>{i.name}</span>
+                                    {removingService && (
+                                        <button onClick={() => deleteService(i.name, selectedGame)} className={styles['remove-toogle']}>X</button>
+                                    )}
+                                </button>
                             ))}
-                        </Row>
-                    )}
+                        </div>
+                    </Row>
+
                 </div>
             )}
             <DetailModal

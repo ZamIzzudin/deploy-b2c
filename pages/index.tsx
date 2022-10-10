@@ -30,7 +30,7 @@ function Home() {
   const Row7 = useRef(null);
 
   async function getGames() {
-    await axios.get('http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/games').then((res) => setGames(res.data.data)).catch((res) => console.log(res));
+    await axios.get(`${process.env.API}/games`).then((res) => setGames(res.data.data)).catch((res) => console.log(res));
   }
 
   useEffect(() => {

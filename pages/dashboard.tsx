@@ -14,11 +14,11 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
-    SideBar, DetailOrder, DetailMarket, DetailProfile, DetailBooster, DetailInvoice, DetailOther,
-} from '../../component';
-import styles from '../../styles/User.module.css';
+    SideBar, DetailOrder, DetailMarket, DetailBooster, DetailInvoice, DetailOther,
+} from '../component';
+import styles from '../styles/User.module.css';
 
-function Detail() {
+function Dashboard() {
     const [role, setRole] = useState('user');
     const [component, setComponent] = useState('order');
 
@@ -41,14 +41,20 @@ function Detail() {
             if (userData === null) {
                 const User = JSON.parse(dataStore);
                 setUserData(User.user);
+                setRole(User.roles[0]);
                 setToken(User.token);
+                if (User.roles[0] === 'booster') {
+                    setComponent('boost');
+                }
             } else {
                 setUserData(userData);
+                setRole(JSON.parse(dataStore).roles[0]);
                 setToken(token);
             }
         } else {
             setUserData(null);
             setToken(null);
+            setRole('user');
         }
     }, [userData, token]);
 
@@ -79,13 +85,9 @@ function Detail() {
                             <Row className="my-3 fullwidth">
                                 <div className="flex-row center-start flex-left">
                                     <span className={styles['show-sidebar']} onClick={() => setShowSide(true)}><i className="fa-solid fa-bars" /></span>
-                                    <button className="button capsule" onClick={() => setRole('user')}>User</button>
-                                    <button className="button capsule mx-3" onClick={() => setRole('booster')}>Booster</button>
-                                    <button className="button capsule" onClick={() => setRole('admin')}>Admin</button>
                                 </div>
                             </Row>
                             <Row className="full-width centered">
-                                {component === 'profile' && (<DetailProfile role={role} userData={userData} />)}
                                 {component === 'market' && (<DetailMarket role={role} token={token} />)}
                                 {component === 'order' && (<DetailOrder role={role} token={token} />)}
                                 {component === 'invoice' && (<DetailInvoice role={role} />)}
@@ -104,4 +106,4 @@ function Detail() {
     );
 }
 
-export default Detail;
+export default Dashboard;

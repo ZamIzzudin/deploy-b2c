@@ -72,13 +72,13 @@ function Payment() {
             };
 
             if (data.service === 'Boost') {
-                const url = 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/boosts';
+                const url = `${process.env.API}/boosts`;
                 await axios.post(url, data, config).then(async (res) => {
-                    const url2 = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/boost/checkout/${res.data.data.id}`;
+                    const url2 = `${process.env.API}/boost/checkout/${res.data.data.id}`;
                     await axios.post(url2, form, config).then(() => { global.location.href = '/profile/detail'; }).catch((err) => console.log(err));
                 }).catch((err) => console.log(err));
             } else {
-                const url = `http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/api/account/checkout/${data.id_account}`;
+                const url = `${process.env.API}/account/checkout/${data.id_account}`;
                 await axios.post(url, form, config).then(() => { global.location.href = '/profile/detail'; }).catch((err) => console.log(err));
             }
         }
@@ -108,8 +108,7 @@ function Payment() {
         // Setup Script Paypal
         const setUpPaypal = () => {
             const script = document.createElement('script');
-            const client_id = 'AQJ0lMVFFLnfP5_iWaFZ7CVBwWnW_Ye4PALwEq3uCNl9uEi2Riehni2YETl5kHBWeJ2bdSwCWhfZIusx';
-            script.src = `https://www.paypal.com/sdk/js?client-id=${client_id}`;
+            script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.CLIENT_ID}`;
             script.type = 'text/javascript';
             script.async = true;
             script.onload = () => setScriptLoaded(true);

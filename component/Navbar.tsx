@@ -43,7 +43,7 @@ function TabBar() {
         if (data !== undefined) {
             const store = {
                 user: {
-                    displayName: data.displayName, email: data.email, isLogin: data.emailVerified, photoURL: data.photoURL,
+                    isLogin: data.emailVerified,
                 },
                 token,
                 roles,
@@ -123,7 +123,7 @@ function TabBar() {
                 <div className={styles['navbar-button']} onClick={() => setSideBar(false)}>
                     {userData ? (
                         <>
-                            <Link scroll href="/profile/detail">
+                            <Link scroll href="/dashboard">
                                 <a>
                                     <button className="button-border capsule">Profile</button>
                                 </a>
