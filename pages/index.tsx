@@ -72,10 +72,12 @@ function Home() {
           <h1 className={`${styles['content-title']}  text-end mt-5`}>Supported Game</h1>
           <h2 className={`${styles['content-subtitle']} text-end`}>What we can handle</h2>
         </Row>
-        <Row ref={Row2} className="my-5 px-2">
-          {games.map((game) => (
-            <GameCard data={game} key={game.id} />
-          ))}
+        <Row ref={Row2} className="my-5 centered">
+          <Row className="w-50-res">
+            {games.map((game) => (
+              <GameCard data={game} key={game.id} />
+            ))}
+          </Row>
         </Row>
         <Row ref={Row3}>
           <FeaturedBenefit />
@@ -94,9 +96,9 @@ function Home() {
           <h1 className={`${styles['content-title']} text-end mt-3`}>FAQ</h1>
           <FAQ />
         </Row>
-        <Row ref={Row7} className={`${styles['banner-collapse']} full-width centered`}>
-          <Col className={`${styles['banner-bg']} centered-down`}>
-            <h3 className={`${styles['content-title']} ${styles['banner-title']} text-end mt-5`}>Discord Channel</h3>
+        <Row ref={Row7} className="p-4 centered">
+          <Col className="centered-down card">
+            <h3 className={`${styles['content-title']} text-center mt-5`}>Discord Channel</h3>
             <button type="button" className="button capsule mt-3 mb-5">Join Now</button>
           </Col>
         </Row>

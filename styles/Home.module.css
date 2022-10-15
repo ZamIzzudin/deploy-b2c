@@ -33,25 +33,9 @@
     letter-spacing: 1px;
 }
 
-.banner-bg {
-    border-radius: 20px;
-}
-
-.banner-title {
-    font-size: 5em;
-}
-
-.banner-collapse {
-    border-radius: 20px;
-    height: fit-content;
-    background: url('/xiao-lantern-festival-genshin-impact-thumb(1).jpg');
-    background-size: cover;
-    background-position: 0% 8%;
-}
-
 @media only screen and (max-width: 1000px) {
     .content-title {
-        font-size: 2.5em;
+        font-size: 3em;
     }
 
     .content-subtitle {

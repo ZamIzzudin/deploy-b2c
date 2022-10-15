@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-props-no-spreading */
@@ -29,20 +30,38 @@ export default function LoginModal(props: any) {
 
     const [errorMsg, setErrorMsg] = useState(false);
 
+    const saveDataLogin = (data: any, token: any, roles: any) => {
+        if (data !== undefined) {
+            const store = {
+                user: {
+                    isLogin: data.emailVerified,
+                },
+                token,
+                roles,
+            };
+
+            const expiryDate = new Date();
+            const month = (expiryDate.getMonth() + 1) % 12;
+            expiryDate.setMonth(month);
+
+            document.cookie = `store=${JSON.stringify(store)}; expires=${expiryDate.toUTCString()}`;
+        }
+    };
+
     const handleLogin = async (provider: any) => {
         const res = await socialMediaAuth(provider);
         const auth = {
             username: res.displayName,
             email: res.email,
+            firebase_id: res.uid,
         };
-
-        const { uid } = res;
 
         const url = `${process.env.API}/v1/auth`;
 
         await axios.post(url, auth).then((response) => {
-            props.getDataLogin(res, response.data.token, response.data.role);
-        }).catch((response) => alert(response));
+            saveDataLogin(res, response.data.token, response.data.role);
+            window.location.reload();
+        }).catch((response) => console.log(response));
     };
 
     async function handleLoginAccount(e) {
@@ -55,7 +74,8 @@ export default function LoginModal(props: any) {
         const url = `${process.env.API}/v1/auth/login`;
 
         await axios.post(url, auth).then((response) => {
-            props.getDataLogin({ emailVerified: true }, response.data.token, response.data.role);
+            saveDataLogin({ emailVerified: true }, response.data.token, response.data.role);
+            window.location.reload();
         }).catch((err) => { setErrorMsg(true); });
     }
 
@@ -70,8 +90,8 @@ export default function LoginModal(props: any) {
 
         const url = `${process.env.API}/v1/auth/register`;
         if (password === rePassword) {
-            const user = await axios.post(url, auth).then((response) => response.data).catch((response) => console.log(response));
-            await props.getDataLogin({ emailVerified: true }, user.token, user.role);
+            await axios.post(url, auth).then((response) => saveDataLogin({ emailVerified: true }, response.data.token, response.data.role)).catch((response) => console.log(response));
+            window.location.reload();
         } else {
             setErrorMsg(true);
         }
@@ -107,7 +127,7 @@ export default function LoginModal(props: any) {
                                 Login with Account
                             </span>
                             {errorMsg && (
-                                <span className="mb-3 error-message">Cannot Login</span>
+                                <span className="mb-3 error-message">Your Email or Password Wrong</span>
                             )}
                             <Form onSubmit={(e) => handleLoginAccount(e)}>
                                 <Form.Group className="fullwidth">

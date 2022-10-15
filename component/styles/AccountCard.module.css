@@ -30,11 +30,12 @@
 }
 
 .price-text {
-    font-weight: 700;
+    font-weight: 800;
     color: var(--yellow);
     text-align: left;
-    font-size: 2.5em;
+    font-size: 2em;
     margin: 0;
+    font-family: var(--secFont);
 }
 
 .server-text {

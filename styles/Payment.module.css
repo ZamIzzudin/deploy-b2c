@@ -1,6 +1,7 @@
 .mini-text {
     font-weight: 400;
     font-size: 1em;
+    text-align: justify;
 }
 
 .sub-mini-text {
@@ -17,7 +18,8 @@
 }
 
 .service-price {
+    font-family: var(--secFont);
     color: var(--yellow);
-    font-weight: 800;
+    font-weight: 750;
     font-size: 2em;
 }

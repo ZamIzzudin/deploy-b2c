@@ -142,4 +142,7 @@
         transition: .5s;
     }
 
+    .navbar-button {
+        width: 80%;
+    }
 }

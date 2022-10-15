@@ -83,7 +83,7 @@
 
 @media only screen and (max-width: 1000px) {
     .benefit-container {
-        grid-template-areas: 'two''three''one''four''five';
+        grid-template-areas: 'two' 'three' 'one' 'four' 'five';
     }
 
     .debug5,
@@ -106,7 +106,7 @@
     }
 
     .benefit-title {
-        font-size: 2.5em;
+        font-size: 3em;
     }
 
     .benefit-subtitle {

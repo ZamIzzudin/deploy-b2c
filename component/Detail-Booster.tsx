@@ -13,6 +13,7 @@
 import { Row, Col, Form } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Image from 'next/image';
 import GameCard from './Game-Card';
 import DetailModal from './Detail-Modal';
 import styles from './styles/DetailPage.module.css';
@@ -33,14 +34,20 @@ function DetailBooster(props: any) {
             id: null,
         },
     ]);
-    const [selectedGame, setSelectedGame] = useState('');
     const [service, setService] = useState<any>([]);
 
     const [newGameName, setNewGameName] = useState('');
     const [newGameLogo, setNewGameLogo] = useState('');
     const [newServiceName, setNewServiceName] = useState('');
 
-    const [boostOrder, setBoostOrder] = useState([{ id: undefined }]);
+    const [boostOrder, setBoostOrder] = useState([{ id: 0, boost_detail: { game: { name: 'h', logo_url: '' }, type: '' }, total_price: 0 }]);
+    const [selectedOrder, setSelectedOrder] = useState<any>({
+        id: undefined,
+        boost_detail: {
+            game: { name: '' }, type: '', require: [], addOns: [],
+        },
+        total_price: 0,
+    });
 
     useEffect(() => {
         getGames();
@@ -48,12 +55,30 @@ function DetailBooster(props: any) {
         getService({ name: 'Valorant' });
     }, []);
 
+    // BOOSTER
     async function getBoostOrderList() {
         const url = `${process.env.API}/boosts`;
 
-        await axios.get(url).then((res) => setBoostOrder(res.data)).catch((err) => console.log(err));
+        await axios.get(url).then((res) => { setBoostOrder(res.data.data); console.log(res.data.data); }).catch((err) => console.log(err));
     }
 
+    async function takeOrder(id) {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        };
+
+        const url = `${process.env.API}/boosts/${id}`;
+
+        const data = { status: 'On Progress' };
+
+        await axios.put(url, data, config).then((res) => { showModal3(false); getBoostOrderList(); }).catch((err) => console.log(err));
+    }
+
+    // ADMIN
     async function getGames() {
         await axios.get(`${process.env.API}/games`).then((res) => setGames(res.data.data)).catch((res) => console.log(res));
     }
@@ -69,7 +94,7 @@ function DetailBooster(props: any) {
         await axios.get(url).then((res) => setService(res.data.boost_options)).catch((err) => console.log(err));
     }
 
-    // CRUD
+    // CRUD ADMIN
     async function newGame() {
         const data = {
             name: newGameName,
@@ -117,26 +142,28 @@ function DetailBooster(props: any) {
                 <h1>404 error</h1>
             )}
             {role === 'booster' && (
-                <Row className="mt-3 centered">
-                    {boostOrder[0].id !== undefined ? (
-                        <span>Ada Order</span>
-                    ) : (
-                        <span>No Order Yet</span>
-                    )}
-                    {/* <Col className="col-md-4 my-3 col-6">
-                        <Row className="card width90">
-                            <h2 className={styles['booster-card-title']}>Genshin Impact</h2>
-                            <h3 className={styles['booster-card-subtitle']}>Daily Mission</h3>
-                            <Row className="centered gap-3 mt-3">
-                                <Col className="centered">
-                                    <span className={styles['booster-card-price']}>$47.0</span>
+                <Row className="mt-3 centered debug-bg">
+                    {boostOrder.length > 0 ? (
+                        <Row>
+                            {boostOrder.map((order) => (
+                                <Col className="col-md-3 my-2 col-12">
+                                    <Row className="centered card w-95-res debug-bg flex-down">
+                                        <Col className="centered">
+                                            <span className={styles['booster-card-price']}>
+                                                $
+                                                {order.total_price}
+                                            </span>
+                                        </Col>
+                                        <Col className="centered">
+                                            <button onClick={() => { showModal3(true); setSelectedOrder(order); }} className="button-org capsule">Details</button>
+                                        </Col>
+                                    </Row>
                                 </Col>
-                                <Col className="centered">
-                                    <button onClick={() => showModal3(true)} className="button capsule">Details</button>
-                                </Col>
-                            </Row>
+                            ))}
                         </Row>
-                    </Col> */}
+                    ) : (
+                        <span className="text-center fullwidth">No Order Yet</span>
+                    )}
                 </Row>
             )}
             {role === 'admin' && (
@@ -173,7 +200,7 @@ function DetailBooster(props: any) {
                                 <button key={i.name} className={`card fit-content mx-2 ${removingService ? ('') : ('card-hovering')} relative-pos`}>
                                     <span className={styles['service-name']}>{i.name}</span>
                                     {removingService && (
-                                        <button onClick={() => deleteService(i.name, selectedGame)} className={styles['remove-toogle']}>X</button>
+                                        <button onClick={() => deleteService(i.name, i)} className={styles['remove-toogle']}>X</button>
                                     )}
                                 </button>
                             ))}
@@ -215,6 +242,46 @@ function DetailBooster(props: any) {
                 onHide={() => showModal3(false)}
             >
                 <h1>Details</h1>
+                {/* <Row className="mb-4">
+                    <Col className="col-4 pad-0">
+                        <div className="fullwidth centered flex-down">
+                            <Image src={selectedOrder.boost_detail.game.logo_url} width="100%" height="100%" />
+                            <span className="text-center d-i-block fullwidth">{selectedOrder.boost_detail.game.name}</span>
+                        </div>
+                    </Col>
+                    <Col className="col-8 flex-down">
+                        <p className="mar-0">
+                            <b>Service : </b>
+                            {selectedOrder.boost_detail.type}
+                        </p>
+                        <p className="mar-0">
+                            <b>Price : </b>
+                            {`$${selectedOrder.total_price}`}
+                        </p>
+                        {selectedOrder.boost_detail.require.map((item) => (
+                            <p className="mar-0">
+                                <b>
+                                    {Object.keys(item)[0]}
+                                    {' '}
+                                    :
+                                    {' '}
+                                </b>
+                                {item[Object.keys(item)[0]]}
+                            </p>
+                        ))}
+                        <p className="mar-0">
+                            <b>Add Ons : </b>
+                            {selectedOrder.boost_detail.addOns.map((addOn) => <span className="mar-0">{`${addOn},`}</span>)}
+                        </p>
+                    </Col>
+                </Row> */}
+                <Row>
+                    <Col>
+                        <button className="button capsule" onClick={() => takeOrder(selectedOrder.id)}>
+                            Take Order
+                        </button>
+                    </Col>
+                </Row>
             </DetailModal>
         </div>
     );

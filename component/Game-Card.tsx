@@ -19,7 +19,7 @@ function GameCard(props: any) {
     return (
         <>
             {mini === true ? (
-                <Col className="col-md-4 col-6 min-w-155px centered relative-pos" onClick={() => { props.getData(data); }}>
+                <Col className="col-md-4 col-6 centered relative-pos pad-0" onClick={() => { props.getData(data); }}>
                     <Row className={`${styles['card-game-mini']} ${remove ? ('') : ('card-hovering')} card`}>
                         <Col className={`${styles['thumb-container']} col-md-12`}>
                             <Image src={`${data.logo_url}`} width="145%" height="130%" />
@@ -33,7 +33,7 @@ function GameCard(props: any) {
                     )}
                 </Col>
             ) : (
-                <Col className="col-md-2 col-4 centered">
+                <Col className="centered max-w-50">
                     <Link href="/boost">
                         <div className={`${styles['card-game']} card-hovering`}>
                             <div className="px-3">

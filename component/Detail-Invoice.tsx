@@ -12,7 +12,7 @@ function DetailInvoice(props: any) {
     return (
         <div>
             {role === 'user' ? (
-                <Table>
+                <Table borderless responsive="sm">
                     <thead>
                         <tr>
                             <th>Id Payment</th>
@@ -30,8 +30,8 @@ function DetailInvoice(props: any) {
                             <td>Genshin Impact</td>
                             <td>Daily Mission</td>
                             <td>Metamask</td>
-                            <td className="centered">
-                                <button onClick={() => showModal(true)} className="capsule button-org-border">Details</button>
+                            <td>
+                                <button onClick={() => showModal(true)} className="capsule button-org">Details</button>
                             </td>
                         </tr>
                         <tr>
@@ -40,8 +40,8 @@ function DetailInvoice(props: any) {
                             <td>Valorant</td>
                             <td>Rank Boosting</td>
                             <td>Paypal</td>
-                            <td className="centered">
-                                <button onClick={() => showModal(true)} className="capsule button-org-border">Details</button>
+                            <td>
+                                <button onClick={() => showModal(true)} className="capsule button-org">Details</button>
                             </td>
                         </tr>
                     </tbody>

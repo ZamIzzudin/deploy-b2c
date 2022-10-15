@@ -41,102 +41,115 @@ function DetailOrder(props: any) {
     // }, [typeOrder]);
 
     return (
-        <div className="mt-4">
+        <div>
             {role === 'user' && (
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Game</th>
-                            <th>Service</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                            <th>Details</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>424853</td>
-                            <td>Genshin Impact</td>
-                            <td>Daily Mission</td>
-                            <td>On Process</td>
-                            <td className="text-center">
-                                <button className="capsule button" onClick={() => showModal(true)}>Chat</button>
-                            </td>
-                            <td className="centered">
-                                <button onClick={() => showModal3(true)} className="capsule button-org-border">Details</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>532153</td>
-                            <td>Valorant</td>
-                            <td>Rank Boosting</td>
-                            <td>Finished</td>
-                            <td className="text-center">
-                                <button className="capsule button-org" onClick={() => showModal2(true)}>Rate</button>
-                            </td>
-                            <td className="centered">
-                                <button onClick={() => showModal3(true)} className="capsule button-org-border">Details</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </Table>
+                <div>
+                    <Col className="center-start mb-3">
+                        <Form.Group className="width150px">
+                            <Form.Label>Order Type</Form.Label>
+                            <Form.Select className="form-layout" onChange={(e) => setTypeOrder(e.target.value)}>
+                                <option value="boost">Boost</option>
+                                <option value="account">Account</option>
+                            </Form.Select>
+                        </Form.Group>
+                    </Col>
+                    <Table responsive="sm" borderless>
+                        <thead>
+                            <tr>
+                                <th>Order Id</th>
+                                <th>Game</th>
+                                <th>Service</th>
+                                <th>Status</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>424853</td>
+                                <td>Genshin Impact</td>
+                                <td>Daily Mission</td>
+                                <td>On Process</td>
+                                <td>
+                                    <button onClick={() => showModal3(true)} className="capsule button-org">Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>532153</td>
+                                <td>Valorant</td>
+                                <td>Rank Boosting</td>
+                                <td>Finished</td>
+                                <td>
+                                    <button onClick={() => showModal3(true)} className="capsule button-org">Details</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                </div>
             )}
             {role === 'booster' && (
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Game</th>
-                            <th>Service</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                            <th>Details</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>424853</td>
-                            <td>Genshin Impact</td>
-                            <td>Daily Mission</td>
-                            <td>On Process</td>
-                            <td className="centered">
-                                <button className="capsule button" onClick={() => showModal(true)}>Chat</button>
-                                <button onClick={() => showModal4(true)} className="capsule button-org">Finish</button>
-                            </td>
-                            <td>
-                                <button onClick={() => showModal3(true)} className="capsule button-org-border">Details</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>532153</td>
-                            <td>Valorant</td>
-                            <td>Rank Boosting</td>
-                            <td>Finished</td>
-                            <td className="centered">
-                                <button className="capsule button" onClick={() => showModal(true)}>Chat</button>
-                            </td>
-                            <td>
-                                <button onClick={() => showModal3(true)} className="capsule button-org-border">Details</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </Table>
+                <div>
+                    <Col className="center-start mb-3">
+                        <Form.Group className="width150px">
+                            <Form.Label>Order Type</Form.Label>
+                            <Form.Select className="form-layout" onChange={(e) => setTypeOrder(e.target.value)}>
+                                <option value="boost">Boost</option>
+                                <option value="account">Account</option>
+                            </Form.Select>
+                        </Form.Group>
+                    </Col>
+                    <Table responsive="sm" borderless>
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Game</th>
+                                <th>Service</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>424853</td>
+                                <td>Genshin Impact</td>
+                                <td>Daily Mission</td>
+                                <td>On Process</td>
+                                <td>
+                                    <button onClick={() => showModal4(true)} className="capsule button-org-border">Finish</button>
+                                </td>
+                                <td>
+                                    <button onClick={() => showModal3(true)} className="capsule button-org">Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>532153</td>
+                                <td>Valorant</td>
+                                <td>Rank Boosting</td>
+                                <td>Finished</td>
+                                <td>
+                                    <button className="capsule button-border" onClick={() => showModal(true)}>Review</button>
+                                </td>
+                                <td>
+                                    <button onClick={() => showModal3(true)} className="capsule button-org">Details</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                </div>
+
             )}
             {role === 'admin' && (
                 <div>
-                    <Row className="mb-4">
-                        <Col className="center-start">
-                            <Form.Group className="mx-3 width150px">
-                                <Form.Label>Order Type</Form.Label>
-                                <Form.Select className="form-layout" onChange={(e) => setTypeOrder(e.target.value)}>
-                                    <option value="boost">Boost</option>
-                                    <option value="account">Account</option>
-                                </Form.Select>
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                    <Table>
+                    <Col className="center-start mb-3">
+                        <Form.Group className="width150px">
+                            <Form.Label>Order Type</Form.Label>
+                            <Form.Select className="form-layout" onChange={(e) => setTypeOrder(e.target.value)}>
+                                <option value="boost">Boost</option>
+                                <option value="account">Account</option>
+                            </Form.Select>
+                        </Form.Group>
+                    </Col>
+                    <Table responsive="sm" borderless>
                         <thead>
                             <tr>
                                 <th>Id</th>

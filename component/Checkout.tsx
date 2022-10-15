@@ -14,12 +14,12 @@ import {
 
 function Checkout(props: any) {
     const {
-        details, flow, orderType, addOns, form, game,
+        details, orderType, addOns, form, game, flow,
     } = props;
 
     const [price, setPrice] = useState<any>(50.00);
     const [overviewDetails, setOverviewDetails] = useState<any>([]);
-    const [selectedAddOns, setSelectedAddOns] = useState<any>({});
+    const [selectedAddOns, setSelectedAddOns] = useState<any>([]);
 
     function setupOverview() {
         const overviews = form?.map((overview) => overview.type);
@@ -32,11 +32,22 @@ function Checkout(props: any) {
         setOverviewDetails(count);
     }
 
-    function setAddOns(addon, status) {
-        const selected = selectedAddOns;
-        selected[addon] = status;
-
-        setSelectedAddOns(selected);
+    function setAddOns(addon) {
+        const selectedAdd = addon.toString().slice(0, 7);
+        if (selectedAddOns.length === 0) {
+            setSelectedAddOns([...selectedAddOns, addon]);
+        } else {
+            selectedAddOns.forEach((ons) => {
+                if (ons.includes(selectedAdd)) {
+                    const index = selectedAddOns.indexOf(ons);
+                    const tempSelected = selectedAddOns;
+                    tempSelected.splice(index, 1);
+                    setSelectedAddOns(tempSelected);
+                } else {
+                    setSelectedAddOns([...selectedAddOns, addon]);
+                }
+            });
+        }
     }
 
     function getDataCheckout() {
@@ -45,17 +56,26 @@ function Checkout(props: any) {
             game: {},
             type: '',
             service: 'Boost',
-            addOns: {},
+            addOns: [],
+            require: [],
         };
+
+        const tempRequire: any = [];
+
         dataDetails.type = orderType;
         dataDetails.game = game;
         dataDetails.total_price = price;
 
         details.forEach((detail) => {
-            dataDetails[detail.title] = detail.name || detail.numberGame || detail.server || detail.platform || { start: detail.start, to: detail.to };
+            const require = {
+                [detail.title]: detail.name || detail.numberGame || detail.server || detail.platform || { start: detail.start, to: detail.to },
+            };
+
+            tempRequire.push(require);
         });
 
         dataDetails.addOns = selectedAddOns;
+        dataDetails.require = tempRequire;
 
         localStorage.setItem('data', JSON.stringify(dataDetails));
     }
@@ -66,13 +86,13 @@ function Checkout(props: any) {
 
     return (
         <div className="fullwidth centered flex-down card">
-            <h3>
+            <h1 className="title-sec mt-2">
                 Checkout
-            </h3>
+            </h1>
             <h5 className="text-org">
                 {orderType}
             </h5>
-            <Row className="mt-3 fullwidth">
+            <Row className="mt-4 fullwidth">
                 {overviewDetails?.includeRank === 2 && (
                     <DoubleIncludeRank details={details} />
                 )}
@@ -87,7 +107,7 @@ function Checkout(props: any) {
                 )}
             </Row>
 
-            <Row className="my-5 fullwidth">
+            <Row className="mt-5 mb-4 fullwidth">
                 <div className="fullwidth">
                     {addOns?.map((item) => (
                         <OptionalAddons key={item.name} data={item} getAddOns={setAddOns} />
@@ -95,22 +115,24 @@ function Checkout(props: any) {
                 </div>
             </Row>
 
-            <Row className="fullwidth px-3">
-                <Col>
-                    <h4 className="fullwidth text-left">Total Amount</h4>
+            <Row className="fullwidth">
+                <Col className="col-7">
+                    <h5 className="fullwidth text-left subtitle-sec">Total Amount</h5>
                 </Col>
-                <Col>
-                    <h4 className="fullwidth text-right">
+                <Col className="col-5">
+                    <h4 className="fullwidth text-right subtitle-sec">
                         $
                         {price}
                     </h4>
                 </Col>
             </Row>
 
-            <Row className="mt-3">
-                <Link href="/payment">
-                    <button type="button" className="button capsule" onClick={() => getDataCheckout()}>Pay Now</button>
-                </Link>
+            <Row className="mb-2 mt-3">
+                <Col>
+                    <Link href="/payment">
+                        <button type="button" className="button capsule" onClick={() => getDataCheckout()}>Pay Now</button>
+                    </Link>
+                </Col>
             </Row>
         </div>
     );

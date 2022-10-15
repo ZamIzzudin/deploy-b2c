@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const onLoad = () => {
     if (tawkMessengerRef.current !== undefined) {
-      if (window.innerWidth < 800 && window.location.href.slice(-6) === 'detail') {
+      if (window.innerWidth < 800 && window.location.href.slice(-9) === 'dashboard') {
         tawkMessengerRef.current?.hideWidget();
       }
     }
@@ -42,8 +42,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Component {...pageProps} />
       <Footer />
       <TawkMessengerReact
-        propertyId="62d5635eb0d10b6f3e7ce951"
-        widgetId="1g88ooaaq"
+        propertyId={process.env.TAWK_PROP_ID}
+        widgetId={process.env.TAWK_WIDGET_ID}
         useRef={tawkMessengerRef}
         ref={tawkMessengerRef}
         onLoad={onLoad}

@@ -43,9 +43,6 @@ function Dashboard() {
                 setUserData(User.user);
                 setRole(User.roles[0]);
                 setToken(User.token);
-                if (User.roles[0] === 'booster') {
-                    setComponent('boost');
-                }
             } else {
                 setUserData(userData);
                 setRole(JSON.parse(dataStore).roles[0]);

@@ -5,40 +5,36 @@ import { Row, Col } from 'react-bootstrap';
 
 export function DoubleIncludeRank({ details }) {
     return (
-        <Row className="centered">
-            <Col className="centered pr-1">
-                <Row className="flex-horizon fullwidth">
-                    <Col className="centered-down gap-2 ">
-                        <Image src={details[0].badge || '/kosong.png'} width={65} height={65} />
-                        <span>{details[0].name}</span>
-                    </Col>
-                    <Col className="centered">
-                        <Image src="/arrow.png" width={50} height={25} />
-                    </Col>
-                    <Col className="centered-down gap-2">
-                        <Image src={details[1].badge || '/kosong.png'} width={65} height={65} />
-                        <span>{details[1].name}</span>
-                    </Col>
-                </Row>
-            </Col>
-        </Row>
+        <Col>
+            <Row className="flex-horizon fullwidth">
+                <Col className="centered-down gap-2 pad-0">
+                    <Image src={details[0].badge || '/kosong.png'} width={65} height={65} />
+                    <span>{details[0].name}</span>
+                </Col>
+                <Col className="centered h-100 pad-0">
+                    <Image src="/arrow.png" width={40} height={20} />
+                </Col>
+                <Col className="centered-down gap-2 pad-0">
+                    <Image src={details[1].badge || '/kosong.png'} width={65} height={65} />
+                    <span>{details[1].name}</span>
+                </Col>
+            </Row>
+        </Col>
     );
 }
 
 export function RankAndGame({ details }) {
     return (
-        <Row className="centered">
-            <Col className="centered-down gap-2">
-                <Image src={details[0].badge || '/kosong.png'} width={65} height={65} />
-                <span>
-                    {details[1].numberGame}
-                    {' '}
-                    game in
-                    {' '}
-                    {details[0].name}
-                </span>
-            </Col>
-        </Row>
+        <Col className="centered-down gap-2">
+            <Image src={details[0].badge || '/kosong.png'} width={65} height={65} />
+            <span className="content-text">
+                <b className="sec-font">{details[1].numberGame}</b>
+                {' '}
+                game in
+                {' '}
+                <b className="sec-font">{details[0].name}</b>
+            </span>
+        </Col>
     );
 }
 
@@ -50,15 +46,15 @@ export function NumberGame({ details }) {
 
 export function Point({ details }) {
     return (
-        <Row className="centered text-center">
-            <h4>{details[0].unit}</h4>
-            <h5>
-                {details[0].start}
+        <div className=" centered text-center flex-down">
+            <h4 className="capitalized sec-font">{details[0].unit_type}</h4>
+            <span className="content-text mt-1">
+                <b className="sec-font">{details[0].start}</b>
                 {' '}
-                to
+                -
                 {' '}
-                {details[0].to}
-            </h5>
-        </Row>
+                <b className="sec-font">{details[0].to}</b>
+            </span>
+        </div>
     );
 }

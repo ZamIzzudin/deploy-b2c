@@ -49,7 +49,7 @@ function Order() {
         await axios.get(url).then((res) => {
             setServices(res.data.boost_options);
             setRanks(res.data.ranks);
-            setServers(res.data.servers);
+            setServers(res.data.servers || []);
             setRequireOrder(res.data.boost_options[0].require['order-options']);
             setAddonsOrder(res.data.boost_options[0].require['add-ons']);
             setTitleOrder(res.data.boost_options[0].name);
@@ -65,7 +65,6 @@ function Order() {
 
     function getData(data) {
         const tempDetails = checkoutDetail;
-        const indexing = checkoutDetail.length;
         checkoutDetail?.forEach((item, index) => {
             if (item.title === data.title) {
                 tempDetails[index] = data;
@@ -73,10 +72,9 @@ function Order() {
                 setFlow(flow + 1);
             }
         });
-        if (data.title === 'Server Require' || data.title === 'Platform Require') {
-            tempDetails[indexing] = data;
-            tempDetails[indexing] = data;
-        }
+        // if (data.title === 'Server Require' || data.title === 'Platform Require') {
+        //     tempDetails[indexing] = data;
+        // }
     }
 
     function setupOrderRequire(service) {
@@ -88,10 +86,15 @@ function Order() {
     function setupCheckoutDetail() {
         const detailsForm = requireOrder;
         const type = detailsForm?.map((item) => {
-            const typeForm = { title: item.title, server: null, platform: null };
+            const typeForm = { title: item.title };
 
             return typeForm;
         });
+
+        if (servers.length > 0) {
+            type.push({ title: 'Server Require' });
+        }
+
         setCheckoutDetail(type);
     }
 
@@ -126,19 +129,23 @@ function Order() {
                     <Row className={`${styles['service-slider']} centered mb-3`}>
                         <div className={styles['service-slider-container']}>
                             {services.map((service: any) => (
-                                <button key={service.name} className="card fit-content card-hovering mx-2" onClick={() => setupOrderRequire(service)}>
-                                    <span className={styles['service-name']}>{service.name}</span>
+                                <button key={service.name} className={`${styles['service-card']} card-hovering mx-2`} onClick={() => setupOrderRequire(service)}>
+                                    {service.name}
                                 </button>
                             ))}
                         </div>
                     </Row>
                     {/* Form */}
-                    <Row className="mt-3 gap-3 px-3 fullwidth">
-                        <Col className="col-md-7 col-12 mx-3">
-                            <FormBoost form={requireOrder} ranks={ranks} servers={servers} getData={getData} />
+                    <Row className="mt-3 px-3 fullwidth centered">
+                        <Col className="col-md-8 col-12">
+                            <div className="fullwidth">
+                                <FormBoost form={requireOrder} ranks={ranks} servers={servers} getData={getData} titleService={titleOrder} />
+                            </div>
                         </Col>
-                        <Col className="col-md-4 col-12 mr-3 flex-horizon-centered-start">
-                            <Checkout form={requireOrder} game={gameOrder} details={checkoutDetail} flow={flow} orderType={titleOrder} addOns={addonsOrder} />
+                        <Col className="col-md-4 col-12 flex-horizon-centered-start">
+                            <div className="fullwidth">
+                                <Checkout form={requireOrder} game={gameOrder} details={checkoutDetail} flow={flow} orderType={titleOrder} addOns={addonsOrder} />
+                            </div>
                         </Col>
                     </Row>
                 </>

@@ -15,15 +15,15 @@
 
 .detail-account-title {
     color: var(--yellow);
-    font-size: 2em;
+    font-size: 1.6em;
     font-family: var(--secFont);
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .detail-list {
     list-style: none;
-    font-weight: 300;
+    font-weight: 400;
 }
 
 .stats-card {
@@ -55,18 +55,26 @@
 }
 
 .account-desc {
-    font-weight: 300;
+    font-weight: 400;
+    font-size: 1.05em;
+    text-align: justify;
 }
 
 .price-tag {
     color: var(--yellow);
     font-weight: 800;
-    font-size: 2.5em;
+    font-size: 2.3em;
+    font-family: var(--secFont);
 }
 
 @media only screen and (max-width: 1000px) {
     .card-container {
         margin: 1vw;
+    }
+
+    .id-account {
+        color: var(--yellow);
+        font-size: .7em;
     }
 }
 

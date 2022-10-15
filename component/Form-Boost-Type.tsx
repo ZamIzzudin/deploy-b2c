@@ -12,11 +12,10 @@ import { Form, Row, Col } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
-import { send } from 'process';
 import styles from './styles/FormBoost.module.css';
 
 export function IncludeRank({
-    title, getData, ranks,
+    title, getData, ranks, serviceName,
 }) {
     const [clearRanks, setClearRanks] = useState<any>([]);
     const [selectedRank, setSelectedRank] = useState<any>(ranks[0]);
@@ -61,20 +60,18 @@ export function IncludeRank({
 
     useEffect(() => {
         setUpRanks();
-    }, []);
+    }, [serviceName]);
 
     return (
         <div className={styles.container}>
-            <div>
-                <h1 className={styles['title-form']}>{title}</h1>
-            </div>
+            <h1 className={styles['title-form']}>{title}</h1>
             <Row className={styles['rank-division-container']}>
-                <Col className={`${styles['rank-container']} col-md-6 gap-2`}>
+                <Col className={`${styles['rank-container']} col-md-6 gap-2 col-12`}>
                     {clearRanks.map((rank) => (
                         <Image className={`${styles['rank-list']} ${selectedRank.name === rank.name ? (styles.active) : ('')} p-1`} key={rank.name} src={rank.badge} width={60} height={60} onClick={() => { setSelectedRank(rank); setSelectedDivision(0); }} />
                     ))}
                 </Col>
-                <Col className={`${styles['division-container']} col-md-6`}>
+                <Col className={`${styles['division-container']} col-md-6 col-12`}>
                     <div className={`${styles['division-list']} ${selectedDivision === 0 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(0)}>I</div>
                     <div className={`${styles['division-list']} ${selectedDivision === 1 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(1)}>II</div>
                     <div className={`${styles['division-list']} ${selectedDivision === 2 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(2)}>III</div>
@@ -85,7 +82,7 @@ export function IncludeRank({
 }
 
 export function NumberGame({
-    max, min, title, getData,
+    max, min, title, getData, serviceName,
 }) {
     function sendData(data) {
         const newData = { numberGame: data };
@@ -95,31 +92,34 @@ export function NumberGame({
 
     useEffect(() => {
         sendData(num);
+        setNum('5');
+    }, [serviceName]);
+
+    useEffect(() => {
+        sendData(num);
     }, [num]);
 
     return (
-        <div className={styles.container}>
-            <div>
-                <h1 className={styles['title-form']}>{title}</h1>
-            </div>
-            <div>
-                <Form.Group>
-                    <Form.Range min={min} max={max} className="my-2" value={num} onChange={(e) => { setNum(e.target.value); sendData(e.target.value); }} />
-                    <Form.Select className="form-layout mt-3">
-                        <option>US</option>
-                        <option>North America</option>
-                        <option>Asia Pacific</option>
-                        <option>China</option>
-                    </Form.Select>
-                </Form.Group>
-            </div>
-        </div>
+        <Row className={styles.container2}>
+            <Col className="m-0 centered pad-0 col">
+                <h1 className="big-num">{num}</h1>
+            </Col>
+            <Col className="flex-down col-10">
+                <div>
+                    <h1 className={styles['title-form']}>{title}</h1>
+                </div>
+                <div>
+                    <input className="fullwidth range-input mt-3" type="range" min={min} max={max} value={num} onChange={(e) => { setNum(e.target.value); sendData(e.target.value); }} />
+                </div>
+            </Col>
+
+        </Row>
 
     );
 }
 
 export function Points({
-    start, to, title, unit, getData,
+    start, to, title, unit, getData, serviceName,
 }) {
     const [max, setMax] = useState(to);
     const [min, setMin] = useState(start);
@@ -141,7 +141,7 @@ export function Points({
     }
 
     function sendData() {
-        const newData = { start: min, to: max, unit };
+        const newData = { start: min, to: max, unit_type: unit };
         getData(newData, title);
     }
 
@@ -149,59 +149,73 @@ export function Points({
         sendData();
     }, [max, min]);
 
+    useEffect(() => {
+        setMax(to);
+        setMin(start);
+        sendData();
+    }, [unit]);
+
+    useEffect(() => {
+        sendData();
+    }, []);
+
     return (
-        <div className={styles.container}>
+        <Row className={styles.container}>
             <h1 className={styles['title-form']}>{title}</h1>
-            <div className={`${styles['point-range-container']} my-3`}>
-                <Form.Group className="w-50 px-3 centered-down">
-                    <span>
-                        Current
-                        {' '}
-                        {unit}
-                    </span>
-                    <div className="centered my-2">
-                        <button className={styles['point-button']} onClick={() => rangeLogic(parseInt(min, 10) - 1, 'min')}>-</button>
-                        <h3>{min}</h3>
-                        <button className={styles['point-button']} onClick={() => rangeLogic(parseInt(min, 10) + 1, 'min')}>+</button>
-                    </div>
-                    <Form.Range max={parseInt(max, 10) - 1} min={start} value={min} onChange={(e) => setMin(e.target.value)} />
-                </Form.Group>
-                <Form.Group className="w-50 px-3 centered-down">
-                    <span>
-                        Desire
-                        {' '}
-                        {unit}
-                    </span>
-                    <div className="centered my-2">
-                        <button type="button" className={styles['point-button']} onClick={() => rangeLogic(parseInt(max, 10) - 1, 'max')}>-</button>
-                        <h3>{max}</h3>
-                        <button className={styles['point-button']} onClick={() => rangeLogic(parseInt(max, 10) + 1, 'max')}>+</button>
-                    </div>
-                    <Form.Range max={to} min={parseInt(min, 10) + 1} value={max} onChange={(e) => setMax(e.target.value)} />
-                </Form.Group>
-            </div>
-        </div>
+            <Row className="pt-1 pb-1 centered">
+                <Col className="col-md-6 col-12">
+                    <Form.Group className="fullwidth py-4 centered-down">
+                        <span className="capitalized">
+                            Current
+                            {' '}
+                            {unit}
+                        </span>
+                        <div className="centered my-2">
+                            <button className={styles['point-button']} onClick={() => rangeLogic(parseInt(min, 10) - 1, 'min')}>-</button>
+                            <span className="content-text"><b className="sec-font">{min}</b></span>
+                            <button className={styles['point-button']} onClick={() => rangeLogic(parseInt(min, 10) + 1, 'min')}>+</button>
+                        </div>
+                        <input className="w-90 range-input mt-3" type="range" max={parseInt(max, 10) - 1} min={start} value={min} onChange={(e) => setMin(e.target.value)} />
+                    </Form.Group>
+                </Col>
+                <Col className="col-md-6 col-12">
+                    <Form.Group className="fullwidth py-4 centered-down">
+                        <span className="capitalized">
+                            Desire
+                            {' '}
+                            {unit}
+                        </span>
+                        <div className="centered my-2">
+                            <button type="button" className={styles['point-button']} onClick={() => rangeLogic(parseInt(max, 10) - 1, 'max')}>-</button>
+                            <span className="content-text"><b className="sec-font">{max}</b></span>
+                            <button className={styles['point-button']} onClick={() => rangeLogic(parseInt(max, 10) + 1, 'max')}>+</button>
+                        </div>
+                        <input className="w-90 range-input mt-3" type="range" max={to} min={parseInt(min, 10) + 1} value={max} onChange={(e) => setMax(e.target.value)} />
+                    </Form.Group>
+                </Col>
+            </Row>
+        </Row>
 
     );
 }
 
 export function PlatformSelect({
-    title, platforms, getData,
+    title, platforms, getData, serviceName,
 }) {
     function sendData(data) {
         const newData = { platform: data };
-        getData(newData, 'Platform Require');
+        getData(newData, title);
     }
 
     const [selected, setSelected] = useState<any>(platforms[0]);
 
     useEffect(() => {
         sendData(platforms[0]);
-    }, [platforms]);
+    }, [serviceName]);
     return (
         <div className={styles.container}>
             <h1 className={styles['title-form']}>{title}</h1>
-            <div className="mt-4 mb-2">
+            <div className="mt-4 mb-2 f-wrap gap-3">
                 {platforms.map((platform) => <span key={platform} onClick={() => { sendData(platform); setSelected(platform); }} className={`${styles['platform-button']} ${platform === selected ? (styles.active) : ('')}`}>{platform}</span>)}
             </div>
         </div>
@@ -209,7 +223,7 @@ export function PlatformSelect({
 }
 
 export function ServerSelect({
-    servers, getData,
+    servers, getData, serviceName,
 }) {
     function sendData(data) {
         const newData = { server: data };
@@ -219,16 +233,14 @@ export function ServerSelect({
     const [selected, setSelected] = useState<any>();
 
     useEffect(() => {
-        if (servers !== undefined) {
-            setSelected(servers[0]?.name);
-        }
-        sendData(servers[0]?.name);
-    }, [servers]);
+        sendData(servers[0].name);
+        setSelected(servers[0].name);
+    }, [serviceName]);
 
     return (
         <div className={styles.container}>
             <h1 className={styles['title-form']}>Select Your Server</h1>
-            <div className="mt-4 mb-2">
+            <div className="mt-4 mb-2 f-wrap gap-3">
                 {servers.map((server) => <span key={server.name} onClick={() => { sendData(server.name); setSelected(server.name); }} className={`${styles['platform-button']} ${server.name === selected ? (styles.active) : ('')}`}>{server.name}</span>)}
             </div>
         </div>

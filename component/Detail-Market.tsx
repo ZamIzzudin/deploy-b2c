@@ -16,7 +16,6 @@ import {
 } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Image from 'next/image';
 import AccountCard from './Account-Card';
 import DetailModal from './Detail-Modal';
 import styles from './styles/DetailPage.module.css';
@@ -188,7 +187,6 @@ function DetailMarket(props: any) {
     async function getAccountbyFilter() {
         let url = `${process.env.API}/accounts/?sortOrder=${filterSort}`;
 
-        console.log(filterRank);
         if (filterRank === '99' || filterServer === '99') {
             getAccount();
             setFilterRank('0');

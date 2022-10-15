@@ -4,12 +4,21 @@
 }
 
 /* Module */
-.container {
+.container,
+.container2 {
     padding: 20px 30px;
     border-radius: 15px;
     width: 100%;
     background-color: var(--card);
-    margin-bottom: 20px;
+    margin: 0 0 20px 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.container2 {
+    flex-direction: row;
 }
 
 .rank-container {
@@ -54,11 +63,6 @@
     margin-right: 20px;
 }
 
-.point-range-container {
-    display: flex;
-    justify-content: space-around;
-}
-
 .point-button {
     background-color: var(--insideCard);
     border: none;
@@ -72,7 +76,6 @@
     background-color: var(--insideCard);
     padding: 10px 20px;
     border-radius: 5px;
-    margin-right: 20px;
     transition: .4s;
 }
 
@@ -81,6 +84,9 @@
 }
 
 .title-form {
+    font-family: var(--secFont);
     font-size: 1.8em;
     font-weight: 700;
+    text-align: left;
+    width: 100%;
 }

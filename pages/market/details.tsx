@@ -56,8 +56,8 @@ function AccountDetails() {
 
     return (
         <Container className="my-5 py-3">
-            <h1 className="text-center mt-5 title">Account Details</h1>
-            <h2 className="section-subtitle text-center mb-5">Know about the details before make decision</h2>
+            <h1 className="text-center mt-5 section-title">Account Details</h1>
+            <h2 className="section-subtitle text-center mb-5 px-3">Know about the details before make decision</h2>
             <Row>
                 <Col className="flex-down col-md-8 px-4 col-12">
                     <h1 className={styles['server-name']}>
@@ -81,19 +81,19 @@ function AccountDetails() {
                 </Col>
             </Row>
             {Details.price > 0 ? (
-                <Row className="mt-5 px-4">
+                <Row className="mt-4 px-4">
                     {agents.length > 0 && (
-                        <Col className="col-6 col-md-4 mb-3">
-                            <div className="w-95 center-start card">
+                        <Col className="col-6 col-md-4 mb-3 pad-right-1-res">
+                            <div className="w-95-res center-start card">
                                 <h2 className={styles['detail-account-title']}>Agent</h2>
                                 {agents.length > 5 ? (
                                     <Row className="full-width">
-                                        <Col className="col-md-6 centered-start">
+                                        <Col className="col-md-6 col-12 centered-start">
                                             <div className="text-center">
                                                 {agents.map((i, key) => key % 2 === 0 && (<li key={i} className={styles['detail-list']}>{i}</li>))}
                                             </div>
                                         </Col>
-                                        <Col className="col-md-6 centered-start">
+                                        <Col className="col-md-6 col-12 centered-start">
                                             <div className="text-center">
                                                 {agents.map((i, key) => key % 2 === 1 && (<li key={i} className={styles['detail-list']}>{i}</li>))}
 
@@ -109,17 +109,17 @@ function AccountDetails() {
                         </Col>
                     )}
                     {skins.length > 0 && (
-                        <Col className="col-6 col-md-4 mb-3">
-                            <div className="w-95 center-start card">
+                        <Col className="col-6 col-md-4 mb-3 pad-left-1-res">
+                            <div className="w-95-res center-start card">
                                 <h2 className={styles['detail-account-title']}>Skin</h2>
                                 {skins.length > 5 ? (
                                     <Row className="full-width">
-                                        <Col className="col-md-6 centered-start">
+                                        <Col className="col-md-6 col-12 centered-start">
                                             <div className="text-center">
                                                 {skins.map((i, key) => key % 2 === 0 && (<li key={i} className={styles['detail-list']}>{i}</li>))}
                                             </div>
                                         </Col>
-                                        <Col className="col-md-6 centered-start">
+                                        <Col className="col-md-6 col-12 centered-start">
                                             <div className="text-center">
                                                 {skins.map((i, key) => key % 2 === 1 && (<li key={i} className={styles['detail-list']}>{i}</li>))}
 
@@ -135,7 +135,7 @@ function AccountDetails() {
                         </Col>
                     )}
                     <Col className="col-12 col-md-4 mb-3">
-                        <div className="w-95 center-start card">
+                        <div className="w-95-res center-start card">
                             <h2 className={styles['detail-account-title']}>Ranked Stats</h2>
                             <Row className={styles['stats-card']}>
                                 <Col className="flex-down col-8">

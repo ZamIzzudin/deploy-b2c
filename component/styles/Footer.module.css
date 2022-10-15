@@ -99,7 +99,7 @@
     }
 
     .footer-part {
-        padding: 0;
+        padding: 0 10px;
     }
 
     .list-title,
@@ -110,5 +110,9 @@
     .col {
         min-height: fit-content;
         padding-bottom: 50px;
+    }
+
+    .footer-copyright {
+        padding: 32px 0;
     }
 }

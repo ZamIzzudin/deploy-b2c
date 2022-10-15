@@ -39,31 +39,15 @@ function TabBar() {
         setUserData(null);
     };
 
-    const getDataLogin = (data: any, token: any, roles: any) => {
-        if (data !== undefined) {
-            const store = {
-                user: {
-                    isLogin: data.emailVerified,
-                },
-                token,
-                roles,
-            };
+    // const getDataLogin = () => {
+    //     const dataStore = getCookie("store");
 
-            const expiryDate = new Date();
-            const month = (expiryDate.getMonth() + 1) % 12;
-            expiryDate.setMonth(month);
-
-            document.cookie = 'store=' + JSON.stringify(store) + "; expires=" + expiryDate.toUTCString();
-
-            const dataStore = getCookie("store");
-
-            if (dataStore !== undefined) {
-                const User = JSON.parse(dataStore);
-                setUserData(User.user);
-                showModal(false);
-            }
-        }
-    };
+    //     if (dataStore !== undefined) {
+    //         const User = JSON.parse(dataStore);
+    //         setUserData(User.user);
+    //         showModal(false);
+    //     }
+    // };
 
     useEffect(() => {
         const dataStore = getCookie("store");
@@ -122,7 +106,7 @@ function TabBar() {
                 </div>
                 <div className={styles['navbar-button']} onClick={() => setSideBar(false)}>
                     {userData ? (
-                        <>
+                        <div className="gap-3 w-90 centered">
                             <Link scroll href="/dashboard">
                                 <a>
                                     <button className="button-border capsule">Profile</button>
@@ -131,7 +115,7 @@ function TabBar() {
                             <span onClick={() => handleLogout()}>
                                 <a className="button capsule">Logout</a>
                             </span>
-                        </>
+                        </div>
                     ) : (
                         <span onClick={() => handleModal()}>
                             <a className="button capsule">Login</a>
@@ -145,7 +129,6 @@ function TabBar() {
             <LoginModal
                 show={modal}
                 onHide={() => showModal(false)}
-                getDataLogin={getDataLogin}
             />
         </nav>
     );

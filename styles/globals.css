@@ -86,6 +86,7 @@ b {
   background: var(--primColor);
   border: 2px solid var(--primColor);
   transition: .5s;
+  font-size: 16px;
 }
 
 .button-border {
@@ -96,6 +97,7 @@ b {
   border: 2px solid var(--primColor);
   transition: .5s;
   color: var(--primColor);
+  font-size: 16px;
 }
 
 .button-border:hover {
@@ -115,6 +117,7 @@ b {
   background: var(--yellow);
   border: 2px solid var(--yellow);
   transition: .5s;
+  font-size: 16px;
 }
 
 .button-org:hover {
@@ -130,6 +133,7 @@ b {
   border: 2px solid var(--yellow);
   transition: .5s;
   color: var(--yellow);
+  font-size: 16px;
 }
 
 .button-org-border:hover {
@@ -371,10 +375,6 @@ b {
   -moz-box-shadow: 0px 0px 40px 5px rgba(20, 20, 50, 0.54) !important;
 }
 
-.fit-content {
-  min-width: fit-content;
-}
-
 .org-icon {
   color: var(--yellow);
 }
@@ -390,8 +390,23 @@ b {
   color: white !important;
 }
 
-.form-range {
-  -webkit-appearance: none !important;
+.range-input {
+  -webkit-appearance: none;
+  height: 10px !important;
+  border-radius: 15px;
+  background: var(--grey);
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primColor);
+  cursor: pointer;
 }
 
 .form-layout:focus {
@@ -512,46 +527,61 @@ b {
   background-color: var(--card) !important;
 }
 
+thead {
+  border-bottom: 2px solid white !important;
+}
+
+tbody tr {
+  border-top: 1px solid white !important;
+}
+
+thead,
+tbody {
+  text-align: center;
+}
+
 th,
 td {
-  border: none;
   padding: .8rem 2rem !important;
   vertical-align: middle;
-}
-
-td {
-  font-family: var(--primFont);
-  font-weight: 400;
-  border-top: 1px solid var(--insideCard);
-  border-right: 1px solid var(--insideCard);
-}
-
-td:last-child {
-  border-right: none;
+  font-size: 1.1em;
+  font-weight: 500;
 }
 
 th {
-  text-align: center;
-  border-right: 1px solid var(--grey50);
+  color: var(--yellow);
+  font-weight: 600;
+  font-size: 1.2em;
+}
+
+td:first-child {
+  font-size: 1em;
   font-family: var(--secFont);
-  background-color: var(--insideCard) !important;
-}
-
-thead th:first-child {
-  border-radius: 15px 0 0 0;
-}
-
-thead th:last-child {
-  border-radius: 0 15px 0 0;
-  border-right: none;
 }
 
 .z-upper {
   z-index: 100;
 }
 
-.w-50 {
-  width: 50%;
+.mar-0 {
+  margin: 0 !important;
+  font-weight: 400;
+}
+
+.pad-0 {
+  padding: 0 !important;
+}
+
+.max-w-50 {
+  max-width: 200px !important;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.w-50-res {
+  width: 50% !important;
   height: 100%;
 }
 
@@ -560,7 +590,7 @@ thead th:last-child {
   height: 100%;
 }
 
-.w-95 {
+.w-95-res {
   width: 95%;
 }
 
@@ -594,7 +624,7 @@ thead th:last-child {
 }
 
 .error-message {
-  background-color: #ffe5ce;
+  background-color: #ffe4cd;
   padding: 5px 10px;
   color: var(--yellow);
   display: block;
@@ -604,17 +634,70 @@ thead th:last-child {
   border: 2px solid var(--yellow);
 }
 
+.f-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.capitalized {
+  font-size: 1.3em;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.title-sec {
+  font-family: var(--secFont);
+  font-size: 1.8em;
+  font-weight: 700;
+}
+
+.mini-title-sec {
+  font-family: var(--secFont);
+  font-size: 1em;
+  font-weight: 700;
+}
+
+.subtitle-sec {
+  font-family: var(--secFont);
+  font-size: 1.3em;
+  font-weight: 700;
+  color: var(--yellow);
+}
+
+.content-text {
+  font-weight: 600;
+  font-family: var(--secFont);
+  font-size: 1.1em;
+  text-transform: capitalize;
+}
+
+.sec-font {
+  font-family: var(--secFont);
+}
+
+.big-num {
+  font-family: var(--secFont);
+  font-weight: 800;
+  font-size: 3em;
+}
+
 @media only screen and (max-width: 1000px) {
   .title {
     font-size: 2.5em;
   }
 
+  .desc {
+    font-size: 1.1em;
+  }
+
   .section-title {
-    font-size: 2.5em;
+    font-size: 3.5em;
   }
 
   .section-subtitle {
-    font-size: .9em;
+    font-size: 1em;
   }
 
   #jumbo-text {
@@ -626,11 +709,28 @@ thead th:last-child {
     stroke-linecap: square;
     fill-opacity: 0;
     transition: fill-opacity 0.5s ease-in-out;
-    width: 370px;
+    width: 90vw;
     height: 130px;
   }
 
   .mobile-detail {
     background-color: salmon;
+  }
+
+  .w-50-res {
+    width: 100% !important;
+  }
+
+  .w-95-res {
+    padding: 12px 0 !important;
+    width: 100%;
+  }
+
+  .pad-left-1-res {
+    padding-left: 6px !important;
+  }
+
+  .pad-right-1-res {
+    padding-right: 6px !important;
   }
 }
