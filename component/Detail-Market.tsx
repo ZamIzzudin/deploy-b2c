@@ -16,6 +16,8 @@ import {
 } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Link from 'next/link';
+import Image from 'next/image';
 import AccountCard from './Account-Card';
 import DetailModal from './Detail-Modal';
 import styles from './styles/DetailPage.module.css';
@@ -67,7 +69,7 @@ function DetailMarket(props: any) {
     }
 
     async function getRank() {
-        const url = `${process.env.API}/ranks`;
+        const url = `${process.env.API}/ranks?game=valorant`;
 
         await axios.get(url).then((res) => setRanks(res.data.ranks.data)).catch((err) => console.log(err));
     }
@@ -110,8 +112,8 @@ function DetailMarket(props: any) {
             highest_rank_id: newHighestRank,
             server_id: newAccountServer,
             price: newAccountPrice,
-            agent_list: newAgents.join(' '),
-            skin_list: newSkins.join(' '),
+            agent_list: newAgents,
+            skin_list: newSkins,
             description: newAccountDesc,
             screenshots: newScreenshoot,
             in_stocks: '1',
@@ -119,11 +121,13 @@ function DetailMarket(props: any) {
 
         const url = `${process.env.API}/accounts`;
 
-        await axios.post(url, data, config).then((res) => {
-            clearData();
-            showModal3(false);
-            getAccount();
-        }).catch((err) => console.log(err));
+        console.log(data);
+
+        // await axios.post(url, data, config).then((res) => {
+        //     clearData();
+        //     showModal3(false);
+        //     getAccount();
+        // }).catch((err) => console.log(err));
     }
 
     async function updateAccount(id) {
@@ -140,19 +144,21 @@ function DetailMarket(props: any) {
             highest_rank_id: newHighestRank,
             server_id: newAccountServer,
             price: newAccountPrice,
-            agent_list: newAgents.join(' '),
-            skin_list: newSkins.join(' '),
+            agent_list: newAgents.join(';'),
+            skin_list: newSkins.join(';'),
             description: newAccountDesc,
             screenshots: newScreenshoot,
         };
 
         const url = `${process.env.API}/accounts/${id}`;
 
-        await axios.put(url, data, config).then((res) => {
-            showModal(false);
-            clearData();
-            getAccount();
-        }).catch((err) => console.log(err));
+        console.log(data);
+
+        // await axios.put(url, data, config).then((res) => {
+        //     showModal(false);
+        //     clearData();
+        //     getAccount();
+        // }).catch((err) => console.log(err));
     }
 
     async function deleteAccount(id) {
@@ -314,11 +320,13 @@ function DetailMarket(props: any) {
                             </Col>
                         )}
                     </Row>
+
+                    {/* Edit Account on Market Modal */}
                     <DetailModal
                         show={modal}
                         onHide={() => showModal(false)}
                     >
-                        <h1>Edit Account</h1>
+                        <h3 className="sec-font">Edit Account</h3>
                         <Form.Group className="mb-3 fullwidth">
                             <Row className="gap-3">
                                 <Col className="flex-down">
@@ -349,17 +357,21 @@ function DetailMarket(props: any) {
                             <Row>
                                 <Col className="flex-down space-between">
                                     <Form.Label>Skins</Form.Label>
-                                    <div className="flex-row gap-2 flex-wrap">
+                                    <div className="flex-row gap-2 flex-wrap mb-2">
                                         {newSkins.map((e, i) => (
-                                            <div className="list-skin px-1">
-                                                {e}
-                                                <span className="pointer mx-1" onClick={() => removeSkins(i)}>x</span>
+                                            <div className="list-skin">
+                                                <span className="sec-font">
+                                                    {e}
+                                                </span>
+                                                <div className="pointer centered" onClick={() => removeSkins(i)}>
+                                                    <i className="fa-solid fa-xmark" />
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
                                     <InputGroup className="mb-3">
                                         <Form.Control
-                                            placeholder="Skins"
+                                            placeholder="Skins Name"
                                             className="form-layout"
                                             onChange={(e) => setAddMoreSkins(e.target.value)}
                                             value={addMoreSkins}
@@ -373,17 +385,22 @@ function DetailMarket(props: any) {
                             <Row>
                                 <Col className="flex-down space-between">
                                     <Form.Label>Agents</Form.Label>
-                                    <div className="flex-row gap-2 flex-wrap">
+                                    <div className="flex-row gap-2 flex-wrap mb-2">
                                         {newAgents.map((e, i) => (
-                                            <div className="list-skin px-1">
-                                                {e}
-                                                <span className="pointer mx-1" onClick={() => removeAgents(i)}>x</span>
+                                            <div className="list-skin">
+                                                <span className="sec-font">
+                                                    {e}
+                                                </span>
+
+                                                <span className="pointer centered" onClick={() => removeAgents(i)}>
+                                                    <i className="fa-solid fa-xmark" />
+                                                </span>
                                             </div>
                                         ))}
                                     </div>
                                     <InputGroup className="mb-3">
                                         <Form.Control
-                                            placeholder="Agents"
+                                            placeholder="Agents Name"
                                             className="form-layout"
                                             onChange={(e) => setAddMoreAgents(e.target.value)}
                                             value={addMoreAgents}
@@ -409,24 +426,28 @@ function DetailMarket(props: any) {
                             </Row>
                         </Form.Group>
                     </DetailModal>
+
+                    {/* Confirm to Delete Acoount on Market Modal */}
                     <DetailModal
                         show={modal2}
                         onHide={() => showModal2(false)}
                     >
-                        <h1 className="text-center">
+                        <h3 className="text-center sec-font">
                             Delete Account
-                        </h1>
-                        <p className="text-center">Are you sure want to delete this account from market?</p>
-                        <div className="centered mt-5 px-5">
+                        </h3>
+                        <p className="text-center mt-4">Are you sure want to delete this account from market?</p>
+                        <div className="centered mt-4 px-5">
                             <button className="button-org-border" onClick={() => showModal2(false)}>Cancel</button>
                             <button className="button-org" onClick={() => deleteAccount(newId)}>Delete Account</button>
                         </div>
                     </DetailModal>
+
+                    {/* Add New Account on Market Modal */}
                     <DetailModal
                         show={modal3}
                         onHide={() => showModal3(false)}
                     >
-                        <h1>Add New Account</h1>
+                        <h3 className="sec-font">Add New Account</h3>
                         <Form.Group className="mb-3 fullwidth">
                             <Row className="gap-3">
                                 <Col className="flex-down">
@@ -435,17 +456,29 @@ function DetailMarket(props: any) {
                                 </Col>
                                 <Col className="flex-down">
                                     <Form.Label>Server</Form.Label>
-                                    <Form.Control className="form-layout mb-4" onChange={(e) => setNewAccountServer(e.target.value)} />
+                                    <Form.Select className="form-layout mb-4" onChange={(e) => setNewAccountServer(e.target.value)}>
+                                        {Servers.map((server) => (
+                                            <option value={server.id} key={server.id}>{server.server_name}</option>
+                                        ))}
+                                    </Form.Select>
                                 </Col>
                             </Row>
                             <Row className="gap-3">
                                 <Col className="flex-down">
                                     <Form.Label>Highest Rank</Form.Label>
-                                    <Form.Control className="form-layout mb-4" onChange={(e) => setNewHighestRank(e.target.value)} />
+                                    <Form.Select className="form-layout mb-4" onChange={(e) => setNewHighestRank(e.target.value)}>
+                                        {Ranks.map((rank) => (
+                                            <option value={rank.id} key={rank.id}>{rank.name}</option>
+                                        ))}
+                                    </Form.Select>
                                 </Col>
                                 <Col className="flex-down">
                                     <Form.Label>Current Rank</Form.Label>
-                                    <Form.Control className="form-layout mb-4" onChange={(e) => setNewCurrentRank(e.target.value)} />
+                                    <Form.Select className="form-layout mb-4" onChange={(e) => setNewCurrentRank(e.target.value)}>
+                                        {Ranks.map((rank) => (
+                                            <option value={rank.id} key={rank.id}>{rank.name}</option>
+                                        ))}
+                                    </Form.Select>
                                 </Col>
                             </Row>
                             <Row>
@@ -457,11 +490,15 @@ function DetailMarket(props: any) {
                             <Row>
                                 <Col className="flex-down space-between">
                                     <Form.Label>Skins</Form.Label>
-                                    <div className="flex-row gap-2 flex-wrap">
+                                    <div className="flex-row gap-2 flex-wrap mb-2">
                                         {newSkins.map((e, i) => (
-                                            <div className="list-skin px-1">
-                                                {e}
-                                                <span className="pointer mx-1" onClick={() => removeSkins(i)}>x</span>
+                                            <div className="list-skin">
+                                                <span className="sec-font">
+                                                    {e}
+                                                </span>
+                                                <div className="pointer centered" onClick={() => removeSkins(i)}>
+                                                    <i className="fa-solid fa-xmark" />
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
@@ -481,11 +518,15 @@ function DetailMarket(props: any) {
                             <Row>
                                 <Col className="flex-down space-between">
                                     <Form.Label>Agents</Form.Label>
-                                    <div className="flex-row gap-2 flex-wrap">
+                                    <div className="flex-row gap-2 flex-wrap mb-2">
                                         {newAgents.map((e, i) => (
-                                            <div className="list-skin px-1">
-                                                {e}
-                                                <span className="pointer mx-1" onClick={() => removeAgents(i)}>x</span>
+                                            <div className="list-skin">
+                                                <span className="sec-font">
+                                                    {e}
+                                                </span>
+                                                <span className="pointer centered" onClick={() => removeAgents(i)}>
+                                                    <i className="fa-solid fa-xmark" />
+                                                </span>
                                             </div>
                                         ))}
                                     </div>
@@ -519,7 +560,15 @@ function DetailMarket(props: any) {
                     </DetailModal>
                 </div>
             )}
-            {role !== 'admin' && (<h1>404 Error</h1>)}
+            {role !== 'admin' && (
+                <div className="error-container fullwidth">
+                    <Image src="/Jett-Sticker.png" width="300" height="300" />
+                    <span className="sec-font">Go Back to Home Page</span>
+                    <Link href="/">
+                        <button className="button capsule mt-3" type="button">Home</button>
+                    </Link>
+                </div>
+            )}
         </>
     );
 }

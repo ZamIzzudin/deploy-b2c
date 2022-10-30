@@ -7,6 +7,7 @@
 import { Row, Col } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import axios from 'axios';
 import { OptionalAddons } from '../component';
 import {
     DoubleIncludeRank, RankAndGame, NumberGame, Point,
@@ -17,9 +18,11 @@ function Checkout(props: any) {
         details, orderType, addOns, form, game, flow,
     } = props;
 
-    const [price, setPrice] = useState<any>(50.00);
+    const [price, setPrice] = useState<any>(0);
     const [overviewDetails, setOverviewDetails] = useState<any>([]);
     const [selectedAddOns, setSelectedAddOns] = useState<any>([]);
+
+    const [flow2, setFlow2] = useState(0);
 
     function setupOverview() {
         const overviews = form?.map((overview) => overview.type);
@@ -33,18 +36,21 @@ function Checkout(props: any) {
     }
 
     function setAddOns(addon) {
-        const selectedAdd = addon.toString().slice(0, 7);
+        const selectedAdd = addon.name.toString().slice(0, 7);
         if (selectedAddOns.length === 0) {
             setSelectedAddOns([...selectedAddOns, addon]);
+            setFlow2(flow2 + 1);
         } else {
             selectedAddOns.forEach((ons) => {
-                if (ons.includes(selectedAdd)) {
+                if (ons.name.includes(selectedAdd)) {
                     const index = selectedAddOns.indexOf(ons);
                     const tempSelected = selectedAddOns;
                     tempSelected.splice(index, 1);
                     setSelectedAddOns(tempSelected);
+                    setFlow2(flow2 + 1);
                 } else {
                     setSelectedAddOns([...selectedAddOns, addon]);
+                    setFlow2(flow2 + 1);
                 }
             });
         }
@@ -79,6 +85,25 @@ function Checkout(props: any) {
 
         localStorage.setItem('data', JSON.stringify(dataDetails));
     }
+
+    async function getPrice() {
+        const url = `${process.env.API}/service/price/calculate`;
+
+        const data = {
+            add_ons: selectedAddOns.length > 0 ? selectedAddOns : [{ name: 'none', percentage_price: 0 }],
+            boost_detail: {},
+        };
+
+        details.forEach((detail) => {
+            data.boost_detail[detail.title.toLowerCase().split(' ').join('_')] = detail.name || detail.numberGame || detail.server || detail.platform || { start: detail.start, to: detail.to };
+        });
+
+        await axios.post(url, data).then((res) => setPrice(res.data.total_price)).catch((err) => console.log(err));
+    }
+
+    useEffect(() => {
+        getPrice();
+    }, [flow, selectedAddOns, flow2]);
 
     useEffect(() => {
         setupOverview();

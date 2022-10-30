@@ -35,9 +35,11 @@ function Order() {
     const [titleOrder, setTitleOrder] = useState<any>('');
 
     const [checkoutDetail, setCheckoutDetail] = useState<any>([]);
+    const [priceList, setPriceList] = useState<any>([]);
 
     const [flow, setFlow] = useState(0);
 
+    // Get Data Service From API With Selected Game
     async function getServices(game) {
         const slugGame = game.name.replace(
             /[^a-zA-Z0-9,\-.?! ]/g,
@@ -57,12 +59,14 @@ function Order() {
         }).catch((err) => console.log(err));
     }
 
+    // Get Data Game From API
     async function getGames() {
         const url = `${process.env.API}/games`;
 
         await axios.get(url).then((res) => setGames(res.data.data)).catch((res) => console.log(res));
     }
 
+    // Get Data Order From Form
     function getData(data) {
         const tempDetails = checkoutDetail;
         checkoutDetail?.forEach((item, index) => {
@@ -72,17 +76,16 @@ function Order() {
                 setFlow(flow + 1);
             }
         });
-        // if (data.title === 'Server Require' || data.title === 'Platform Require') {
-        //     tempDetails[indexing] = data;
-        // }
     }
 
+    // Setup Order Require to Setup Form
     function setupOrderRequire(service) {
         setRequireOrder(service.require['order-options']);
         setAddonsOrder(service.require['add-ons']);
         setTitleOrder(service.name);
     }
 
+    // Setup Store to Get Data From Form
     function setupCheckoutDetail() {
         const detailsForm = requireOrder;
         const type = detailsForm?.map((item) => {
@@ -98,6 +101,13 @@ function Order() {
         setCheckoutDetail(type);
     }
 
+    // Get Prices list
+    async function getPriceList() {
+        const url = `${process.env.API}/service/prices`;
+
+        await axios.get(url).then((res) => setPriceList(res.data.data)).catch((err) => console.log(err));
+    }
+
     useEffect(() => {
         setupCheckoutDetail();
     }, [requireOrder]);
@@ -110,6 +120,7 @@ function Order() {
             logo_url: 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/storage/images/game-logo/valo.png',
         });
         localStorage.setItem('data', '');
+        getPriceList();
     }, []);
 
     return (
@@ -139,7 +150,7 @@ function Order() {
                     <Row className="mt-3 px-3 fullwidth centered">
                         <Col className="col-md-8 col-12">
                             <div className="fullwidth">
-                                <FormBoost form={requireOrder} ranks={ranks} servers={servers} getData={getData} titleService={titleOrder} />
+                                <FormBoost priceList={priceList} form={requireOrder} ranks={ranks} servers={servers} getData={getData} titleService={titleOrder} />
                             </div>
                         </Col>
                         <Col className="col-md-4 col-12 flex-horizon-centered-start">

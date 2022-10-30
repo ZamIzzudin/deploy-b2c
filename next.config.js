@@ -14,8 +14,8 @@ const nextConfig = {
     F_MESSAGE_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
     F_APP_ID: process.env.FIREBASE_APP_ID,
     F_MEASURE_ID: process.env.FIREBASE_MEASUREMENT_ID,
-    TAWK_PROP_ID: process.env.TAWK_PROP_ID,
-    TAWK_WIDGET_ID: process.env.TAWK_WIDGET_ID,
+    LC_WIDGET_ID: process.env.LC_WIDGET_ID,
+    CRYPTO_WALLET_ADDRESS: process.env.CRYPTO_WALLET_ADDRESS,
   },
 };
 

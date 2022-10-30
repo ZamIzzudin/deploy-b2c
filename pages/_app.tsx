@@ -12,23 +12,26 @@
 import '../styles/globals.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import type { AppProps } from 'next/app';
-import { useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
-import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
+import { LiveChatWidget } from '@livechat/widget-react';
+
 import TabBar from '../component/Navbar';
 import Footer from '../component/Footer';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const tawkMessengerRef = useRef<any>();
+  // const [showLC, setShowLC] = useState(true);
 
-  const onLoad = () => {
-    if (tawkMessengerRef.current !== undefined) {
-      if (window.innerWidth < 800 && window.location.href.slice(-9) === 'dashboard') {
-        tawkMessengerRef.current?.hideWidget();
-      }
-    }
-  };
+  // const onLoad = () => {
+  //   if (window.innerWidth < 800 && window.location.href.slice(-9) === 'dashboard') {
+  //     setShowLC(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   onLoad();
+  // }, []);
 
   return (
     <>
@@ -41,13 +44,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 
       <Component {...pageProps} />
       <Footer />
-      <TawkMessengerReact
-        propertyId={process.env.TAWK_PROP_ID}
-        widgetId={process.env.TAWK_WIDGET_ID}
-        useRef={tawkMessengerRef}
-        ref={tawkMessengerRef}
-        onLoad={onLoad}
-      />
+
+      {/* <LiveChatWidget
+        license={process.env.LC_WIDGET_ID}
+        visibility="minimized"
+      /> */}
     </>
   );
 }

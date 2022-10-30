@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-use-before-define */
 /* eslint-disable array-callback-return */
 /* eslint-disable consistent-return */
@@ -11,63 +13,39 @@
 import { Row, Col, Form } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Link from 'next/link';
+import Image from 'next/image';
 import DetailModal from './Detail-Modal';
 import styles from './styles/DetailPage.module.css';
 
 function DetailOther(props: any) {
+    const [addFaqModal, showAddFaqModal] = useState(false);
+    const [editFaqModal, showEditFaqModal] = useState(false);
+
     const { role, token } = props;
 
-    const [servers, setServers] = useState([{ id: 0, server_name: '' }]);
-    const [currentServer, setCurrentServer] = useState();
-    const [nameServer, setNameServer] = useState<any>([]);
-    const [gameServer, setGameServer] = useState<any>(1);
+    const [FAQ, setFAQ] = useState<any>([]);
+    const [newQuestion, setNewQuestion] = useState<any>();
+    const [newAnswer, setNewAnswer] = useState<any>();
+    const [selectedFaqID, setSelectedFaqID] = useState<any>();
 
-    const [ranks, setRanks] = useState<any>([{ name: '', id: 0, game_id: 0 }]);
-    const [currentRank, setCurrentRank] = useState<any>([{ name: '', id: 0, game_id: 0 }]);
-    const [selectedRank, setSelectedRank] = useState(1);
-    const [nameRank, setNameRank] = useState<any>();
-    const [gameRank, setGameRank] = useState<any>(1);
-    const [badgeRank, setBadgeRank] = useState<any>();
-
-    const [games, setGames] = useState([{ name: '', id: 0 }]);
-    const [currentGame, setCurrentGame] = useState<any>(1);
-
-    const [modal, showModal] = useState(false);
-    const [modal2, showModal2] = useState(false);
-    const [modal3, showModal3] = useState(false);
-    const [modal4, showModal4] = useState(false);
-    const [modal5, showModal5] = useState(false);
-    const [modal6, showModal6] = useState(false);
-
-    async function getGames() {
-        const url = `${process.env.API}/games`;
-
-        await axios.get(url).then((res) => setGames(res.data.data)).catch((err) => console.log(err));
+    // Function to get all FAQ data
+    async function getFAQ() {
+        const url = `${process.env.API}/faqs`;
+        await axios.get(url).then((res) => setFAQ(res.data.data)).catch((err) => console.log(err));
     }
 
-    // Manage Server
-    async function getServer() {
-        await axios.get(`${process.env.API}/servers`).then((res) => setServers(res.data.data)).catch((err) => console.log(err));
+    // Function to get spesfic data about FAQ
+    function selectFAQ(item) {
+        setSelectedFaqID(item.id);
+        setNewQuestion(item.question);
+        setNewAnswer(item.answer);
     }
 
-    async function deleteServer(server) {
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        };
-
-        const url = `${process.env.API}/servers/${server}`;
-
-        await axios.delete(url, config).then((res) => {
-            getServer();
-        }).catch((err) => console.log(err));
-    }
-
-    async function addServer() {
-        const url = `${process.env.API}/servers`;
+    // Function to add new FAQ data
+    async function addNewFAQ(e) {
+        e.preventDefault();
+        const url = `${process.env.API}/faqs`;
 
         const config = {
             headers: {
@@ -78,32 +56,32 @@ function DetailOther(props: any) {
         };
 
         const data = {
-            name: nameServer,
-            game_id: gameServer,
+            question: newQuestion,
+            answer: newAnswer,
         };
 
-        await axios.post(url, data, config).then(() => {
-            showModal(false);
-            setNameServer('');
-            clearData();
-            getServer();
-        }).catch((err) => console.log(err));
+        await axios.post(url, data, config).then(() => { getFAQ(); showAddFaqModal(false); }).catch((err) => console.log(err));
     }
 
-    async function getCurrentServer(id) {
-        const url = `${process.env.API}/servers/${id}`;
+    // Function to delete FAQ data
+    async function deleteFAQ(id) {
+        const url = `${process.env.API}/faqs/${id}`;
 
-        await axios.get(url).then((res) => {
-            setCurrentServer(res.data.data.id);
-            setNameServer(res.data.data.server_name);
-            setGameServer(res.data.data.game_id);
-            showModal3(true);
-            showModal2(false);
-        }).catch((err) => console.log(err));
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        };
+
+        await axios.delete(url, config).then((res) => getFAQ()).catch((err) => console.log(err));
     }
 
-    async function updateServer() {
-        const url = `${process.env.API}/servers/${currentServer}`;
+    // Function to edit FAQ data
+    async function editFAQ(e, id) {
+        e.preventDefault();
+        const url = `${process.env.API}/faqs/${id}`;
 
         const config = {
             headers: {
@@ -114,341 +92,93 @@ function DetailOther(props: any) {
         };
 
         const data = {
-            name: nameServer,
-            game_id: gameServer,
+            question: newQuestion,
+            answer: newAnswer,
         };
 
-        await axios.put(url, data, config).then((res) => {
-            showModal3(false);
-            clearData();
-            getServer();
-            showModal2(true);
-        }).catch((err) => console.log(err));
+        await axios.put(url, data, config).then((res) => { getFAQ(); showEditFaqModal(false); }).catch((err) => console.log(err));
     }
 
-    // Manage Rank
-    async function getRanks() {
-        await axios.get(`${process.env.API}/ranks`).then((res) => setRanks(res.data.ranks.data)).catch((res) => console.log(res));
+    // Function to clear a form
+    function clearForm() {
+        setNewQuestion(null);
+        setNewAnswer(null);
+        setSelectedFaqID(null);
     }
 
-    function getCurrentRank(id) {
-        setCurrentGame(id);
-        const current: any = [];
-        if (ranks.length > 0) {
-            ranks.forEach((rank) => {
-                if (rank.game_id === parseInt(id, 10)) {
-                    current.push(rank);
-                }
-            });
-            setCurrentRank(current);
-        }
-        console.log(ranks[0].name);
-    }
-
-    async function selectRank(id) {
-        setSelectedRank(id);
-        showModal5(false);
-        showModal6(true);
-
-        const url = `${process.env.API}/ranks/${id}`;
-
-        await axios.get(url).then((res) => {
-            setNameRank(res.data.data.name);
-            setBadgeRank(res.data.data.badge);
-            setGameRank(currentGame);
-        }).catch((err) => console.log(err));
-    }
-
-    async function addRank() {
-        const url = `${process.env.API}/ranks`;
-
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        };
-
-        const data = {
-            name: nameRank,
-            badge: badgeRank,
-            game_id: gameRank,
-        };
-
-        await axios.post(url, data, config).then(() => {
-            showModal4(false);
-            getCurrentRank(gameRank);
-            getRanks();
-        }).catch((err) => console.log(err));
-    }
-
-    async function updateRank() {
-        const url = `${process.env.API}/ranks/${selectedRank}`;
-
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        };
-
-        const data = {
-            name: nameRank,
-            logo: badgeRank,
-            game_id: gameRank,
-        };
-
-        await axios.put(url, data, config).then(async () => {
-            showModal6(false);
-            clearData();
-            await getRanks();
-            getCurrentRank(currentGame);
-            showModal5(true);
-        }).catch((err) => console.log(err));
-    }
-
-    async function deleteRank(id) {
-        const url = `${process.env.API}/ranks/${id}`;
-
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        };
-
-        await axios.delete(url, config).then(async () => {
-            await getRanks();
-            getCurrentRank(currentGame);
-        }).catch((err) => console.log(err));
-    }
-
-    function clearData() {
-        setNameServer('');
-        setGameServer(1);
-        setNameRank('');
-        setGameRank(1);
-        setBadgeRank('');
-    }
-
+    // Get data when load the page
     useEffect(() => {
-        getServer();
-        getRanks();
-        getGames();
+        getFAQ();
     }, []);
+
     return (
         <>
             {role === 'admin' ? (
                 <Row className="centered mt-4">
                     <Col className=" col-md-6 px-3">
                         <div className="card fullwidth">
-                            <h3>Manage Server</h3>
-                            <div className="mt-3">
-                                <button className="button capsule" onClick={() => { clearData(); showModal(true); }}>Add Server</button>
-                                <button className="button capsule mx-3" onClick={() => showModal2(true)}>Update Server</button>
-                            </div>
-                        </div>
-                    </Col>
-                    <Col className=" col-md-6 px-3">
-                        <div className="card fullwidth">
-                            <h3>Manage Rank</h3>
-                            <div className="mt-3">
-                                <button className="button capsule" onClick={() => showModal4(true)}>Add Rank</button>
-                                <button className="button capsule mx-3" onClick={() => { getCurrentRank(1); showModal5(true); }}>Update Rank</button>
-                            </div>
-                        </div>
-
-                    </Col>
-                    {/* Server */}
-                    {/* Add */}
-                    <DetailModal
-                        show={modal}
-                        onHide={() => showModal(false)}
-                    >
-                        <h1>Add Server</h1>
-                        <Form.Group>
-                            <Row>
-                                <Col className="flex-down px-1">
-                                    <Form.Label>Name</Form.Label>
-                                    <Form.Control onChange={(e) => setNameServer(e.target.value)} value={nameServer} className="form-layout" />
-                                </Col>
-                                <Col className="flex-down px-1">
-                                    <Form.Label>Game</Form.Label>
-                                    <Form.Select className="form-layout" onChange={(e) => setGameServer(e.target.value)}>
-                                        {games.map((game) => (
-                                            <option value={game.id}>{game.name}</option>
-                                        ))}
-                                    </Form.Select>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col className="mt-4 flex-down-centered-right">
-                                    <button onClick={() => addServer()} className="button capsule">Add</button>
-                                </Col>
-                            </Row>
-                        </Form.Group>
-                    </DetailModal>
-                    {/* Show List */}
-                    <DetailModal
-                        show={modal2}
-                        onHide={() => showModal2(false)}
-                    >
-                        <h1>Server List</h1>
-                        <div className={styles['server-manage-container']}>
-                            {servers?.map((server) => (
-                                <div className={`${styles['server-manage-list']} my-1`}>
-                                    <span>{server?.server_name}</span>
-                                    <div>
-                                        <button onClick={() => deleteServer(server.id)} className={`${styles['delete-button']} mx-2`}>Delete</button>
-                                        <button className={styles['update-button']} onClick={() => getCurrentServer(server.id)}>Update</button>
+                            <h3 className="sec-font">Manage FAQ</h3>
+                            {/* Looping All FAQ that exist */}
+                            {FAQ?.map((item) => (
+                                <div className={styles['FAQ-card']} key={item.id}>
+                                    <span>{item.question}</span>
+                                    <div className={styles['button-container']}>
+                                        {/* Edit FAQ Button */}
+                                        <div className={styles['edit-btn']} onClick={() => { showEditFaqModal(true); selectFAQ(item); }}>
+                                            <i className="fa-solid fa-pen" />
+                                        </div>
+                                        {/* Delete FAQ Button */}
+                                        <div className={styles['delete-btn']} onClick={() => deleteFAQ(item.id)}>
+                                            <i className="fa-solid fa-trash-can" />
+                                        </div>
                                     </div>
                                 </div>
                             ))}
+                            {/* Add FAQ Button */}
+                            <div className="mt-3">
+                                <button className="button capsule" onClick={() => showAddFaqModal(true)}>Add FAQ</button>
+                            </div>
                         </div>
-                    </DetailModal>
-                    {/* Update */}
+                    </Col>
+
+                    {/* Add FAQ Modal */}
                     <DetailModal
-                        show={modal3}
-                        onHide={() => showModal3(false)}
+                        show={addFaqModal}
+                        onHide={() => { showAddFaqModal(false); clearForm(); }}
                     >
-                        <h1>Update Server</h1>
-                        <Form.Group>
-                            <Row>
-                                <Col className="flex-down px-1">
-                                    <Form.Label>Name</Form.Label>
-                                    <Form.Control onChange={(e) => setNameServer(e.target.value)} value={nameServer} className="form-layout" />
-                                </Col>
-                                <Col className="flex-down px-1">
-                                    <Form.Label>Game</Form.Label>
-                                    <Form.Select className="form-layout" value={gameServer} onChange={(e) => setGameServer(e.target.value)}>
-                                        {games.map((game) => (
-                                            <option value={game.id}>{game.name}</option>
-                                        ))}
-                                    </Form.Select>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col className="mt-4 flex-down-centered-right">
-                                    <button onClick={() => updateServer()} className="button capsule">Update</button>
-                                </Col>
-                            </Row>
-                        </Form.Group>
+                        <h3 className="sec-font">Add Modal</h3>
+                        <Form onSubmit={(e) => addNewFAQ(e)}>
+                            <Form.Label>Question</Form.Label>
+                            <Form.Control className="form-layout mb-2" value={newQuestion} onChange={(e) => setNewQuestion(e.target.value)} />
+                            <Form.Label>Answer</Form.Label>
+                            <Form.Control className="form-layout mb-2" value={newAnswer} onChange={(e) => setNewAnswer(e.target.value)} />
+                            <button className="button capsule mt-2" type="submit">Add</button>
+                        </Form>
                     </DetailModal>
 
-                    {/* Rank */}
-                    {/* Add */}
+                    {/* Edit FAQ Modal */}
                     <DetailModal
-                        show={modal4}
-                        onHide={() => showModal4(false)}
+                        show={editFaqModal}
+                        onHide={() => { showEditFaqModal(false); clearForm(); }}
                     >
-                        <h1>Add Rank</h1>
-                        <Form.Group>
-                            <Row>
-                                <Col className="flex-down px-1">
-                                    <Form.Label>Name</Form.Label>
-                                    <Form.Control onChange={(e) => setNameRank(e.target.value)} value={nameRank} className="form-layout" />
-                                </Col>
-                                <Col className="flex-down px-1">
-                                    <Form.Label>Game</Form.Label>
-                                    <Form.Select className="form-layout" onChange={(e) => setGameRank(e.target.value)}>
-                                        {games.map((game) => (
-                                            <option value={game.id}>{game.name}</option>
-                                        ))}
-                                    </Form.Select>
-                                </Col>
-                            </Row>
-                            <Row className="mt-2">
-                                <Col className="flex-down px-1">
-                                    <Form.Label>Badge</Form.Label>
-                                    <Form.Control onChange={(e) => setBadgeRank(e.target.value)} value={badgeRank} className="form-layout" />
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col className="mt-4 flex-down-centered-right">
-                                    <button onClick={() => addRank()} className="button capsule">Add</button>
-                                </Col>
-                            </Row>
-                        </Form.Group>
-                    </DetailModal>
-                    {/* Show List */}
-                    <DetailModal
-                        show={modal5}
-                        onHide={() => showModal5(false)}
-                    >
-                        <h1>
-                            Rank List
-                        </h1>
-                        <Form.Group className="my-3">
-                            <Form.Select className="form-layout w-50" defaultValue={currentGame} onChange={(e) => getCurrentRank(e.target.value)}>
-                                {games.map((game) => (
-                                    <option value={game.id}>
-                                        {game.name}
-                                    </option>
-                                ))}
-                            </Form.Select>
-                        </Form.Group>
-                        {currentRank.length > 0 ? (
-                            <div className={styles['server-manage-container']}>
-                                {currentRank.map((rank) => (
-                                    <div className={`${styles['server-manage-list']} my-1`}>
-                                        <span>
-                                            {rank.name}
-                                        </span>
-                                        <div>
-                                            <button className={`${styles['delete-button']} mx-2`} onClick={() => deleteRank(rank.id)}>Delete</button>
-                                            <button className={styles['update-button']} onClick={() => selectRank(rank.id)}>Update</button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <span>No Rank Yet</span>
-                        )}
-                    </DetailModal>
-                    {/* Update */}
-                    <DetailModal
-                        show={modal6}
-                        onHide={() => showModal6(false)}
-                    >
-                        <h1>
-                            Update Rank
-                            {' '}
-                            {gameRank}
-                        </h1>
-                        <Form.Group>
-                            <Row>
-                                <Col className="flex-down px-1">
-                                    <Form.Label>Name</Form.Label>
-                                    <Form.Control onChange={(e) => setNameRank(e.target.value)} value={nameRank} className="form-layout" />
-                                </Col>
-                                <Col className="flex-down px-1">
-                                    <Form.Label>Game</Form.Label>
-                                    <Form.Select className="form-layout" defaultValue={currentGame} onChange={(e) => setGameRank(e.target.value)}>
-                                        {games.map((game) => (
-                                            <option value={game.id}>{game.name}</option>
-                                        ))}
-                                    </Form.Select>
-                                </Col>
-                            </Row>
-                            <Row className="mt-2">
-                                <Col className="flex-down px-1">
-                                    <Form.Label>Badge</Form.Label>
-                                    <Form.Control onChange={(e) => setBadgeRank(e.target.value)} value={badgeRank} className="form-layout" />
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col className="mt-4 flex-down-centered-right">
-                                    <button onClick={() => updateRank()} className="button capsule">Add</button>
-                                </Col>
-                            </Row>
-                        </Form.Group>
+                        <h1>Edit Modal</h1>
+                        <Form onSubmit={(e) => editFAQ(e, selectedFaqID)}>
+                            <Form.Label>Question</Form.Label>
+                            <Form.Control className="form-layout mb-2" value={newQuestion} onChange={(e) => setNewQuestion(e.target.value)} />
+                            <Form.Label>Answer</Form.Label>
+                            <Form.Control className="form-layout mb-2" value={newAnswer} onChange={(e) => setNewAnswer(e.target.value)} />
+                            <button className="button capsule mt-2" type="submit">Edit</button>
+                        </Form>
                     </DetailModal>
                 </Row>
             ) : (
-                <h1>404 Error</h1>
+                <div className="error-container fullwidth">
+                    <Image src="/Jett-Sticker.png" width="300" height="300" />
+                    <span className="sec-font">You Dont Have Access</span>
+                    <Link href="/">
+                        <button className="button capsule mt-3" type="button">Home</button>
+                    </Link>
+                </div>
             )}
         </>
     );

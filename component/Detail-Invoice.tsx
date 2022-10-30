@@ -3,6 +3,8 @@
 /* eslint-disable react/button-has-type */
 import { Table } from 'react-bootstrap';
 import { useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import DetailModal from './Detail-Modal';
 
 function DetailInvoice(props: any) {
@@ -47,7 +49,13 @@ function DetailInvoice(props: any) {
                     </tbody>
                 </Table>
             ) : (
-                <h1>404 Error</h1>
+                <div className="error-container fullwidth">
+                    <Image src="/Jett-Sticker.png" width="300" height="300" />
+                    <span className="sec-font">Go Back to Home Page</span>
+                    <Link href="/">
+                        <button className="button capsule mt-3" type="button">Home</button>
+                    </Link>
+                </div>
             )}
             <DetailModal
                 show={modal}

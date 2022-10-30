@@ -16,8 +16,10 @@ import {
 } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Link from 'next/link';
 import Image from 'next/image';
 import { PayPalButton } from 'react-paypal-button-v2';
+import { ethers } from 'ethers';
 import { LoginModal } from '../component';
 import styles from '../styles/Payment.module.css';
 
@@ -39,7 +41,11 @@ function Payment() {
     });
 
     const [accForm, setAcc] = useState(false);
+    // Paypal script load
     const [scriptLoaded, setScriptLoaded] = useState<any>(false);
+    // Metamask method 
+    const [ethereum, setEthereum] = useState<any>();
+    const [totalPrice, setTotalPrice] = useState<any>();
 
     const plain = {
         id_account: null,
@@ -52,6 +58,8 @@ function Payment() {
             name: null,
             logo_url: '/kosong.png'
         },
+        addOns: [],
+        require: {}
     };
 
     const [data, setData] = useState(plain);
@@ -68,6 +76,11 @@ function Payment() {
             payment_method: paymentMethod
         };
 
+        const serviceRequire = {
+            boost_detail: data?.require,
+            add_ons: data?.addOns
+        };
+
         if (accForm) {
             const config = {
                 headers: {
@@ -76,16 +89,22 @@ function Payment() {
                     'Content-Type': 'application/json'
                 }
             };
-
-            if (data.service === 'Boost') {
-                const url = `${process.env.API}/boosts`;
-                await axios.post(url, data, config).then(async (res) => {
-                    const url2 = `${process.env.API}/boost/checkout/${res.data.data.id}`;
-                    await axios.post(url2, form, config).then(() => { global.location.href = '/dashboard'; }).catch((err) => console.log(err));
-                }).catch((err) => console.log(err));
+            if (paymentMethod === 'Metamask') {
+                if (ethereum !== undefined) {
+                    await ethereum.send('eth_requestAccounts');
+                    const provider = new ethers.providers.Web3Provider(ethereum);
+                    const signer = provider.getSigner();
+                    await signer.sendTransaction({
+                        to: process.env.CRYPTO_WALLET_ADDRESS,
+                        value: ethers.utils.parseEther(totalPrice)
+                    }).then((res) => {
+                        console.log(res);
+                    });
+                } else {
+                    console.log('Yuo Have Install Metamask First');
+                }
             } else {
-                const url = `${process.env.API}/account/checkout/${data.id_account}`;
-                await axios.post(url, form, config).then(() => { global.location.href = '/dashboard'; }).catch((err) => console.log(err));
+                await doPayment(config, form, serviceRequire);
             }
         }
     }
@@ -101,6 +120,23 @@ function Payment() {
         return res;
     }
 
+    async function doPayment(config, form, seviceRequire) {
+        if (data.service === 'Boost') {
+            const url = `${process.env.API}/boosts`;
+            await axios.post(url, seviceRequire, config).then(async (res) => {
+                const url2 = `${process.env.API}/boost/checkout/${res.data.data.id}`;
+                await axios.post(url2, form, config).then(() => { global.location.href = '/dashboard'; }).catch((err) => console.log(err));
+            }).catch((err) => console.log(err));
+        } else {
+            const url = `${process.env.API}/account/checkout/${data.id_account}`;
+            await axios.post(url, form, config).then(() => { global.location.href = '/dashboard'; }).catch((err) => console.log(err));
+        }
+    }
+
+    async function doPayLater() {
+        console.log('PayLater');
+    }
+
     useEffect(() => {
         const predata = localStorage.getItem('data') || '';
         const userData = getCookie('store');
@@ -109,7 +145,6 @@ function Payment() {
             setUser(JSON.parse(userData));
         }
         setData(JSON.parse(predata));
-        console.log(JSON.parse(predata));
 
         // Setup Script Paypal
         const setUpPaypal = () => {
@@ -123,11 +158,31 @@ function Payment() {
         setUpPaypal();
     }, []);
 
+    function setETH(window: any) {
+        setEthereum(window.ethereum);
+    }
+
+    async function setupETHprice() {
+        await axios.get('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD').then((res) => {
+            const USDconvertETH = data.total_price / res.data.USD;
+            setTotalPrice(USDconvertETH.toString().slice(0, 8));
+        });
+    }
+
+    useEffect(() => {
+        if (paymentMethod === 'Metamask') {
+            setupETHprice();
+            setETH(window);
+        } else {
+            setTotalPrice(data.total_price);
+        }
+    }, [paymentMethod, data]);
+
     return (
         <Container className="pt-3 my-5">
             <h1 className="section-title mt-5 text-center">Checkout</h1>
             <h2 className="section-subtitle text-center mb-5 px-3">Finish Your payment to make us process Your order</h2>
-            {user.roles.length > 0 ? (
+            {user.roles[0] === 'user' ? (
                 <Row className="flex-center-start">
                     <Col className="col-md-7 col-12 mb-4">
                         <Form className="card" onSubmit={(e) => paymentForm(e)}>
@@ -145,15 +200,6 @@ function Payment() {
                                         <h5 className="mt-3">PayPal</h5>
                                     </div>
                                 </Col>
-                            </Row>
-                            <Row>
-                                <Form.Group className="mb-3 col-md-6 fullwidth">
-                                    <Form.Label>Currency</Form.Label>
-                                    <Form.Select className="form-layout">
-                                        <option>USD $</option>
-                                        <option>Euro €</option>
-                                    </Form.Select>
-                                </Form.Group>
                             </Row>
                             <hr />
                             <h3 className="section-subtitle">Billing Details</h3>
@@ -203,11 +249,17 @@ function Payment() {
                                     </span>
                                 </div>
                                 <span className={styles['sub-mini-text']}>Further information will be requested after payment.</span>
-                                <div className="centered mt-4 mb-2">
+                                <div className=" centered mt-4 px-5">
                                     {paymentMethod === 'Paypal' && scriptLoaded ? (
-                                        <PayPalButton amount={data.total_price} onSuccess={(details) => console.log(details)} />
+                                        <PayPalButton
+                                            style={{
+                                                color: 'blue', layout: 'horizontal', tagline: false, shape: 'pill', height: 40
+                                            }}
+                                            amount={data.total_price}
+                                            onSuccess={(details) => console.log(details)}
+                                        />
                                     ) : (
-                                        <button className="button capsule" type="submit">Pay Now</button>
+                                        <button className="button capsule mb-2" type="submit">Pay Now</button>
                                     )}
                                 </div>
                             </Row>
@@ -233,8 +285,7 @@ function Payment() {
                                 </Col>
                                 <Col>
                                     <h5 className={styles['service-price']}>
-                                        $
-                                        {data.total_price}
+                                        {paymentMethod === 'Metamask' ? (`ETH ${totalPrice}`) : (`$ ${totalPrice}`)}
                                     </h5>
                                 </Col>
                             </Row>
@@ -243,14 +294,29 @@ function Payment() {
                 </Row>
             ) : (
                 <Row className="fullwidth py-5">
-                    <Col>
-                        <div className="card centered p-4">
-                            <h1 className="mini-title-sec text-center mb-4">You Have to Login First</h1>
-                            <div>
-                                <button className="capsule button" onClick={() => showModal(true)}>Login</button>
+                    {user.roles.length < 0 ? (
+                        <Col>
+                            <div className="flex-down centered p-4">
+                                <Image src="/Jett-Sticker.png" width="300" height="300" />
+                                <span className="sec-font">You Have to Login First</span>
+                                <div className="mt-3">
+                                    <button className="capsule button" onClick={() => showModal(true)}>Login</button>
+                                </div>
                             </div>
-                        </div>
-                    </Col>
+                        </Col>
+                    ) : (
+                        <Col>
+                            <div className="flex flex-down centered">
+                                <Image src="/Jett-Sticker.png" width="300" height="300" />
+                                <span className="sec-font">You Dont Have Access, Go Back to Home Page</span>
+                                <Link href="/">
+                                    <button className="button capsule mt-3" type="button">Home</button>
+                                </Link>
+                            </div>
+                        </Col>
+
+                    )}
+
                 </Row>
             )}
             <LoginModal

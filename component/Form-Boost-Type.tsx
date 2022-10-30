@@ -15,7 +15,7 @@ import axios from 'axios';
 import styles from './styles/FormBoost.module.css';
 
 export function IncludeRank({
-    title, getData, ranks, serviceName,
+    title, getData, ranks, serviceName, priceList,
 }) {
     const [clearRanks, setClearRanks] = useState<any>([]);
     const [selectedRank, setSelectedRank] = useState<any>(ranks[0]);
@@ -51,7 +51,13 @@ export function IncludeRank({
     async function getRank() {
         const url = `${process.env.API}/ranks/${selectedRank.id + selectedDivision}`;
 
-        await axios.get(url).then((res) => sendData(res.data.data)).catch((err) => console.log(err));
+        let data: any = {};
+
+        await axios.get(url).then((res) => {
+            data = res.data.data;
+            data.priceList = priceList[(selectedRank.id + selectedDivision) - 1];
+            sendData(data);
+        }).catch((err) => console.log(err));
     }
 
     useEffect(() => {

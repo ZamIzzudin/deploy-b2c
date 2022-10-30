@@ -14,6 +14,7 @@ import { Row, Col, Form } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
+import Link from 'next/link';
 import GameCard from './Game-Card';
 import DetailModal from './Detail-Modal';
 import styles from './styles/DetailPage.module.css';
@@ -40,7 +41,9 @@ function DetailBooster(props: any) {
     const [newGameLogo, setNewGameLogo] = useState('');
     const [newServiceName, setNewServiceName] = useState('');
 
-    const [boostOrder, setBoostOrder] = useState([{ id: 0, boost_detail: { game: { name: 'h', logo_url: '' }, type: '' }, total_price: 0 }]);
+    const [boostOrder, setBoostOrder] = useState([{
+        boost_id: 0, boost_detail: {}, total_price: 0, game_name: '', service_name: '', order_created: '',
+    }]);
     const [selectedOrder, setSelectedOrder] = useState<any>({
         id: undefined,
         boost_detail: {
@@ -59,7 +62,7 @@ function DetailBooster(props: any) {
     async function getBoostOrderList() {
         const url = `${process.env.API}/boosts`;
 
-        await axios.get(url).then((res) => { setBoostOrder(res.data.data); console.log(res.data.data); }).catch((err) => console.log(err));
+        await axios.get(url).then((res) => setBoostOrder(res.data.data)).catch((err) => console.log(err));
     }
 
     async function takeOrder(id) {
@@ -73,9 +76,14 @@ function DetailBooster(props: any) {
 
         const url = `${process.env.API}/boosts/${id}`;
 
-        const data = { status: 'On Progress' };
+        const data = {
+            status: 'On Progress',
+        };
 
-        await axios.put(url, data, config).then((res) => { showModal3(false); getBoostOrderList(); }).catch((err) => console.log(err));
+        await axios.put(url, data, config).then((res) => {
+            showModal3(false);
+            getBoostOrderList();
+        }).catch((err) => console.log(err));
     }
 
     // ADMIN
@@ -139,145 +147,99 @@ function DetailBooster(props: any) {
     return (
         <div>
             {role === 'user' && (
-                <h1>404 error</h1>
+                <div className="error-container fullwidth">
+                    <Image src="/Jett-Sticker.png" width="300" height="300" />
+                    <span className="sec-font">Go Back to Home Page</span>
+                    <Link href="/">
+                        <button className="button capsule mt-3" type="button">Home</button>
+                    </Link>
+                </div>
             )}
             {role === 'booster' && (
-                <Row className="mt-3 centered debug-bg">
+                <div className="mt-3 centered">
                     {boostOrder.length > 0 ? (
-                        <Row>
+                        <Row className="fullwidth">
                             {boostOrder.map((order) => (
-                                <Col className="col-md-3 my-2 col-12">
-                                    <Row className="centered card w-95-res debug-bg flex-down">
-                                        <Col className="centered">
-                                            <span className={styles['booster-card-price']}>
-                                                $
-                                                {order.total_price}
-                                            </span>
-                                        </Col>
-                                        <Col className="centered">
+                                <Col className="col-md-3 my-2 col-12" key={order.boost_id}>
+                                    <div className="centered w-95-res card flex-down">
+                                        <div className="fullwidth flex-right">
+                                            <span className={styles['booster-card-date']}>{order.order_created.slice(0, 10)}</span>
+                                        </div>
+                                        <Row className="fullwidth mb-3">
+                                            <Col className="centered-down">
+                                                <span className={styles['booster-card-title']}>{order.game_name}</span>
+                                                <span className={styles['booster-card-subtitle']}>{order.service_name}</span>
+                                            </Col>
+                                            <Col className="centered-down">
+                                                <span className={styles['booster-card-price']}>
+                                                    $
+                                                    {order.total_price}
+                                                </span>
+                                            </Col>
+                                        </Row>
+                                        <div className="centered">
                                             <button onClick={() => { showModal3(true); setSelectedOrder(order); }} className="button-org capsule">Details</button>
-                                        </Col>
-                                    </Row>
+                                        </div>
+                                    </div>
                                 </Col>
                             ))}
                         </Row>
                     ) : (
-                        <span className="text-center fullwidth">No Order Yet</span>
-                    )}
-                </Row>
-            )}
-            {role === 'admin' && (
-                <div className="centered-down">
-                    <Row className="my-4 fullwidth">
-                        <Col className="flex-horizon-centered-right">
-                            <button onClick={() => showModal(true)} className="button-border mx-2">Add</button>
-                            {removingGame ? (
-                                <button onClick={() => setRemovingGame(false)} className="button-org-border mx-1">Cancel</button>
-                            ) : (
-                                <button onClick={() => setRemovingGame(true)} className="button-org-border mx-1">Delete</button>
-                            )}
-                        </Col>
-                    </Row>
-                    <Row className="mt-5 mb-3 fullwidth">
-                        {games.map((game) => (
-                            <GameCard data={game} key={game.id} getData={getService} mini remove={removingGame} removeFunc={deleteGame} />
-                        ))}
-                    </Row>
-                    <Row className="my-4 fullwidth">
-                        <Col className="flex-horizon-centered-right">
-                            <button onClick={() => showModal2(true)} className="button-border mx-3">Add Service</button>
-                            {removingService ? (
-                                <button onClick={() => setRemovingService(false)} className="button-org-border">Cancel</button>
-                            ) : (
-                                <button onClick={() => setRemovingService(true)} className="button-org-border">Delete</button>
-                            )}
-
-                        </Col>
-                    </Row>
-                    <Row className={`${styles['service-slider']} centered mb-3`}>
-                        <div className={styles['service-slider-container']}>
-                            {service.map((i: any) => (
-                                <button key={i.name} className={`card fit-content mx-2 ${removingService ? ('') : ('card-hovering')} relative-pos`}>
-                                    <span className={styles['service-name']}>{i.name}</span>
-                                    {removingService && (
-                                        <button onClick={() => deleteService(i.name, i)} className={styles['remove-toogle']}>X</button>
-                                    )}
-                                </button>
-                            ))}
+                        <div className="error-container ">
+                            <Image src="/Jett-Sticker.png" width="300" height="300" />
+                            <span className="sec-font">There is No Order Yet</span>
                         </div>
-                    </Row>
-
+                    )}
                 </div>
             )}
-            <DetailModal
-                show={modal}
-                onHide={() => showModal(false)}
-            >
-                <h1>Add Game</h1>
-                <Form.Group className="mb-3 fullwidth">
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control className="form-layout mb-4" onChange={(e) => setNewGameName(e.target.value)} />
-                    <Form.Label>Picture</Form.Label>
-                    <Form.Control className="form-layout mb-4" onChange={(e) => setNewGameLogo(e.target.value)} />
-                    <div>
-                        <button onClick={() => newGame()} className="button capsule">Add</button>
-                    </div>
-                </Form.Group>
-            </DetailModal>
-            <DetailModal
-                show={modal2}
-                onHide={() => showModal2(false)}
-            >
-                <h1>Add Service</h1>
-                <Form.Group className="mb-3 fullwidth">
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control className="form-layout mb-4" onChange={(e) => setNewServiceName(e.target.value)} />
-                    <div>
-                        <button onClick={() => newService()} className="button capsule">Add</button>
-                    </div>
-                </Form.Group>
-            </DetailModal>
+            {role === 'admin' && (
+                <div className="error-container fullwidth">
+                    <Image src="/Jett-Sticker.png" width="300" height="300" />
+                    <span className="sec-font">Features Comming Soon</span>
+                </div>
+            )}
+            {/* Take Order */}
             <DetailModal
                 show={modal3}
                 onHide={() => showModal3(false)}
             >
                 <h1>Details</h1>
-                {/* <Row className="mb-4">
-                    <Col className="col-4 pad-0">
-                        <div className="fullwidth centered flex-down">
-                            <Image src={selectedOrder.boost_detail.game.logo_url} width="100%" height="100%" />
-                            <span className="text-center d-i-block fullwidth">{selectedOrder.boost_detail.game.name}</span>
-                        </div>
-                    </Col>
-                    <Col className="col-8 flex-down">
-                        <p className="mar-0">
-                            <b>Service : </b>
-                            {selectedOrder.boost_detail.type}
-                        </p>
-                        <p className="mar-0">
-                            <b>Price : </b>
-                            {`$${selectedOrder.total_price}`}
-                        </p>
-                        {selectedOrder.boost_detail.require.map((item) => (
-                            <p className="mar-0">
-                                <b>
-                                    {Object.keys(item)[0]}
-                                    {' '}
-                                    :
-                                    {' '}
-                                </b>
-                                {item[Object.keys(item)[0]]}
-                            </p>
+                <Row>
+                    <span>
+                        Game:
+                        {' '}
+                        {selectedOrder.game_name}
+                    </span>
+                    <span>
+                        Service:
+                        {' '}
+                        {selectedOrder.service_name}
+                    </span>
+                </Row>
+                <Row>
+                    {
+                        Object.keys(selectedOrder.boost_detail).map((key) => (
+                            <span className={styles['booster-detail-list']}>
+                                {key.replace('_', ' ')}
+                                {' '}
+                                :
+                                {' '}
+                                {selectedOrder.boost_detail[key]}
+                            </span>
+                        ))
+                    }
+                </Row>
+                <Row>
+                    <span>Add Ons : </span>
+                    <ul className="px-5">
+                        {selectedOrder.add_ons?.map((list) => (
+                            <li>{list.name}</li>
                         ))}
-                        <p className="mar-0">
-                            <b>Add Ons : </b>
-                            {selectedOrder.boost_detail.addOns.map((addOn) => <span className="mar-0">{`${addOn},`}</span>)}
-                        </p>
-                    </Col>
-                </Row> */}
+                    </ul>
+                </Row>
                 <Row>
                     <Col>
-                        <button className="button capsule" onClick={() => takeOrder(selectedOrder.id)}>
+                        <button className="button capsule" onClick={() => takeOrder(selectedOrder.boost_id)}>
                             Take Order
                         </button>
                     </Col>

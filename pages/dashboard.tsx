@@ -13,6 +13,8 @@
 import { Container, Row, Col } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Image from 'next/image';
+import Link from 'next/link';
 import {
     SideBar, DetailOrder, DetailMarket, DetailBooster, DetailInvoice, DetailOther,
 } from '../component';
@@ -95,9 +97,15 @@ function Dashboard() {
                     </Row>
                 </Container>
             ) : (
-                <Container className="py-5 my-5">
-                    <h1 className="my-5">404 Error</h1>
-                </Container>
+                <div className="error-container ">
+                    <Image src="/Jett-Sticker.png" width="300" height="300" />
+                    <span className="sec-font">
+                        You Dont Have Access
+                    </span>
+                    <Link href="/">
+                        <button className="button capsule mt-3" type="button">Home</button>
+                    </Link>
+                </div>
             )}
         </>
     );

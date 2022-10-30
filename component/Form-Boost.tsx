@@ -17,7 +17,7 @@ import styles from './styles/FormBoost.module.css';
 
 function FormBoost(props: any) {
     const {
-        form, getData, ranks, servers, titleService,
+        form, getData, ranks, servers, titleService, priceList,
     } = props;
 
     const [typeForm, setTypeForm] = useState<any>(form);
@@ -39,7 +39,7 @@ function FormBoost(props: any) {
         <div className={styles['form-container']}>
             {typeForm?.map((f) => {
                 if (f.type === 'includeRank') {
-                    return (<IncludeRank key={f.title} title={f.title} getData={setData} ranks={ranks} serviceName={titleService} />);
+                    return (<IncludeRank key={f.title} title={f.title} priceList={priceList} getData={setData} ranks={ranks} serviceName={titleService} />);
                 } if (f.type === 'gameNumber') {
                     return (<NumberGame key={f.title} max={f.max} min={f.min} title={f.title} getData={setData} serviceName={titleService} />);
                 } if (f.type === 'points') {

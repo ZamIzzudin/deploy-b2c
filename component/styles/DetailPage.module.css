@@ -37,7 +37,18 @@
 }
 
 .booster-card-price {
-    font-size: 2em;
+    font-size: 1.5em;
+    font-family: var(--secFont);
+}
+
+.booster-card-date {
+    font-size: .8em;
+    font-family: var(--secFont);
+    opacity: .5;
+}
+
+.booster-detail-list {
+    text-transform: capitalize;
 }
 
 .remove-toogle {
@@ -106,47 +117,59 @@
 
 
 /* Other */
-.server-manage-container {
+.FAQ-card {
+    background-color: var(--insideCard);
+    margin: 12px 0;
+    padding: 12px;
+    border-radius: 12px;
     display: flex;
-    flex-direction: column;
-}
-
-.server-manage-list {
-    display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: var(--insideCard)
 }
 
-.delete-button {
-    background-color: transparent;
-    border: none;
-    color: var(--yellow);
-    padding: 3px 10px;
-    border-radius: 15px;
+.button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.edit-btn,
+.delete-btn {
+    padding: 10px 5px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
     transition: .3s;
-    font-weight: 700;
+    border: 2px solid transparent;
 }
 
-.update-button {
-    background-color: transparent;
-    border: none;
-    color: var(--primColor);
-    padding: 3px 10px;
-    border-radius: 15px;
-    transition: .3s;
-}
-
-.delete-button:hover {
+.delete-btn {
     background-color: var(--yellow);
-    color: white;
 }
 
-.update-button:hover {
+.edit-btn {
     background-color: var(--primColor);
-    color: white;
+}
+
+.delete-btn:hover {
+    background-color: transparent;
+    border: 2px solid var(--yellow);
+}
+
+.delete-btn:hover i {
+    color: var(--yellow);
+}
+
+.edit-btn:hover {
+    background-color: transparent;
+    border: 2px solid var(--primColor);
+}
+
+.edit-btn:hover i {
+    color: var(--primColor);
 }
 
 @media only screen and (max-width: 800px) {

@@ -59,7 +59,6 @@ function Market() {
     async function getAccountbyFilter() {
         let url = `${process.env.API}/accounts/?sortOrder=${filterSort}`;
 
-        console.log(filterRank);
         if (filterRank === '99' || filterServer === '99') {
             getAccount();
             setFilterRank('0');

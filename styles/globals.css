@@ -255,6 +255,7 @@ b {
 }
 
 .flex-right {
+  display: flex;
   align-items: flex-end;
   justify-content: flex-end;
 }
@@ -327,8 +328,12 @@ b {
   font-size: .85em;
   font-weight: 400;
   background-color: var(--insideCard);
-  margin-bottom: 5px;
   width: fit-content;
+  padding: 5px 10px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .debug-bg {
@@ -681,6 +686,15 @@ td:first-child {
   font-family: var(--secFont);
   font-weight: 800;
   font-size: 3em;
+}
+
+.error-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 @media only screen and (max-width: 1000px) {

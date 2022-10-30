@@ -22,14 +22,14 @@ export default function OptionalAddons(props) {
         if (data.name.includes('Specific') && checked === false) {
             showModal(true);
         } else {
-            getAddOns(data.name);
+            getAddOns(data);
             setChecked(!checked);
         }
     }
 
     function addSpecificAgent() {
         const specificAgent = `${data.name} (${agent}/${agent2})`;
-        getAddOns(specificAgent);
+        getAddOns({ name: specificAgent, percentage_price: data.percentage_price });
         setChecked(!checked);
         showModal(false);
         setAgent('Astra');
