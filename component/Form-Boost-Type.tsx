@@ -213,18 +213,17 @@ export function PlatformSelect({
         getData(newData, title);
     }
 
-    const [selected, setSelected] = useState<any>(platforms[0]);
-
     useEffect(() => {
         sendData(platforms[0]);
     }, [serviceName]);
+
     return (
-        <div className={styles.container}>
-            <h1 className={styles['title-form']}>{title}</h1>
-            <div className="mt-4 mb-2 f-wrap gap-3">
-                {platforms.map((platform) => <span key={platform} onClick={() => { sendData(platform); setSelected(platform); }} className={`${styles['platform-button']} ${platform === selected ? (styles.active) : ('')}`}>{platform}</span>)}
-            </div>
-        </div>
+        <Col className="flex-down fullwidth">
+            <Form.Label>{title}</Form.Label>
+            <Form.Select className="form-layout mb-4" onChange={(e) => sendData(e.target.value)}>
+                {platforms.map((platform) => <option key={platform} value={platform}>{platform}</option>)}
+            </Form.Select>
+        </Col>
     );
 }
 
@@ -236,19 +235,16 @@ export function ServerSelect({
         getData(newData, 'Server Require');
     }
 
-    const [selected, setSelected] = useState<any>();
-
     useEffect(() => {
         sendData(servers[0].name);
-        setSelected(servers[0].name);
     }, [serviceName]);
 
     return (
-        <div className={styles.container}>
-            <h1 className={styles['title-form']}>Select Your Server</h1>
-            <div className="mt-4 mb-2 f-wrap gap-3">
-                {servers.map((server) => <span key={server.name} onClick={() => { sendData(server.name); setSelected(server.name); }} className={`${styles['platform-button']} ${server.name === selected ? (styles.active) : ('')}`}>{server.name}</span>)}
-            </div>
-        </div>
+        <Col className="flex-down fullwidth">
+            <Form.Label>Select Your Server</Form.Label>
+            <Form.Select className="form-layout mb-4" onChange={(e) => sendData(e.target.value)}>
+                {servers.map((server) => <option key={server.name} value={server.name}>{server.name}</option>)}
+            </Form.Select>
+        </Col>
     );
 }

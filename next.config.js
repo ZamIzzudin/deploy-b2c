@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
-    domains: ['ec2-54-219-168-219.us-west-1.compute.amazonaws.com', 'lh3.googleusercontent.com', 'encrypted-tbn0.gstatic.com'],
+    domains: ['52.53.213.105', 'ec2-54-219-168-219.us-west-1.compute.amazonaws.com'],
   },
   env: {
     API: process.env.API_URL,

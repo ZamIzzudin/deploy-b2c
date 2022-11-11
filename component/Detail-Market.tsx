@@ -14,7 +14,7 @@
 import {
     Row, Col, Form, InputGroup, Pagination,
 } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -36,12 +36,14 @@ function DetailMarket(props: any) {
     const [filterServer, setFilterServer] = useState<any>('99');
     const [filterSort, setFilterSort] = useState('asc');
 
-    const [newHighestRank, setNewHighestRank] = useState('');
+    const [newHighestRank, setNewHighestRank] = useState<any>(1);
     const [newAccountPrice, setNewAccountPrice] = useState('');
-    const [newAccountServer, setNewAccountServer] = useState('');
-    const [newCurrentRank, setNewCurrentRank] = useState('');
+    const [newAccountServer, setNewAccountServer] = useState<any>(1);
+    const [newCurrentRank, setNewCurrentRank] = useState<any>(1);
     const [newAccountDesc, setNewAccountDesc] = useState('');
-    const [newScreenshoot, setNewScreenShoot] = useState('');
+    const [newScreenshoot, setNewScreenShoot] = useState<any>([]);
+    const [currentScreenshoot, setCurrentScreenShoot] = useState<any>([]);
+    const [showScreenshoot, setShowScreenShoot] = useState<any>([]);
     const [newSkins, setNewSkins] = useState<any>([]);
     const [newAgents, setNewAgents] = useState<any>([]);
     const [newId, setId] = useState<any>();
@@ -51,6 +53,8 @@ function DetailMarket(props: any) {
 
     const [paginationPage, setPaginationPage] = useState(1);
     const pagination: any = [];
+
+    const fileForm = useRef<any>();
 
     useEffect(() => {
         getAccount();
@@ -75,7 +79,9 @@ function DetailMarket(props: any) {
     }
 
     async function getAccount() {
-        await axios.get(`${process.env.API}/accounts`).then((res) => setAccounts(res.data.accounts)).catch((res) => console.log(res));
+        await axios.get(`${process.env.API}/accounts`)
+            .then((res) => setAccounts(res.data.accounts))
+            .catch((res) => console.log(res));
     }
 
     function setModal(type) {
@@ -87,17 +93,18 @@ function DetailMarket(props: any) {
     }
 
     function clearData() {
-        setNewHighestRank('');
+        setNewHighestRank(1);
         setNewAccountPrice('');
-        setNewAccountServer('');
-        setNewCurrentRank('');
+        setNewAccountServer(1);
+        setNewCurrentRank(1);
         setNewAccountDesc('');
-        setNewScreenShoot('');
+        setNewScreenShoot([]);
+        setNewCurrentRank([]);
+        setShowScreenShoot([]);
         setNewSkins([]);
         setNewAgents([]);
     }
 
-    // Masih Error API - nya
     async function newAccount() {
         const config = {
             headers: {
@@ -107,27 +114,33 @@ function DetailMarket(props: any) {
             },
         };
 
-        const data = {
-            current_rank_id: newCurrentRank,
-            highest_rank_id: newHighestRank,
-            server_id: newAccountServer,
-            price: newAccountPrice,
-            agent_list: newAgents,
-            skin_list: newSkins,
-            description: newAccountDesc,
-            screenshots: newScreenshoot,
-            in_stocks: '1',
-        };
+        const formData = new FormData();
+
+        formData.append('current_rank_id', newCurrentRank);
+        formData.append('highest_rank_id', newHighestRank);
+        formData.append('server_id', newAccountServer);
+        formData.append('price', newAccountPrice);
+        formData.append('agent_list', newAgents);
+        formData.append('skin_list', newSkins);
+        formData.append('description', newAccountDesc);
+        formData.append('in_stocks', '1');
+
+        console.log(newScreenshoot.length);
+        if (newScreenshoot?.length > 0) {
+            newScreenshoot.forEach((SS) => {
+                formData.append('screenshots[]', SS);
+            });
+        } else {
+            formData.append('screenshots[]', ' ');
+        }
 
         const url = `${process.env.API}/accounts`;
 
-        console.log(data);
-
-        // await axios.post(url, data, config).then((res) => {
-        //     clearData();
-        //     showModal3(false);
-        //     getAccount();
-        // }).catch((err) => console.log(err));
+        await axios.post(url, formData, config).then((res) => {
+            clearData();
+            showModal3(false);
+            getAccount();
+        }).catch((err) => console.log(err));
     }
 
     async function updateAccount(id) {
@@ -139,26 +152,31 @@ function DetailMarket(props: any) {
             },
         };
 
-        const data = {
-            current_rank_id: newCurrentRank,
-            highest_rank_id: newHighestRank,
-            server_id: newAccountServer,
-            price: newAccountPrice,
-            agent_list: newAgents.join(';'),
-            skin_list: newSkins.join(';'),
-            description: newAccountDesc,
-            screenshots: newScreenshoot,
-        };
+        const formData = new FormData();
+
+        formData.append('current_rank_id', newCurrentRank);
+        formData.append('highest_rank_id', newHighestRank);
+        formData.append('server_id', newAccountServer);
+        formData.append('price', newAccountPrice);
+        formData.append('agent_list', newAgents);
+        formData.append('skin_list', newSkins);
+        formData.append('description', newAccountDesc);
+
+        if (newScreenshoot?.length > 0) {
+            newScreenshoot.forEach((SS) => {
+                formData.append('screenshots[]', SS);
+            });
+        } else {
+            formData.append('screenshots[]', ' ');
+        }
 
         const url = `${process.env.API}/accounts/${id}`;
 
-        console.log(data);
-
-        // await axios.put(url, data, config).then((res) => {
-        //     showModal(false);
-        //     clearData();
-        //     getAccount();
-        // }).catch((err) => console.log(err));
+        await axios.post(url, formData, config).then((res) => {
+            showModal(false);
+            clearData();
+            getAccount();
+        }).catch((err) => console.log(err));
     }
 
     async function deleteAccount(id) {
@@ -179,6 +197,7 @@ function DetailMarket(props: any) {
     }
 
     function getCurrentAccount(data) {
+        clearData();
         setNewSkins(data.skin_list.split(' '));
         setNewAgents(data.agent_list.split(' '));
         setNewHighestRank(data.highest_rank_id);
@@ -186,7 +205,7 @@ function DetailMarket(props: any) {
         setNewAccountServer(data.server_id);
         setNewCurrentRank(data.current_rank_id);
         setNewAccountDesc(data.description);
-        setNewScreenShoot(data.screenshots);
+        setCurrentScreenShoot(JSON.parse(data.screenshots));
         setId(data.id);
     }
 
@@ -235,6 +254,48 @@ function DetailMarket(props: any) {
         const [...arrAgents] = newAgents;
         setNewAgents(arrAgents);
         setAddMoreAgents('');
+    }
+
+    function addScreenshoot(e) {
+        const file = e.target.files[0];
+        setNewScreenShoot([...newScreenshoot, file]);
+
+        if (file !== undefined) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                const { result } = reader;
+                const detail = {
+                    src: result,
+                    name: file.name,
+                };
+                setShowScreenShoot([...showScreenshoot, detail]);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    async function deleteScreenshoot(link) {
+        const name = link.slice(56).split('.')[0];
+        const url = `${process.env.API}/accounts/${newId}/${name}`;
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        };
+
+        await axios.delete(url, config).then(async (res) => {
+            setCurrentScreenShoot(JSON.parse(res.data.data.screenshots));
+        }).catch((err) => console.log(err));
+    }
+
+    function deleteShowScreenshoot(name) {
+        const showSS = showScreenshoot.filter((item) => item.name !== name);
+        const showFile = newScreenshoot.filter((file) => file.name !== name);
+        setNewScreenShoot(showFile);
+        setShowScreenShoot(showSS);
     }
 
     async function handlePagination(page) {
@@ -327,25 +388,37 @@ function DetailMarket(props: any) {
                         onHide={() => showModal(false)}
                     >
                         <h3 className="sec-font">Edit Account</h3>
-                        <Form.Group className="mb-3 fullwidth">
+                        <Form.Group className=" fullwidth">
                             <Row className="gap-3">
-                                <Col className="flex-down">
-                                    <Form.Label>Server</Form.Label>
-                                    <Form.Control className="form-layout mb-4" value={newAccountServer} onChange={(e) => setNewAccountServer(e.target.value)} />
-                                </Col>
                                 <Col className="flex-down">
                                     <Form.Label>Price</Form.Label>
                                     <Form.Control className="form-layout mb-4" value={newAccountPrice} onChange={(e) => setNewAccountPrice(e.target.value)} />
+                                </Col>
+                                <Col className="flex-down">
+                                    <Form.Label>Server</Form.Label>
+                                    <Form.Select className="form-layout mb-4" value={newAccountServer} onChange={(e) => setNewAccountServer(e.target.value)}>
+                                        {Servers.map((server) => (
+                                            <option value={server.id} key={server.id}>{server.server_name}</option>
+                                        ))}
+                                    </Form.Select>
                                 </Col>
                             </Row>
                             <Row className="gap-3">
                                 <Col className="flex-down">
                                     <Form.Label>Highest Rank</Form.Label>
-                                    <Form.Control className="form-layout mb-4" value={newHighestRank} onChange={(e) => setNewHighestRank(e.target.value)} />
+                                    <Form.Select className="form-layout mb-4" value={newHighestRank} onChange={(e) => setNewHighestRank(e.target.value)}>
+                                        {Ranks.map((rank) => (
+                                            <option value={rank.id} key={rank.id}>{rank.name}</option>
+                                        ))}
+                                    </Form.Select>
                                 </Col>
                                 <Col className="flex-down">
                                     <Form.Label>Current Rank</Form.Label>
-                                    <Form.Control className="form-layout mb-4" value={newCurrentRank} onChange={(e) => setNewCurrentRank(e.target.value)} />
+                                    <Form.Select className="form-layout mb-4" value={newCurrentRank} onChange={(e) => setNewCurrentRank(e.target.value)}>
+                                        {Ranks.map((rank) => (
+                                            <option value={rank.id} key={rank.id}>{rank.name}</option>
+                                        ))}
+                                    </Form.Select>
                                 </Col>
                             </Row>
                             <Row>
@@ -412,9 +485,30 @@ function DetailMarket(props: any) {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col className="flex-down">
+                                <Col className="flex-down mb-3">
                                     <Form.Label>Screenshoot</Form.Label>
-                                    <Form.Control className="form-layout mb-4" value={newScreenshoot} onChange={(e) => setNewScreenShoot(e.target.value)} />
+                                    {currentScreenshoot?.map((link) => (
+                                        <div className="spbetween-horizontal mb-3">
+                                            <Image src={link} height="60px" width="90px" />
+                                            <span>{link.slice(56)}</span>
+                                            <button className={styles['delete-btn']} onClick={() => deleteScreenshoot(link)}>
+                                                <i className="fa-solid fa-trash-can" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                    {showScreenshoot?.map((image) => (
+                                        <div className="spbetween-horizontal mb-3">
+                                            <Image src={image.src} height="60px" width="90px" />
+                                            <span>{image.name}</span>
+                                            <button className={styles['delete-btn']} onClick={() => deleteShowScreenshoot(image.name)}>
+                                                <i className="fa-solid fa-trash-can" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <input type="file" onChange={(e) => { addScreenshoot(e); }} accept="image/png, image/jpg, image/jpeg" hidden ref={fileForm} />
+                                    <button className="button-org-border capsule" onClick={() => fileForm.current?.click()}>
+                                        Choose File
+                                    </button>
                                 </Col>
                             </Row>
                             <Row>
@@ -448,7 +542,7 @@ function DetailMarket(props: any) {
                         onHide={() => showModal3(false)}
                     >
                         <h3 className="sec-font">Add New Account</h3>
-                        <Form.Group className="mb-3 fullwidth">
+                        <Form.Group className="fullwidth">
                             <Row className="gap-3">
                                 <Col className="flex-down">
                                     <Form.Label>Price</Form.Label>
@@ -456,7 +550,7 @@ function DetailMarket(props: any) {
                                 </Col>
                                 <Col className="flex-down">
                                     <Form.Label>Server</Form.Label>
-                                    <Form.Select className="form-layout mb-4" onChange={(e) => setNewAccountServer(e.target.value)}>
+                                    <Form.Select className="form-layout mb-4" defaultValue={newAccountServer} onChange={(e) => setNewAccountServer(e.target.value)}>
                                         {Servers.map((server) => (
                                             <option value={server.id} key={server.id}>{server.server_name}</option>
                                         ))}
@@ -466,7 +560,7 @@ function DetailMarket(props: any) {
                             <Row className="gap-3">
                                 <Col className="flex-down">
                                     <Form.Label>Highest Rank</Form.Label>
-                                    <Form.Select className="form-layout mb-4" onChange={(e) => setNewHighestRank(e.target.value)}>
+                                    <Form.Select className="form-layout mb-4" value={newHighestRank} onChange={(e) => setNewHighestRank(e.target.value)}>
                                         {Ranks.map((rank) => (
                                             <option value={rank.id} key={rank.id}>{rank.name}</option>
                                         ))}
@@ -474,7 +568,7 @@ function DetailMarket(props: any) {
                                 </Col>
                                 <Col className="flex-down">
                                     <Form.Label>Current Rank</Form.Label>
-                                    <Form.Select className="form-layout mb-4" onChange={(e) => setNewCurrentRank(e.target.value)}>
+                                    <Form.Select className="form-layout mb-4" value={newCurrentRank} onChange={(e) => setNewCurrentRank(e.target.value)}>
                                         {Ranks.map((rank) => (
                                             <option value={rank.id} key={rank.id}>{rank.name}</option>
                                         ))}
@@ -496,9 +590,9 @@ function DetailMarket(props: any) {
                                                 <span className="sec-font">
                                                     {e}
                                                 </span>
-                                                <div className="pointer centered" onClick={() => removeSkins(i)}>
+                                                <span className="pointer centered" onClick={() => removeSkins(i)}>
                                                     <i className="fa-solid fa-xmark" />
-                                                </div>
+                                                </span>
                                             </div>
                                         ))}
                                     </div>
@@ -544,9 +638,21 @@ function DetailMarket(props: any) {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col className="flex-down">
+                                <Col className="flex-down mb-3">
                                     <Form.Label>Screenshoot</Form.Label>
-                                    <Form.Control className="form-layout mb-4" onChange={(e) => setNewScreenShoot(e.target.value)} />
+                                    {showScreenshoot?.map((image) => (
+                                        <div className="spbetween-horizontal mb-3">
+                                            <Image src={image.src} height="60px" width="90px" />
+                                            <span>{image.name}</span>
+                                            <button className={styles['delete-btn']} onClick={() => deleteShowScreenshoot(image.name)}>
+                                                <i className="fa-solid fa-trash-can" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <input type="file" onChange={(e) => { addScreenshoot(e); }} accept="image/png, image/jpg, image/jpeg" hidden ref={fileForm} />
+                                    <button className="button-org-border capsule" onClick={() => fileForm.current?.click()}>
+                                        Choose File
+                                    </button>
                                 </Col>
                             </Row>
                             <Row>
@@ -560,15 +666,17 @@ function DetailMarket(props: any) {
                     </DetailModal>
                 </div>
             )}
-            {role !== 'admin' && (
-                <div className="error-container fullwidth">
-                    <Image src="/Jett-Sticker.png" width="300" height="300" />
-                    <span className="sec-font">Go Back to Home Page</span>
-                    <Link href="/">
-                        <button className="button capsule mt-3" type="button">Home</button>
-                    </Link>
-                </div>
-            )}
+            {
+                role !== 'admin' && (
+                    <div className="error-container fullwidth">
+                        <Image src="/Jett-Sticker.png" width="300" height="300" />
+                        <span className="sec-font">Go Back to Home Page</span>
+                        <Link href="/">
+                            <button className="button capsule mt-3" type="button">Home</button>
+                        </Link>
+                    </div>
+                )
+            }
         </>
     );
 }

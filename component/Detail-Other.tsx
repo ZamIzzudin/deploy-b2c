@@ -124,13 +124,13 @@ function DetailOther(props: any) {
                                     <span>{item.question}</span>
                                     <div className={styles['button-container']}>
                                         {/* Edit FAQ Button */}
-                                        <div className={styles['edit-btn']} onClick={() => { showEditFaqModal(true); selectFAQ(item); }}>
+                                        <button className={styles['edit-btn']} onClick={() => { showEditFaqModal(true); selectFAQ(item); }}>
                                             <i className="fa-solid fa-pen" />
-                                        </div>
+                                        </button>
                                         {/* Delete FAQ Button */}
-                                        <div className={styles['delete-btn']} onClick={() => deleteFAQ(item.id)}>
+                                        <button className={styles['delete-btn']} onClick={() => deleteFAQ(item.id)}>
                                             <i className="fa-solid fa-trash-can" />
-                                        </div>
+                                        </button>
                                     </div>
                                 </div>
                             ))}

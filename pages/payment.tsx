@@ -52,7 +52,7 @@ function Payment() {
         full_name: null,
         total_price: 0,
         service: null,
-        type: null,
+        type: 'A',
         rank: null,
         game: {
             name: null,
@@ -65,7 +65,10 @@ function Payment() {
     const [data, setData] = useState(plain);
 
     async function paymentForm(e) {
-        e.preventDefault();
+        if (e !== null) {
+            e.preventDefault();
+        }
+
         const form = {
             full_name: fullName,
             country: Country,
@@ -78,7 +81,8 @@ function Payment() {
 
         const serviceRequire = {
             boost_detail: data?.require,
-            add_ons: data?.addOns
+            add_ons: data?.addOns,
+            total_price: data?.total_price
         };
 
         if (accForm) {
@@ -97,11 +101,11 @@ function Payment() {
                     await signer.sendTransaction({
                         to: process.env.CRYPTO_WALLET_ADDRESS,
                         value: ethers.utils.parseEther(totalPrice)
-                    }).then((res) => {
-                        console.log(res);
+                    }).then(async (res) => {
+                        await doPayment(config, form, serviceRequire);
                     });
                 } else {
-                    console.log('Yuo Have Install Metamask First');
+                    console.log('You Have Install Metamask First');
                 }
             } else {
                 await doPayment(config, form, serviceRequire);
@@ -122,7 +126,9 @@ function Payment() {
 
     async function doPayment(config, form, seviceRequire) {
         if (data.service === 'Boost') {
-            const url = `${process.env.API}/boosts`;
+            const serviceName = data.type.toLowerCase().replace(/ /g, '-');
+
+            const url = `${process.env.API}/boosts/${serviceName}`;
             await axios.post(url, seviceRequire, config).then(async (res) => {
                 const url2 = `${process.env.API}/boost/checkout/${res.data.data.id}`;
                 await axios.post(url2, form, config).then(() => { global.location.href = '/dashboard'; }).catch((err) => console.log(err));
@@ -145,7 +151,6 @@ function Payment() {
             setUser(JSON.parse(userData));
         }
         setData(JSON.parse(predata));
-
         // Setup Script Paypal
         const setUpPaypal = () => {
             const script = document.createElement('script');
@@ -256,7 +261,7 @@ function Payment() {
                                                 color: 'blue', layout: 'horizontal', tagline: false, shape: 'pill', height: 40
                                             }}
                                             amount={data.total_price}
-                                            onSuccess={(details) => console.log(details)}
+                                            onSuccess={() => paymentForm(null)}
                                         />
                                     ) : (
                                         <button className="button capsule mb-2" type="submit">Pay Now</button>

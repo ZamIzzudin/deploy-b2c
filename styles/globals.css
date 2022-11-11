@@ -87,6 +87,7 @@ b {
   border: 2px solid var(--primColor);
   transition: .5s;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .button-border {
@@ -98,6 +99,7 @@ b {
   transition: .5s;
   color: var(--primColor);
   font-size: 16px;
+  cursor: pointer;
 }
 
 .button-border:hover {
@@ -118,6 +120,7 @@ b {
   border: 2px solid var(--yellow);
   transition: .5s;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .button-org:hover {
@@ -134,6 +137,7 @@ b {
   transition: .5s;
   color: var(--yellow);
   font-size: 16px;
+  cursor: pointer;
 }
 
 .button-org-border:hover {
@@ -247,6 +251,13 @@ b {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  align-items: center;
+}
+
+.spbetween-horizontal {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -695,6 +706,10 @@ td:first-child {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 @media only screen and (max-width: 1000px) {

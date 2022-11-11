@@ -37,20 +37,28 @@ function FormBoost(props: any) {
 
     return (
         <div className={styles['form-container']}>
+            {/* Solo Form */}
             {typeForm?.map((f) => {
                 if (f.type === 'includeRank') {
                     return (<IncludeRank key={f.title} title={f.title} priceList={priceList} getData={setData} ranks={ranks} serviceName={titleService} />);
                 } if (f.type === 'gameNumber') {
-                    return (<NumberGame key={f.title} max={f.max} min={f.min} title={f.title} getData={setData} serviceName={titleService} />);
+                    return (<NumberGame key={f.title} max={f.maxGameOrder} min={f.minGameOrder} title={f.title} getData={setData} serviceName={titleService} />);
                 } if (f.type === 'points') {
                     return (<Points key={f.title} start={f.start} to={f.to} title={f.title} unit={f.unit} getData={setData} serviceName={titleService} />);
-                } if (f.type === 'platformSelect') {
-                    return (<PlatformSelect key={f.title} title={f.title} platforms={f.platforms} getData={setData} serviceName={titleService} />);
                 }
             })}
-            {servers.length > 0 && (
-                <ServerSelect servers={servers} getData={setData} serviceName={titleService} />
-            )}
+
+            {/* Grouping Dropdown Form */}
+            <div className={styles.container}>
+                {servers.length > 0 && (
+                    <ServerSelect servers={servers} getData={setData} serviceName={titleService} />
+                )}
+                {typeForm?.map((f) => {
+                    if (f.type === 'platformSelect') {
+                        return (<PlatformSelect key={f.title} title={f.title} platforms={f.platforms} getData={setData} serviceName={titleService} />);
+                    }
+                })}
+            </div>
         </div>
     );
 }

@@ -88,14 +88,14 @@ function Order() {
     // Setup Store to Get Data From Form
     function setupCheckoutDetail() {
         const detailsForm = requireOrder;
+
         const type = detailsForm?.map((item) => {
             const typeForm = { title: item.title };
-
             return typeForm;
         });
 
         if (servers.length > 0) {
-            type.push({ title: 'Server Require' });
+            type.push({ title: 'Server Require', server: servers[0].name });
         }
 
         setCheckoutDetail(type);

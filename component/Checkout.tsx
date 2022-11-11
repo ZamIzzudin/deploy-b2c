@@ -87,7 +87,10 @@ function Checkout(props: any) {
     }
 
     async function getPrice() {
-        const url = `${process.env.API}/service/price/calculate`;
+        const gameName = game.name.toLowerCase().replace(/ /g, '-');
+        const serviceName = orderType.toLowerCase().replace(/ /g, '-');
+
+        const url = `${process.env.API}/service/price/calculate?game=${gameName}&service=${serviceName}`;
 
         const data = {
             add_ons: selectedAddOns.length > 0 ? selectedAddOns : [{ name: 'none', percentage_price: 0 }],
@@ -98,7 +101,9 @@ function Checkout(props: any) {
             data.boost_detail[detail.title.toLowerCase().split(' ').join('_')] = detail.name || detail.numberGame || detail.server || detail.platform || { start: detail.start, to: detail.to };
         });
 
-        await axios.post(url, data).then((res) => setPrice(res.data.total_price)).catch((err) => console.log(err));
+        await axios.post(url, data)
+            .then((res) => setPrice(res.data.total_price))
+            .catch((err) => console.log(err));
     }
 
     useEffect(() => {

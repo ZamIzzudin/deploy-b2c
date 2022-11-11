@@ -96,9 +96,9 @@ function TabBar() {
                 <Image src="/logo.png" width="125" height="45" />
             </div>
             <div className={`${styles['navbar-collapse']} ${sideBar && (styles['show-side-bar'])}`}>
-                <div className={styles['close-toogle']} onClick={() => setSideBar(false)}>
+                <button className={styles['close-toogle']} onClick={() => setSideBar(false)}>
                     <i className="fa-solid fa-xmark" />
-                </div>
+                </button>
                 <div className={styles['navbar-list']} onClick={() => setSideBar(false)}>
                     <Link href="/" scroll>Home</Link>
                     <Link href="/boost" scroll>Boost</Link>
@@ -112,13 +112,13 @@ function TabBar() {
                                     <button className="button-border capsule">Profile</button>
                                 </a>
                             </Link>
-                            <span onClick={() => handleLogout()}>
-                                <a className="button capsule">Logout</a>
+                            <span onClick={() => handleLogout()} className="button capsule">
+                                Logout
                             </span>
                         </div>
                     ) : (
-                        <span onClick={() => handleModal()}>
-                            <a className="button capsule">Login</a>
+                        <span onClick={() => handleModal()} className="button capsule">
+                            Login
                         </span>
                     )}
                 </div>
