@@ -42,13 +42,13 @@ function DetailBooster(props: any) {
     const [newServiceName, setNewServiceName] = useState('');
 
     const [boostOrder, setBoostOrder] = useState([{
-        boost_id: 0, boost_detail: {}, total_price: 0, game_name: '', service_name: '', order_created: '',
+        boost_id: 0, boost_detail: [], total_price: 0, game_name: '', service_name: '', order_created: '',
     }]);
     const [selectedOrder, setSelectedOrder] = useState<any>({
         id: undefined,
-        boost_detail: {
+        boost_detail: [{
             game: { name: '' }, type: '', require: [], addOns: [],
-        },
+        }],
         total_price: 0,
     });
 
@@ -62,7 +62,9 @@ function DetailBooster(props: any) {
     async function getBoostOrderList() {
         const url = `${process.env.API}/boosts`;
 
-        await axios.get(url).then((res) => setBoostOrder(res.data.data)).catch((err) => console.log(err));
+        await axios.get(url).then((res) => {
+            setBoostOrder(res.data.data);
+        }).catch((err) => console.log(err));
     }
 
     async function takeOrder(id) {
@@ -218,13 +220,13 @@ function DetailBooster(props: any) {
                 </Row>
                 <Row>
                     {
-                        Object.keys(selectedOrder.boost_detail).map((key) => (
+                        selectedOrder.boost_detail?.map((item) => (
                             <span className={styles['booster-detail-list']}>
-                                {key.replace('_', ' ')}
+                                {Object.keys(item)}
                                 {' '}
                                 :
                                 {' '}
-                                {selectedOrder.boost_detail[key]}
+                                {item[Object.keys(item).toString()]}
                             </span>
                         ))
                     }

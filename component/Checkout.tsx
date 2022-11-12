@@ -74,7 +74,7 @@ function Checkout(props: any) {
 
         details.forEach((detail) => {
             const require = {
-                [detail.title]: detail.name || detail.numberGame || detail.server || detail.platform || { start: detail.start, to: detail.to },
+                [detail.title.toLowerCase().split(' ').join('_')]: detail.name || detail.numberGame || detail.server || detail[detail.title] || { start: detail.start, to: detail.to },
             };
 
             tempRequire.push(require);
@@ -98,11 +98,13 @@ function Checkout(props: any) {
         };
 
         details.forEach((detail) => {
-            data.boost_detail[detail.title.toLowerCase().split(' ').join('_')] = detail.name || detail.numberGame || detail.server || detail.platform || { start: detail.start, to: detail.to };
+            data.boost_detail[detail.title.toLowerCase().split(' ').join('_')] = detail.name || detail.numberGame || detail.server || detail[detail.title] || { start: detail.start, to: detail.to };
         });
 
         await axios.post(url, data)
-            .then((res) => setPrice(res.data.total_price))
+            .then((res) => {
+                setPrice(res.data.total_price);
+            })
             .catch((err) => console.log(err));
     }
 

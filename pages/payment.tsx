@@ -103,6 +103,8 @@ function Payment() {
                         value: ethers.utils.parseEther(totalPrice)
                     }).then(async (res) => {
                         await doPayment(config, form, serviceRequire);
+                    }).catch((err) => {
+                        console.log(err);
                     });
                 } else {
                     console.log('You Have Install Metamask First');
@@ -151,6 +153,7 @@ function Payment() {
             setUser(JSON.parse(userData));
         }
         setData(JSON.parse(predata));
+        console.log(JSON.parse(predata));
         // Setup Script Paypal
         const setUpPaypal = () => {
             const script = document.createElement('script');
@@ -299,7 +302,7 @@ function Payment() {
                 </Row>
             ) : (
                 <Row className="fullwidth py-5">
-                    {user.roles.length < 0 ? (
+                    {user.roles.length <= 0 ? (
                         <Col>
                             <div className="flex-down centered p-4">
                                 <Image src="/Jett-Sticker.png" width="300" height="300" />
@@ -319,7 +322,6 @@ function Payment() {
                                 </Link>
                             </div>
                         </Col>
-
                     )}
 
                 </Row>

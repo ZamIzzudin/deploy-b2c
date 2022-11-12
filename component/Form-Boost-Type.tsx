@@ -94,11 +94,11 @@ export function NumberGame({
         const newData = { numberGame: data };
         getData(newData, title);
     }
-    const [num, setNum] = useState('5');
+    const [num, setNum] = useState<number>(1);
 
     useEffect(() => {
         sendData(num);
-        setNum('5');
+        setNum(1);
     }, [serviceName]);
 
     useEffect(() => {
@@ -115,7 +115,7 @@ export function NumberGame({
                     <h1 className={styles['title-form']}>{title}</h1>
                 </div>
                 <div>
-                    <input className="fullwidth range-input mt-3" type="range" min={min} max={max} value={num} onChange={(e) => { setNum(e.target.value); sendData(e.target.value); }} />
+                    <input className="fullwidth range-input mt-3" type="range" min={min} max={max} value={num} onChange={(e) => { setNum(+e.target.value); sendData(e.target.value); }} />
                 </div>
             </Col>
 
@@ -205,23 +205,24 @@ export function Points({
     );
 }
 
-export function PlatformSelect({
-    title, platforms, getData, serviceName,
+export function ListForm({
+    title, items, getData, serviceName, unit,
 }) {
     function sendData(data) {
-        const newData = { platform: data };
-        getData(newData, title);
+        const newData = {};
+        newData[unit] = data;
+        getData(newData, `${unit}`);
     }
 
     useEffect(() => {
-        sendData(platforms[0]);
+        sendData(items[0]);
     }, [serviceName]);
 
     return (
         <Col className="flex-down fullwidth">
             <Form.Label>{title}</Form.Label>
             <Form.Select className="form-layout mb-4" onChange={(e) => sendData(e.target.value)}>
-                {platforms.map((platform) => <option key={platform} value={platform}>{platform}</option>)}
+                {items.map((item) => <option key={item} value={item}>{item}</option>)}
             </Form.Select>
         </Col>
     );

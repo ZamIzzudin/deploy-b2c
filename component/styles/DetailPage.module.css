@@ -26,18 +26,18 @@
 /* Booster */
 .booster-card-title {
     font-family: var(--primFont);
-    font-size: 1.5em;
+    font-size: 1.35em;
     font-weight: 600;
 }
 
 .booster-card-subtitle {
     font-family: var(--secFont);
-    font-size: 1em;
+    font-size: .8em;
     color: var(--yellow);
 }
 
 .booster-card-price {
-    font-size: 1.5em;
+    font-size: 1.2em;
     font-family: var(--secFont);
 }
 

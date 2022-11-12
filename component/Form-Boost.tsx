@@ -11,7 +11,7 @@
 /* eslint-disable import/no-unresolved */
 import { useState, useEffect } from 'react';
 import {
-    IncludeRank, NumberGame, Points, PlatformSelect, ServerSelect,
+    IncludeRank, NumberGame, Points, ListForm, ServerSelect,
 } from './Form-Boost-Type';
 import styles from './styles/FormBoost.module.css';
 
@@ -54,8 +54,8 @@ function FormBoost(props: any) {
                     <ServerSelect servers={servers} getData={setData} serviceName={titleService} />
                 )}
                 {typeForm?.map((f) => {
-                    if (f.type === 'platformSelect') {
-                        return (<PlatformSelect key={f.title} title={f.title} platforms={f.platforms} getData={setData} serviceName={titleService} />);
+                    if (f.type === 'ListForm') {
+                        return (<ListForm key={f.title} title={f.title} unit={f.unit} items={f.items} getData={setData} serviceName={titleService} />);
                     }
                 })}
             </div>

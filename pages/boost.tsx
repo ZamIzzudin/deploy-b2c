@@ -90,6 +90,10 @@ function Order() {
         const detailsForm = requireOrder;
 
         const type = detailsForm?.map((item) => {
+            if (item.type === 'ListForm') {
+                const typeForm = { title: `${item.unit}` };
+                return typeForm;
+            }
             const typeForm = { title: item.title };
             return typeForm;
         });
