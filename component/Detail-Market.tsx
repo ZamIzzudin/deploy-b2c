@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/click-events-have-key-events */

@@ -64,6 +64,7 @@ function DetailBooster(props: any) {
 
         await axios.get(url).then((res) => {
             setBoostOrder(res.data.data);
+            console.log(res.data.data);
         }).catch((err) => console.log(err));
     }
 

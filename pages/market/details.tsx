@@ -28,10 +28,11 @@ function AccountDetails() {
 
     const [agents, setAgents] = useState<any>([]);
     const [skins, setSkins] = useState<any>([]);
+    const [screenshots, setScreenshots] = useState<any>([]);
 
     function storingData() {
         const transaction = {
-            id_account: Details.account_id,
+            id_account: Details.id,
             total_price: Details.price,
             service: 'Market',
             type: 'Valorant Account',
@@ -49,6 +50,8 @@ function AccountDetails() {
     useEffect(() => {
         const preData = localStorage.getItem('account') || '';
         setDetails(JSON.parse(preData));
+        console.log(JSON.parse(preData));
+        setScreenshots(JSON.parse(JSON.parse(preData).screenshots));
         setAgents(JSON.parse(preData).agent_list.split(' '));
         setSkins(JSON.parse(preData).skin_list.split(' '));
         localStorage.setItem('data', '');
@@ -161,6 +164,13 @@ function AccountDetails() {
             ) : (
                 <SDetailAccount />
             )}
+            {screenshots.length > 0 ? (
+                <Row className="mt-4 px-4">
+                    <Col>
+                        <Image src={screenshots[0]} width="350%" height="200%" />
+                    </Col>
+                </Row>
+            ) : null}
         </Container>
 
     );

@@ -10,7 +10,7 @@ import {
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import DetailModal from './Detail-Modal';
-// import styles from './styles/DetailPage.module.css';
+import styles from './styles/DetailPage.module.css';
 
 function DetailOrder(props: any) {
     const { role, token } = props;
@@ -20,25 +20,58 @@ function DetailOrder(props: any) {
     const [modal4, showModal4] = useState(false);
 
     const [typeOrder, setTypeOrder] = useState('boost');
-    const [order, setOrder] = useState([]);
+    const [orders, setOrders] = useState<any>([]);
 
-    // async function getTypeByOrder() {
-    //     const url = `${process.env.API}/account/checkout`;
+    const [selectedOrder, setSelectedOrder] = useState({
+        boost_detail: {
+            boost_detail: [{
+                game: { name: '' }, type: '', require: [],
+            }],
+            add_ons: [{ name: '' }],
+        },
+        total_price: 0,
+    });
 
-    //     const config = {
-    //         headers: {
-    //             Authorization: `Bearer ${token}`,
-    //             Accept: 'application/json',
-    //             'Content-Type': 'application/json',
-    //         },
-    //     };
+    async function getTypeByOrder() {
+        let url = `${process.env.API}/account/account-order`;
 
-    //     await axios.get(url, config).then((res) => setOrder(res.data.data)).catch((err) => console.log(err));
-    // }
+        if (typeOrder === 'boost' && role === 'user') {
+            url = `${process.env.API}/profile/detail`;
+        } if (typeOrder === 'boost' && role === 'booster') {
+            url = `${process.env.API}/booster/detail`;
+        }
 
-    // useEffect(() => {
-    //     getTypeByOrder();
-    // }, [typeOrder]);
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        };
+
+        await axios.get(url, config)
+            .then((res) => {
+                if (typeOrder === 'boost' && role === 'user') {
+                    setOrders(res.data.boost_order);
+                    console.log(res.data.boost_order);
+                } else if (typeOrder === 'boost' && role === 'booster') {
+                    setOrders(res.data.data);
+                    console.log(res.data.data);
+                } else {
+                    setOrders(res.data.data);
+                    console.log(res.data.data);
+                }
+            })
+            .catch((err) => console.log(err));
+    }
+
+    useEffect(() => {
+        getTypeByOrder();
+    }, []);
+
+    useEffect(() => {
+        getTypeByOrder();
+    }, [typeOrder]);
 
     return (
         <div>
@@ -56,7 +89,7 @@ function DetailOrder(props: any) {
                     <Table responsive="sm" borderless>
                         <thead>
                             <tr>
-                                <th>Order Id</th>
+                                <th>Order Date</th>
                                 <th>Game</th>
                                 <th>Service</th>
                                 <th>Status</th>
@@ -64,43 +97,27 @@ function DetailOrder(props: any) {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>424853</td>
-                                <td>Genshin Impact</td>
-                                <td>Daily Mission</td>
-                                <td>On Process</td>
-                                <td>
-                                    <button onClick={() => showModal3(true)} className="capsule button-org">Details</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>532153</td>
-                                <td>Valorant</td>
-                                <td>Rank Boosting</td>
-                                <td>Finished</td>
-                                <td>
-                                    <button onClick={() => showModal3(true)} className="capsule button-org">Details</button>
-                                </td>
-                            </tr>
+                            {orders.map((order) => (
+                                <tr key={order.boost_id}>
+                                    <td>{order.created_at?.slice(0, 10) || 'None'}</td>
+                                    <td>Genshin Impact</td>
+                                    <td>Daily Mission</td>
+                                    <td>{order.status}</td>
+                                    <td>
+                                        <button onClick={() => { showModal3(true); setSelectedOrder(order); }} className="capsule button-org">Details</button>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </Table>
                 </div>
             )}
             {role === 'booster' && (
                 <div>
-                    <Col className="center-start mb-3">
-                        <Form.Group className="width150px">
-                            <Form.Label>Order Type</Form.Label>
-                            <Form.Select className="form-layout" onChange={(e) => setTypeOrder(e.target.value)}>
-                                <option value="boost">Boost</option>
-                                <option value="account">Account</option>
-                            </Form.Select>
-                        </Form.Group>
-                    </Col>
                     <Table responsive="sm" borderless>
                         <thead>
                             <tr>
-                                <th>Id</th>
+                                <th>Order Date</th>
                                 <th>Game</th>
                                 <th>Service</th>
                                 <th>Status</th>
@@ -109,30 +126,20 @@ function DetailOrder(props: any) {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>424853</td>
-                                <td>Genshin Impact</td>
-                                <td>Daily Mission</td>
-                                <td>On Process</td>
-                                <td>
-                                    <button onClick={() => showModal4(true)} className="capsule button-org-border">Finish</button>
-                                </td>
-                                <td>
-                                    <button onClick={() => showModal3(true)} className="capsule button-org">Details</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>532153</td>
-                                <td>Valorant</td>
-                                <td>Rank Boosting</td>
-                                <td>Finished</td>
-                                <td>
-                                    <button className="capsule button-border" onClick={() => showModal(true)}>Review</button>
-                                </td>
-                                <td>
-                                    <button onClick={() => showModal3(true)} className="capsule button-org">Details</button>
-                                </td>
-                            </tr>
+                            {orders.map((order) => (
+                                <tr>
+                                    <td>{order.created_at?.slice(0, 10) || 'None'}</td>
+                                    <td>Genshin Impact</td>
+                                    <td>Daily Mission</td>
+                                    <td>{order.status}</td>
+                                    <td>
+                                        <button onClick={() => showModal4(true)} className="capsule button-org-border">Finish</button>
+                                    </td>
+                                    <td>
+                                        <button onClick={() => { showModal3(true); setSelectedOrder(order); }} className="capsule button-org">Details</button>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </Table>
                 </div>
@@ -198,6 +205,36 @@ function DetailOrder(props: any) {
                 onHide={() => showModal3(false)}
             >
                 <h1>Details</h1>
+                <Row>
+                    <span>
+                        Total Price :
+                        {' '}
+                        {selectedOrder.total_price}
+                    </span>
+                </Row>
+                <Row>
+                    {
+                        selectedOrder.boost_detail.boost_detail?.map((item) => (
+                            <span className={styles['booster-detail-list']}>
+                                {Object.keys(item)}
+                                {' '}
+                                :
+                                {' '}
+                                {item[Object.keys(item).toString()]}
+                            </span>
+                        ))
+                    }
+                </Row>
+                <Row>
+                    <Row>
+                        <span>Add Ons : </span>
+                        <ul className="px-5">
+                            {selectedOrder.boost_detail.add_ons?.map((list) => (
+                                <li>{list.name}</li>
+                            ))}
+                        </ul>
+                    </Row>
+                </Row>
             </DetailModal>
             <DetailModal
                 show={modal4}

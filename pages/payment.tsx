@@ -27,9 +27,9 @@ function Payment() {
     const [modal, showModal] = useState(false);
 
     const [fullName, setFullName] = useState('');
-    const [Country, setCountry] = useState('');
+    const [Country, setCountry] = useState('United State');
     const [billingAddress, setBilling] = useState('');
-    const [City, setCity] = useState('United State');
+    const [City, setCity] = useState('');
     const [zipCode, setZip] = useState('');
     const [Address, setAddress] = useState('');
     const [paymentMethod, setPayment] = useState('Metamask');
@@ -218,7 +218,7 @@ function Payment() {
                                 </Form.Group>
                                 <Form.Group className="mb-3 col-md-6">
                                     <Form.Label>Country</Form.Label>
-                                    <Form.Select className="form-layout" onChange={(e) => setCountry(e.target.value)}>
+                                    <Form.Select className="form-layout" defaultValue={Country} onChange={(e) => setCountry(e.target.value)}>
                                         <option value="United State">United State</option>
                                         <option value="Canada">Canada</option>
                                         <option value="Japan">Japan</option>
