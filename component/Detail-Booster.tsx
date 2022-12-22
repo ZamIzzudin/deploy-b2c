@@ -41,9 +41,7 @@ function DetailBooster(props: any) {
     const [newGameLogo, setNewGameLogo] = useState('');
     const [newServiceName, setNewServiceName] = useState('');
 
-    const [boostOrder, setBoostOrder] = useState([{
-        boost_id: 0, boost_detail: [], total_price: 0, game_name: '', service_name: '', order_created: '',
-    }]);
+    const [boostOrder, setBoostOrder] = useState<any>([]);
     const [selectedOrder, setSelectedOrder] = useState<any>({
         id: undefined,
         boost_detail: [{
@@ -62,9 +60,16 @@ function DetailBooster(props: any) {
     async function getBoostOrderList() {
         const url = `${process.env.API}/boosts`;
 
-        await axios.get(url).then((res) => {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        };
+
+        await axios.get(url, config).then((res) => {
             setBoostOrder(res.data.data);
-            console.log(res.data.data);
         }).catch((err) => console.log(err));
     }
 
@@ -77,13 +82,9 @@ function DetailBooster(props: any) {
             },
         };
 
-        const url = `${process.env.API}/boosts/${id}`;
+        const url = `${process.env.API}/boosts/${id}?status=on-progress`;
 
-        const data = {
-            status: 'On Progress',
-        };
-
-        await axios.put(url, data, config).then((res) => {
+        await axios.put(url, {}, config).then((res) => {
             showModal3(false);
             getBoostOrderList();
         }).catch((err) => console.log(err));
@@ -160,23 +161,23 @@ function DetailBooster(props: any) {
             )}
             {role === 'booster' && (
                 <div className="mt-3 centered">
-                    {boostOrder.length > 0 ? (
+                    {boostOrder.length !== 0 ? (
                         <Row className="fullwidth">
                             {boostOrder.map((order) => (
-                                <Col className="col-md-3 my-2 col-12" key={order.boost_id}>
+                                <Col className="col-md-3 my-2 col-12" key={order?.boost_id}>
                                     <div className="centered w-95-res card flex-down">
                                         <div className="fullwidth flex-right">
-                                            <span className={styles['booster-card-date']}>{order.order_created.slice(0, 10)}</span>
+                                            <span className={styles['booster-card-date']}>{order?.order_created?.slice(0, 10)}</span>
                                         </div>
                                         <Row className="fullwidth mb-3">
-                                            <Col className="centered-down">
-                                                <span className={styles['booster-card-title']}>{order.game_name}</span>
-                                                <span className={styles['booster-card-subtitle']}>{order.service_name}</span>
+                                            <Col className="centered-down p-0">
+                                                <span className={styles['booster-card-title']}>{order?.game_name}</span>
+                                                <span className={styles['booster-card-subtitle']}>{order?.service_name}</span>
                                             </Col>
-                                            <Col className="centered-down">
+                                            <Col className="centered-down col-5 p-0">
                                                 <span className={styles['booster-card-price']}>
                                                     $
-                                                    {order.total_price}
+                                                    {order?.total_price}
                                                 </span>
                                             </Col>
                                         </Row>
@@ -207,21 +208,41 @@ function DetailBooster(props: any) {
                 onHide={() => showModal3(false)}
             >
                 <h1>Details</h1>
+                {/* General Detail */}
                 <Row>
+                    <h5 className="text-org">General</h5>
                     <span>
-                        Game:
+                        Total Price :
                         {' '}
-                        {selectedOrder.game_name}
+                        {selectedOrder?.total_price}
                     </span>
                     <span>
-                        Service:
+                        Order Date :
                         {' '}
-                        {selectedOrder.service_name}
+                        {selectedOrder?.order_created.slice(0, 10)}
+                    </span>
+                    <span>
+                        Game :
+                        {' '}
+                        {selectedOrder?.game_name}
+                    </span>
+                    <span>
+                        Service :
+                        {' '}
+                        {selectedOrder?.service_name}
+                    </span>
+                    <span>
+                        Status :
+                        {' '}
+                        {selectedOrder?.status}
                     </span>
                 </Row>
+                <hr />
+                {/* Boost Detail */}
                 <Row>
+                    <h5 className="text-org">Spesification</h5>
                     {
-                        selectedOrder.boost_detail?.map((item) => (
+                        selectedOrder?.boost_detail?.map((item) => (
                             <span className={styles['booster-detail-list']}>
                                 {Object.keys(item)}
                                 {' '}
@@ -232,19 +253,22 @@ function DetailBooster(props: any) {
                         ))
                     }
                 </Row>
+                <hr />
+                {/* Add Ons */}
+                {selectedOrder?.add_ons[0].name !== 'None' && (
+                    <Row>
+                        <h5 className="text-org">Add Ons</h5>
+                        <span>Add Ons : </span>
+                        <ul className="px-5">
+                            {selectedOrder?.detail.add_ons?.map((list) => (
+                                <li>{list.name}</li>
+                            ))}
+                        </ul>
+                    </Row>
+                )}
                 <Row>
-                    <span>Add Ons : </span>
-                    <ul className="px-5">
-                        {selectedOrder.add_ons?.map((list) => (
-                            <li>{list.name}</li>
-                        ))}
-                    </ul>
-                </Row>
-                <Row>
-                    <Col>
-                        <button className="button capsule" onClick={() => takeOrder(selectedOrder.boost_id)}>
-                            Take Order
-                        </button>
+                    <Col className="mt-3">
+                        <button onClick={() => takeOrder(selectedOrder?.boost_id)} className="button-org capsule">Take Order</button>
                     </Col>
                 </Row>
             </DetailModal>

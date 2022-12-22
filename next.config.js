@@ -16,6 +16,7 @@ const nextConfig = {
     F_MEASURE_ID: process.env.FIREBASE_MEASUREMENT_ID,
     LC_WIDGET_ID: process.env.LC_WIDGET_ID,
     CRYPTO_WALLET_ADDRESS: process.env.CRYPTO_WALLET_ADDRESS,
+    SALT: process.env.SALT,
   },
 };
 

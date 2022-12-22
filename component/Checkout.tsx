@@ -7,28 +7,31 @@
 import { Row, Col } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import axios from 'axios';
+import { useAppSelector, useAppDispatch } from '../hooks';
 import { OptionalAddons } from '../component';
 import {
     DoubleIncludeRank, RankAndGame, NumberGame, Point,
 } from './Checkout-Overview';
 
+import { setAddOnsDetail } from '../state/addonsDetail/action';
+import { asyncCalculatePrice } from '../state/price/action';
+import { setCheckoutBoosting } from '../state/checkoutDetail/action';
+
 function Checkout(props: any) {
     const {
-        details, orderType, addOns, form, game, flow,
+        orderType, addOns, form, game,
     } = props;
 
-    const [price, setPrice] = useState<any>(0);
-    const [overviewDetails, setOverviewDetails] = useState<any>([]);
-    const [selectedAddOns, setSelectedAddOns] = useState<any>([]);
+    const { boostDetail, addonsDetail, price } = useAppSelector((states) => states);
+    const dispatch = useAppDispatch();
 
-    const [flow2, setFlow2] = useState(0);
+    const [overviewDetails, setOverviewDetails] = useState<any>([]);
 
     function setupOverview() {
         const overviews = form?.map((overview) => overview.type);
         const count = {};
 
-        overviews.forEach((overview) => {
+        overviews?.forEach((overview) => {
             count[overview] = (count[overview] || 0) + 1;
         });
 
@@ -36,84 +39,50 @@ function Checkout(props: any) {
     }
 
     function setAddOns(addon) {
-        const selectedAdd = addon.name.toString().slice(0, 7);
-        if (selectedAddOns.length === 0) {
-            setSelectedAddOns([...selectedAddOns, addon]);
-            setFlow2(flow2 + 1);
-        } else {
-            selectedAddOns.forEach((ons) => {
-                if (ons.name.includes(selectedAdd)) {
-                    const index = selectedAddOns.indexOf(ons);
-                    const tempSelected = selectedAddOns;
-                    tempSelected.splice(index, 1);
-                    setSelectedAddOns(tempSelected);
-                    setFlow2(flow2 + 1);
-                } else {
-                    setSelectedAddOns([...selectedAddOns, addon]);
-                    setFlow2(flow2 + 1);
-                }
-            });
-        }
+        dispatch(setAddOnsDetail(addon));
     }
 
+    // Target hari ini
     function getDataCheckout() {
-        const dataDetails = {
-            total_price: '',
-            game: {},
-            type: '',
-            service: 'Boost',
-            addOns: [],
+        const data = {
+            total_price: price,
+            game,
+            type: orderType,
+            add_ons: addonsDetail,
             require: [],
         };
 
+        if (data.add_ons.length === 0) {
+            data.add_ons = [{
+                name: 'None',
+                percentage_price: 0,
+            }];
+        }
+
         const tempRequire: any = [];
 
-        dataDetails.type = orderType;
-        dataDetails.game = game;
-        dataDetails.total_price = price;
-
-        details.forEach((detail) => {
+        boostDetail?.forEach((detail) => {
             const require = {
-                [detail.title.toLowerCase().split(' ').join('_')]: detail.name || detail.numberGame || detail.server || detail[detail.title] || { start: detail.start, to: detail.to },
+                [detail.title.toLowerCase().split(' ').join('_')]: detail[detail.title] || detail.name || detail.numberGame || detail.server || detail[detail.title].name || { start: detail.start, to: detail.to },
             };
 
             tempRequire.push(require);
         });
-
-        dataDetails.addOns = selectedAddOns;
-        dataDetails.require = tempRequire;
-
-        localStorage.setItem('data', JSON.stringify(dataDetails));
+        data.require = tempRequire;
+        dispatch(setCheckoutBoosting((data)));
     }
 
-    async function getPrice() {
-        const gameName = game.name.toLowerCase().replace(/ /g, '-');
-        const serviceName = orderType.toLowerCase().replace(/ /g, '-');
-
-        const url = `${process.env.API}/service/price/calculate?game=${gameName}&service=${serviceName}`;
-
-        const data = {
-            add_ons: selectedAddOns.length > 0 ? selectedAddOns : [{ name: 'none', percentage_price: 0 }],
-            boost_detail: {},
-        };
-
-        details.forEach((detail) => {
-            data.boost_detail[detail.title.toLowerCase().split(' ').join('_')] = detail.name || detail.numberGame || detail.server || detail[detail.title] || { start: detail.start, to: detail.to };
-        });
-
-        await axios.post(url, data)
-            .then((res) => {
-                setPrice(res.data.total_price);
-            })
-            .catch((err) => console.log(err));
+    function getPrice() {
+        dispatch(asyncCalculatePrice(game, orderType));
     }
 
     useEffect(() => {
         getPrice();
-    }, [flow, selectedAddOns, flow2]);
+    }, [boostDetail, addonsDetail]);
 
     useEffect(() => {
         setupOverview();
+        getPrice();
     }, [orderType]);
 
     return (
@@ -126,16 +95,19 @@ function Checkout(props: any) {
             </h5>
             <Row className="mt-4 fullwidth">
                 {overviewDetails?.includeRank === 2 && (
-                    <DoubleIncludeRank details={details} />
+                    <DoubleIncludeRank details={boostDetail} />
+                )}
+                {overviewDetails?.apexIncludeRank === 2 && (
+                    <DoubleIncludeRank details={boostDetail} />
                 )}
                 {overviewDetails?.includeRank === 1 && overviewDetails?.gameNumber === 1 && (
-                    <RankAndGame details={details} />
+                    <RankAndGame details={boostDetail} />
                 )}
                 {overviewDetails?.includeRank === undefined && overviewDetails?.gameNumber === 1 && (
-                    <NumberGame details={details} />
+                    <NumberGame details={boostDetail} />
                 )}
                 {overviewDetails.points > 0 && (
-                    <Point details={details} />
+                    <Point details={boostDetail} />
                 )}
             </Row>
 

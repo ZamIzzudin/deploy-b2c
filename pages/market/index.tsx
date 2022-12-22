@@ -20,75 +20,32 @@
 import {
     Container, Row, Col, Form, Pagination,
 } from 'react-bootstrap';
+
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useAppSelector, useAppDispatch } from '../../hooks';
+
 import { AccountCard } from '../../component';
 import { SAccountList } from '../../component/Skeleton-Loading';
+
 import styles from '../../styles/Market.module.css';
 
-function Market() {
-    const [accounts, setAccounts] = useState({ last_page: 1, data: [] });
-    const [Ranks, setRanks] = useState([{ name: '', id: 0, badge: 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/storage/images/rank-badges/valorant/unranked.png' }]);
-    const [Servers, setServers] = useState([{ id: 0, server_name: '' }]);
+import { asyncGetAllAccountByFilter, asyncShowAccountsWithPagination } from '../../state/accounts/action';
 
-    const [filterRank, setFilterRank] = useState('99');
-    const [filterServer, setFilterServer] = useState<any>('99');
+function Market() {
+    const { accounts = {}, ranks = [], servers = [] } = useAppSelector((states) => states);
+    const dispatch = useAppDispatch();
+
+    const [filterRank, setFilterRank] = useState('All');
+    const [filterServer, setFilterServer] = useState<any>('All');
     const [filterSort, setFilterSort] = useState('asc');
 
     const [paginationPage, setPaginationPage] = useState(1);
     const pagination: any = [];
 
-    async function getAccount() {
-        const url = `${process.env.API}/accounts`;
-
-        await axios.get(url).then((res) => setAccounts(res.data.accounts)).catch((err) => console.log(err));
-    }
-
-    async function getRank() {
-        const url = `${process.env.API}/ranks`;
-
-        await axios.get(url).then((res) => setRanks(res.data.ranks.data)).catch((err) => console.log(err));
-    }
-
-    async function getServer() {
-        const url = `${process.env.API}/servers`;
-
-        await axios.get(url).then((res) => setServers(res.data.data)).catch((err) => console.log(err));
-    }
-
-    async function getAccountbyFilter() {
-        let url = `${process.env.API}/accounts/?sortOrder=${filterSort}`;
-
-        if (filterRank === '99' || filterServer === '99') {
-            getAccount();
-            setFilterRank('0');
-            setFilterServer('0');
-        } else {
-            if (filterRank !== '99') {
-                url += `&rank=${filterRank}`;
-            }
-            if (filterServer !== '99') {
-                url += `&server_region=${filterServer}`;
-            }
-
-            const response = await axios.get(url).then((res) => res.data.accounts).catch((res) => console.log(res));
-            setAccounts(response);
-            setPaginationPage(1);
-        }
-    }
-
-    async function handlePagination(page) {
-        const url = `${process.env.API}/accounts?page=${page}`;
-
-        await axios.get(url).then((res) => setAccounts(res.data.accounts)).catch((res) => console.log(res));
-
-        setPaginationPage(page);
-    }
-
     if (accounts.last_page > 0) {
         for (let i = 1; i <= accounts.last_page; i++) {
             pagination.push(
-                <Pagination.Item className="pagination-items mx-1" key={i} active={i === paginationPage} onClick={() => handlePagination(i)}>
+                <Pagination.Item className="pagination-items mx-1" key={i} active={i === paginationPage} onClick={() => setPaginationPage(i)}>
                     {i}
                 </Pagination.Item>,
             );
@@ -96,14 +53,13 @@ function Market() {
     }
 
     useEffect(() => {
-        getAccount();
-        getServer();
-        getRank();
-    }, []);
+        dispatch(asyncGetAllAccountByFilter(filterSort, filterRank, filterServer));
+        setPaginationPage(1);
+    }, [filterRank, filterServer, filterSort]);
 
     useEffect(() => {
-        getAccountbyFilter();
-    }, [filterRank, filterServer, filterSort]);
+        dispatch(asyncShowAccountsWithPagination(paginationPage));
+    }, [paginationPage]);
 
     return (
         <Container className="mt-5 pt-5 centered-down">
@@ -116,8 +72,8 @@ function Market() {
                             <Form.Group className="mb-3 fullwidth ">
                                 <Form.Label>Server</Form.Label>
                                 <Form.Select className="form-layout" value={filterServer} onChange={(e) => setFilterServer(e.target.value)}>
-                                    <option value="99">All</option>
-                                    {Servers.map((server) => (
+                                    <option value="All">All</option>
+                                    {servers?.map((server) => (
                                         <option value={server.id} key={server.id}>{server.server_name}</option>
                                     ))}
                                 </Form.Select>
@@ -127,63 +83,25 @@ function Market() {
                             <Form.Group className="mb-3 fullwidth ">
                                 <Form.Label>Rank</Form.Label>
                                 <Form.Select className="form-layout" value={filterRank} onChange={(e) => setFilterRank(e.target.value)}>
-                                    <option value="99">All</option>
-                                    {Ranks.map((rank) => (
+                                    <option value="All">All</option>
+                                    {ranks?.map((rank) => (
                                         <option value={rank.id} key={rank.id}>{rank.name}</option>
                                     ))}
                                 </Form.Select>
                             </Form.Group>
                         </Col>
-
-                        {/* <Col className="col-6 col-sm-3 px-4 col-md-6">
-                            <Form.Group className="fullwidth">
-                                <Form.Label>Min Price</Form.Label>
-                                <h5>
-                                    $
-                                    {' '}
-                                    {minPrice}
-                                </h5>
-                                <Form.Range className="form-range" min="0" max="1000" onChange={(e: any) => { getMinValue(e.target.value); }} value={minPrice} />
-                            </Form.Group>
-                        </Col>
-                        <Col className="col-6 col-sm-3 px-4 col-md-6">
-                            <Form.Group className="fullwidth">
-                                <Form.Label>Max Price</Form.Label>
-                                <h5>
-                                    $
-                                    {' '}
-                                    {maxPrice}
-                                </h5>
-                                <Form.Range min="0" max="1000" onChange={(e: any) => { getMaxValue(e.target.value); }} value={maxPrice} />
-                            </Form.Group>
-                        </Col> */}
                     </Row>
-
-                    {/* <Row className={`${styles['rank-container']} centered mt-4`}>
-                        {Ranks.map((rank) => (
-                            <span className={`inside-card col-md-2 col-3 card-hovering flex-row centered mb-3 ${filterRank === rank.id ? ('active') : ('')}`} onClick={() => setFilterRank(rank.id)} key={rank.id}>
-                                <Image src={rank.badge} width="35" height="35" />
-                                {rank.name}
-                            </span>
-                        ))}
-                    </Row> */}
                 </Form>
-                {/* <Row className="my-4">
-                    <Col>
-                        <button className="capsule button mx-3" onClick={() => getAccountbyFilter()}>Search</button>
-                        <button className="capsule button-org" onClick={() => clearFilter()}>Clear</button>
-                    </Col>
-                </Row> */}
             </Row>
             <Row className="fullwidth my-4">
                 <Col className="gap-4 debug fullwidth flex-horizon-centered-right">
                     <span>Sort By</span>
-                    <span className={filterSort === 'asc' ? ('active-org') : ('none')} onClick={() => { setFilterSort('asc'); getAccountbyFilter(); }}>ASC</span>
+                    <span className={filterSort === 'asc' ? ('active-org') : ('none')} onClick={() => { setFilterSort('asc'); }}>ASC</span>
                     <span>||</span>
-                    <span className={filterSort === 'desc' ? ('active-org') : ('none')} onClick={() => { setFilterSort('desc'); getAccountbyFilter(); }}>DESC</span>
+                    <span className={filterSort === 'desc' ? ('active-org') : ('none')} onClick={() => { setFilterSort('desc'); }}>DESC</span>
                 </Col>
             </Row>
-            {accounts.data.length > 0 ? (
+            {accounts.data !== undefined ? (
                 <Row className={`${styles['card-container']} centered`}>
                     {accounts.data.map((i: any, index) => (
                         <AccountCard data={i} key={index} />
@@ -197,13 +115,13 @@ function Market() {
                     <Col>
                         <Pagination className={styles['pagination-container']}>
                             {paginationPage !== 1 && (
-                                <Pagination.Prev className="mx-1" onClick={() => handlePagination(paginationPage - 1)} />
+                                <Pagination.Prev className="mx-1" onClick={() => setPaginationPage(paginationPage - 1)} />
                             )}
 
                             {pagination}
 
                             {paginationPage !== accounts.last_page && (
-                                <Pagination.Next className="mx-1" onClick={() => handlePagination(paginationPage + 1)} />
+                                <Pagination.Next className="mx-1" onClick={() => setPaginationPage(paginationPage + 1)} />
                             )}
                         </Pagination>
                     </Col>

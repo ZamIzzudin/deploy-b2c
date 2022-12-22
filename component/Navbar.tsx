@@ -19,10 +19,19 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { LoginModal } from '.';
+import { useAppSelector, useAppDispatch } from '../hooks';
 import { socialMediaLogout } from '../login-auth/auth';
 import styles from './styles/Navbar.module.css';
 
+import { asyncGetAllGames } from '../state/games/action';
+import { asyncGetAllRanksByGame } from '../state/ranks/action';
+import { asyncGetAllServersByGame } from '../state/servers/action';
+import { asyncGetAllAccount } from '../state/accounts/action';
+import { asyncGetServicesPerGame } from '../state/services/action';
+
 function TabBar() {
+    const dispatch = useAppDispatch();
+
     const [scrollY, setScrollY] = useState(0);
     const [sideBar, setSideBar] = useState(false);
     const [modal, showModal] = useState(false);
@@ -34,27 +43,17 @@ function TabBar() {
 
     const handleLogout = async () => {
         socialMediaLogout();
-        document.cookie = "store=;";
+        sessionStorage.setItem('user', '');
         window.location.replace('/');
         setUserData(null);
     };
 
-    // const getDataLogin = () => {
-    //     const dataStore = getCookie("store");
-
-    //     if (dataStore !== undefined) {
-    //         const User = JSON.parse(dataStore);
-    //         setUserData(User.user);
-    //         showModal(false);
-    //     }
-    // };
-
     useEffect(() => {
-        const dataStore = getCookie("store");
+        const dataStore: any = sessionStorage.getItem('user');
 
         if (dataStore === "") {
             setUserData(null);
-        } else if (dataStore !== undefined) {
+        } else if (dataStore !== null) {
             if (userData === null) {
                 const User = JSON.parse(dataStore);
                 setUserData(User.user);
@@ -65,17 +64,6 @@ function TabBar() {
             setUserData(null);
         }
     }, [userData]);
-
-    function getCookie(cName: any) {
-        const name = cName + "=";
-        const cDecoded = decodeURIComponent(document.cookie); // to be careful
-        const cArr = cDecoded.split('; ');
-        let res;
-        cArr.forEach((val) => {
-            if (val.indexOf(name) === 0) res = val.substring(name.length);
-        });
-        return res;
-    }
 
     useEffect(() => {
         const handleScroll = () => {
@@ -88,6 +76,13 @@ function TabBar() {
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
+    }, []);
+
+    useEffect(() => {
+        dispatch(asyncGetAllGames());
+        dispatch(asyncGetAllAccount());
+        dispatch(asyncGetServicesPerGame('valorant'));
+        dispatch(asyncGetAllServersByGame('valorant'));
     }, []);
 
     return (

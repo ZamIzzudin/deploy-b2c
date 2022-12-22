@@ -11,71 +11,36 @@
 import { Container, Row, Col } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import {
-    GameCard, FormBoost, Checkout,
-} from '../component';
+import { GameCard, FormBoost, Checkout } from '../component';
+import { useAppSelector, useAppDispatch } from '../hooks';
 import { SForm, SGameList, SServiceList } from '../component/Skeleton-Loading';
 import styles from '../styles/Boost.module.css';
 
+import { asyncGetServicesPerGame } from '../state/services/action';
+import { asyncGetAllRanksByGame } from '../state/ranks/action';
+import { asyncGetAllServersByGame } from '../state/servers/action';
+import { setupBoostiDetail } from '../state/boostDetail/action';
+import { setupAddOnsDetail } from '../state/addonsDetail/action';
+
 function Order() {
-    const [games, setGames] = useState([
-        {
-            name: null,
-            logo_url: '/valo.png',
-            id: null,
-        },
-    ]);
-    const [services, setServices] = useState<any>([]);
-    const [servers, setServers] = useState<any>([]);
-    const [ranks, setRanks] = useState<any>([]);
+    const {
+        games, services,
+    } = useAppSelector((states) => states);
+    const dispatch = useAppDispatch();
 
-    const [gameOrder, setGameOrder] = useState<any>('');
-    const [requireOrder, setRequireOrder] = useState<any>([]);
-    const [addonsOrder, setAddonsOrder] = useState<any>([]);
-    const [titleOrder, setTitleOrder] = useState<any>('');
+    const [gameOrder, setGameOrder] = useState<any>({ name: 'Valorant' });
+    const [requireOrder, setRequireOrder] = useState<any>(services[0]?.require['order-options']);
+    const [addonsOrder, setAddonsOrder] = useState<any>(services[0]?.require['add-ons']);
+    const [titleOrder, setTitleOrder] = useState<any>(services[0]?.name);
 
-    const [checkoutDetail, setCheckoutDetail] = useState<any>([]);
     const [priceList, setPriceList] = useState<any>([]);
-
-    const [flow, setFlow] = useState(0);
 
     // Get Data Service From API With Selected Game
     async function getServices(game) {
-        const slugGame = game.name.replace(
-            /[^a-zA-Z0-9,\-.?! ]/g,
-            '-',
-        ).replace(/\s/g, '-').toLowerCase();
-
-        const url = `${process.env.API}/boosting/${slugGame}`;
-
-        await axios.get(url).then((res) => {
-            setServices(res.data.boost_options);
-            setRanks(res.data.ranks);
-            setServers(res.data.servers || []);
-            setRequireOrder(res.data.boost_options[0].require['order-options']);
-            setAddonsOrder(res.data.boost_options[0].require['add-ons']);
-            setTitleOrder(res.data.boost_options[0].name);
-            setGameOrder(game);
-        }).catch((err) => console.log(err));
-    }
-
-    // Get Data Game From API
-    async function getGames() {
-        const url = `${process.env.API}/games`;
-
-        await axios.get(url).then((res) => setGames(res.data.data)).catch((res) => console.log(res));
-    }
-
-    // Get Data Order From Form
-    function getData(data) {
-        const tempDetails = checkoutDetail;
-        checkoutDetail?.forEach((item, index) => {
-            if (item.title === data.title) {
-                tempDetails[index] = data;
-                setCheckoutDetail(tempDetails);
-                setFlow(flow + 1);
-            }
-        });
+        dispatch(asyncGetServicesPerGame(game.name));
+        dispatch(asyncGetAllServersByGame(game.name));
+        dispatch(asyncGetAllRanksByGame(game.name));
+        setGameOrder(game);
     }
 
     // Setup Order Require to Setup Form
@@ -83,26 +48,6 @@ function Order() {
         setRequireOrder(service.require['order-options']);
         setAddonsOrder(service.require['add-ons']);
         setTitleOrder(service.name);
-    }
-
-    // Setup Store to Get Data From Form
-    function setupCheckoutDetail() {
-        const detailsForm = requireOrder;
-
-        const type = detailsForm?.map((item) => {
-            if (item.type === 'ListForm') {
-                const typeForm = { title: `${item.unit}` };
-                return typeForm;
-            }
-            const typeForm = { title: item.title };
-            return typeForm;
-        });
-
-        if (servers.length > 0) {
-            type.push({ title: 'Server Require', server: servers[0].name });
-        }
-
-        setCheckoutDetail(type);
     }
 
     // Get Prices list
@@ -113,19 +58,23 @@ function Order() {
     }
 
     useEffect(() => {
-        setupCheckoutDetail();
-    }, [requireOrder]);
+        getPriceList();
+        dispatch(asyncGetAllRanksByGame(gameOrder.name));
+        dispatch(setupAddOnsDetail());
+        getServices({ name: 'Valorant' });
+    }, []);
 
     useEffect(() => {
-        getGames();
-        getServices({
-            id: 2,
-            name: 'Valorant',
-            logo_url: 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/storage/images/game-logo/valo.png',
-        });
-        localStorage.setItem('data', '');
-        getPriceList();
-    }, []);
+        setRequireOrder(services[0]?.require['order-options']);
+        setAddonsOrder(services[0]?.require['add-ons']);
+        setTitleOrder(services[0]?.name);
+        dispatch(setupAddOnsDetail());
+    }, [services]);
+
+    useEffect(() => {
+        dispatch(setupBoostiDetail(requireOrder));
+        dispatch(setupAddOnsDetail());
+    }, [requireOrder]);
 
     return (
         <Container className="my-5 py-5 centered-down">
@@ -137,14 +86,14 @@ function Order() {
                     {/* Game Filter */}
                     <Row className={`${styles['game-overview']} mt-5 mb-3 fullwidth`}>
                         {games.map((game) => (
-                            <GameCard data={game} key={game.id} getData={getServices} mini />
+                            <GameCard active={gameOrder} data={game} key={game.id} getData={getServices} mini />
                         ))}
                     </Row>
                     {/* Service Filter */}
                     <Row className={`${styles['service-slider']} centered mb-3`}>
                         <div className={styles['service-slider-container']}>
                             {services.map((service: any) => (
-                                <button key={service.name} className={`${styles['service-card']} card-hovering mx-2`} onClick={() => setupOrderRequire(service)}>
+                                <button key={service.name} className={`${styles['service-card']} ${titleOrder === service.name ? styles.actived : null} card-hovering mx-2`} onClick={() => setupOrderRequire(service)}>
                                     {service.name}
                                 </button>
                             ))}
@@ -154,12 +103,12 @@ function Order() {
                     <Row className="mt-3 px-3 fullwidth centered">
                         <Col className="col-md-8 col-12">
                             <div className="fullwidth">
-                                <FormBoost priceList={priceList} form={requireOrder} ranks={ranks} servers={servers} getData={getData} titleService={titleOrder} />
+                                <FormBoost priceList={priceList} form={requireOrder} titleService={titleOrder} />
                             </div>
                         </Col>
                         <Col className="col-md-4 col-12 flex-horizon-centered-start">
                             <div className="fullwidth">
-                                <Checkout form={requireOrder} game={gameOrder} details={checkoutDetail} flow={flow} orderType={titleOrder} addOns={addonsOrder} />
+                                <Checkout form={requireOrder} game={gameOrder} orderType={titleOrder} addOns={addonsOrder} />
                             </div>
                         </Col>
                     </Row>

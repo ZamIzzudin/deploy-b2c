@@ -41,6 +41,10 @@
     font-weight: 700;
 }
 
+.actived {
+    background-color: var(--primColor);
+}
+
 @media only screen and (max-width: 800px) {
     .game-overview {
         width: 100vw;

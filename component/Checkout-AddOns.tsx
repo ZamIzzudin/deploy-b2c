@@ -6,10 +6,13 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
+import { useAppSelector } from '../hooks';
 import DetailModal from './Detail-Modal';
 
 export default function OptionalAddons(props) {
     const { data, getAddOns } = props;
+
+    const { addonsDetail } = useAppSelector((states) => states);
 
     const [modal, showModal] = useState(false);
     const [agent, setAgent] = useState<any>('Astra');
@@ -35,6 +38,12 @@ export default function OptionalAddons(props) {
         setAgent('Astra');
         setAgent2('Astra');
     }
+
+    useEffect(() => {
+        if (addonsDetail.length === 0) {
+            setChecked(false);
+        }
+    }, [addonsDetail]);
 
     return (
         <div className="flex-row mb-2">

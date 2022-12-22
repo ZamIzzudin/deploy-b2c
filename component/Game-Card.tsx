@@ -13,14 +13,14 @@ import styles from './styles/GameCard.module.css';
 
 function GameCard(props: any) {
     const {
-        data, mini, remove,
+        data, mini, remove, active,
     } = props;
 
     return (
         <>
             {mini === true ? (
                 <Col className="col-md-4 col-6 centered relative-pos pad-0" onClick={() => { props.getData(data); }}>
-                    <Row className={`${styles['card-game-mini']} ${remove ? ('') : ('card-hovering')} card`}>
+                    <Row className={`${active.name === data.name ? styles.actived : null} ${styles['card-game-mini']} ${remove ? ('') : ('card-hovering')} card`}>
                         <Col className={`${styles['thumb-container']} col-md-12`}>
                             <Image src={`${data.logo_url}`} width="145%" height="130%" />
                         </Col>

@@ -32,7 +32,7 @@ export default function LoginModal(props: any) {
 
     const saveDataLogin = (data: any, token: any, roles: any) => {
         if (data !== undefined) {
-            const store = {
+            const dataUser = {
                 user: {
                     isLogin: data.emailVerified,
                 },
@@ -44,7 +44,7 @@ export default function LoginModal(props: any) {
             const month = (expiryDate.getMonth() + 1) % 12;
             expiryDate.setMonth(month);
 
-            document.cookie = `store=${JSON.stringify(store)}; expires=${expiryDate.toUTCString()}`;
+            sessionStorage.setItem('user', JSON.stringify(dataUser));
         }
     };
 

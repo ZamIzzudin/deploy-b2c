@@ -34,12 +34,12 @@ function Dashboard() {
     }
 
     useEffect(() => {
-        const dataStore = getCookie('store');
+        const dataStore: any = sessionStorage.getItem('user');
 
         if (dataStore === '') {
             setUserData(null);
             setToken(null);
-        } else if (dataStore !== undefined) {
+        } else if (dataStore !== null) {
             if (userData === null) {
                 const User = JSON.parse(dataStore);
                 setUserData(User.user);
@@ -56,17 +56,6 @@ function Dashboard() {
             setRole('user');
         }
     }, [userData, token]);
-
-    function getCookie(cName: any) {
-        const name = `${cName}=`;
-        const cDecoded = decodeURIComponent(document.cookie); // to be careful
-        const cArr = cDecoded.split('; ');
-        let res;
-        cArr.forEach((val) => {
-            if (val.indexOf(name) === 0) res = val.substring(name.length);
-        });
-        return res;
-    }
 
     function getComponent(comp: string) {
         setComponent(comp);

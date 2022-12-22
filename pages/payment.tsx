@@ -20,10 +20,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { PayPalButton } from 'react-paypal-button-v2';
 import { ethers } from 'ethers';
+import { useAppSelector, useAppDispatch } from '../hooks';
 import { LoginModal } from '../component';
 import styles from '../styles/Payment.module.css';
+import { asyncMakeBoostOrder, asyncMakeAccountOrder } from '../state/checkoutDetail/action';
 
 function Payment() {
+    const { checkoutDetail } = useAppSelector((states) => states);
     const [modal, showModal] = useState(false);
 
     const [fullName, setFullName] = useState('');
@@ -47,22 +50,9 @@ function Payment() {
     const [ethereum, setEthereum] = useState<any>();
     const [totalPrice, setTotalPrice] = useState<any>();
 
-    const plain = {
-        id_account: null,
-        full_name: null,
-        total_price: 0,
-        service: null,
-        type: 'A',
-        rank: null,
-        game: {
-            name: null,
-            logo_url: '/kosong.png'
-        },
-        addOns: [],
-        require: {}
-    };
+    const [data, setData] = useState(checkoutDetail);
 
-    const [data, setData] = useState(plain);
+    const dispatch = useAppDispatch();
 
     async function paymentForm(e) {
         if (e !== null) {
@@ -81,7 +71,7 @@ function Payment() {
 
         const serviceRequire = {
             boost_detail: data?.require,
-            add_ons: data?.addOns,
+            add_ons: data?.add_ons,
             total_price: data?.total_price
         };
 
@@ -115,29 +105,11 @@ function Payment() {
         }
     }
 
-    function getCookie(cName: any) {
-        const name = `${cName}=`;
-        const cDecoded = decodeURIComponent(document.cookie); // to be careful
-        const cArr = cDecoded.split('; ');
-        let res;
-        cArr.forEach((val) => {
-            if (val.indexOf(name) === 0) res = val.substring(name.length);
-        });
-        return res;
-    }
-
-    async function doPayment(config, form, seviceRequire) {
-        if (data.service === 'Boost') {
-            const serviceName = data.type.toLowerCase().replace(/ /g, '-');
-
-            const url = `${process.env.API}/boosts/${serviceName}`;
-            await axios.post(url, seviceRequire, config).then(async (res) => {
-                const url2 = `${process.env.API}/boost/checkout/${res.data.data.id}`;
-                await axios.post(url2, form, config).then(() => { global.location.href = '/dashboard'; }).catch((err) => console.log(err));
-            }).catch((err) => console.log(err));
+    async function doPayment(config, form, serviceRequire) {
+        if (data.service === 'Boosting') {
+            dispatch(asyncMakeBoostOrder(config, form, serviceRequire, data.type));
         } else {
-            const url = `${process.env.API}/account/checkout/${data.id_account}`;
-            await axios.post(url, form, config).then(() => { global.location.href = '/dashboard'; }).catch((err) => console.log(err));
+            dispatch(asyncMakeAccountOrder(config, form, data.id_account));
         }
     }
 
@@ -146,14 +118,14 @@ function Payment() {
     }
 
     useEffect(() => {
-        const predata = localStorage.getItem('data') || '';
-        const userData = getCookie('store');
+        const predata: any = sessionStorage.getItem('checkoutData');
+        const userData: any = sessionStorage.getItem('user');
 
-        if (userData !== '') {
-            setUser(JSON.parse(userData));
+        if (userData !== null) {
+            const User = JSON.parse(userData);
+            setUser(User);
         }
         setData(JSON.parse(predata));
-        console.log(JSON.parse(predata));
         // Setup Script Paypal
         const setUpPaypal = () => {
             const script = document.createElement('script');
@@ -185,6 +157,20 @@ function Payment() {
             setTotalPrice(data.total_price);
         }
     }, [paymentMethod, data]);
+
+    if (data === undefined) {
+        return (
+            <Col>
+                <div className="flex flex-down centered">
+                    <Image src="/Jett-Sticker.png" width="300" height="300" />
+                    <span className="sec-font">You Dont Have Any Order, Make Your Order Now</span>
+                    <Link href="/boost">
+                        <button className="button capsule mt-3" type="button">Boost</button>
+                    </Link>
+                </div>
+            </Col>
+        );
+    }
 
     return (
         <Container className="pt-3 my-5">
@@ -279,11 +265,11 @@ function Payment() {
                             <hr />
                             <Row>
                                 <Col className="col-md-6">
-                                    <Image src={data.game.logo_url} width="100%" height="100%" />
+                                    <Image src={data.game?.logo_url || '/valo.png'} width="100%" height="100%" />
                                 </Col>
                                 <Col className="centered-down">
-                                    <h5 className={styles['service-type']}>{data.game.name}</h5>
-                                    <span className={styles['service-desc']}>{data.type}</span>
+                                    <h5 className={styles['service-type']}>{data.game?.name}</h5>
+                                    <span className={styles['service-desc']}>{data?.type}</span>
                                 </Col>
                             </Row>
                             <hr />

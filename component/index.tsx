@@ -21,7 +21,8 @@ import DetailOther from './Detail-Other';
 import DetailModal from './Detail-Modal';
 import OptionalAddons from './Checkout-AddOns';
 import Checkout from './Checkout';
+import ImageGalery from './ImageGalery';
 
 export {
-    Checkout, OptionalAddons, DetailModal, DetailBooster, DetailInvoice, DetailMarket, DetailOrder, DetailOther, SideBar, Navbar, Footer, Jumbotron, Testimonial, FeaturedBenefit, GameCard, FAQ, Step, AccountCard, LoginModal, FormBoost,
+    ImageGalery, Checkout, OptionalAddons, DetailModal, DetailBooster, DetailInvoice, DetailMarket, DetailOrder, DetailOther, SideBar, Navbar, Footer, Jumbotron, Testimonial, FeaturedBenefit, GameCard, FAQ, Step, AccountCard, LoginModal, FormBoost,
 };

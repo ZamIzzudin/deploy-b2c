@@ -1,3 +1,6 @@
+/* eslint-disable no-shadow */
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
 /* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
 /* eslint-disable no-use-before-define */
@@ -11,19 +14,23 @@
 import { Form, Row, Col } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import axios from 'axios';
+import { editBoostDetail } from '../state/boostDetail/action';
+import { useAppSelector, useAppDispatch } from '../hooks';
 import styles from './styles/FormBoost.module.css';
 
 export function IncludeRank({
-    title, getData, ranks, serviceName, priceList,
+    title, serviceName, priceList,
 }) {
+    const { ranks } = useAppSelector((states) => states);
     const [clearRanks, setClearRanks] = useState<any>([]);
-    const [selectedRank, setSelectedRank] = useState<any>(ranks[0]);
 
+    const [selectedRank, setSelectedRank] = useState<any>({ id: 1 });
     const [selectedDivision, setSelectedDivision] = useState<any>(0);
 
+    const dispatch = useAppDispatch();
+
     function sendData(data) {
-        getData(data, title);
+        dispatch(editBoostDetail(data, title));
     }
 
     function setUpRanks() {
@@ -43,21 +50,18 @@ export function IncludeRank({
                 newRanks.push(rank);
             }
         });
+
         setClearRanks(newRanks);
-        setSelectedRank(newRanks[0]);
-        sendData(newRanks[0]);
+        setSelectedRank({ id: 1 });
     }
 
-    async function getRank() {
-        const url = `${process.env.API}/ranks/${selectedRank.id + selectedDivision}`;
+    function getRank() {
+        const addpriceList = {
+            ...ranks[selectedRank.id + selectedDivision - 1],
+            priceList: priceList[(selectedRank.id + selectedDivision) - 1] || ranks[0],
+        };
 
-        let data: any = {};
-
-        await axios.get(url).then((res) => {
-            data = res.data.data;
-            data.priceList = priceList[(selectedRank.id + selectedDivision) - 1];
-            sendData(data);
-        }).catch((err) => console.log(err));
+        sendData(addpriceList);
     }
 
     useEffect(() => {
@@ -66,7 +70,7 @@ export function IncludeRank({
 
     useEffect(() => {
         setUpRanks();
-    }, [serviceName]);
+    }, [serviceName, ranks]);
 
     return (
         <div className={styles.container}>
@@ -74,7 +78,7 @@ export function IncludeRank({
             <Row className={styles['rank-division-container']}>
                 <Col className={`${styles['rank-container']} col-md-6 gap-2 col-12`}>
                     {clearRanks.map((rank) => (
-                        <Image className={`${styles['rank-list']} ${selectedRank.name === rank.name ? (styles.active) : ('')} p-1`} key={rank.name} src={rank.badge} width={60} height={60} onClick={() => { setSelectedRank(rank); setSelectedDivision(0); }} />
+                        <Image className={`${styles['rank-list']} ${selectedRank.id === rank.id ? (styles.active) : ('')} p-1`} key={rank.name} src={rank.badge} width={60} height={60} onClick={() => { setSelectedRank(rank); setSelectedDivision(0); }} />
                     ))}
                 </Col>
                 <Col className={`${styles['division-container']} col-md-6 col-12`}>
@@ -87,17 +91,65 @@ export function IncludeRank({
     );
 }
 
-export function NumberGame({
-    max, min, title, getData, serviceName,
+export function ApexIncludeRank({
+    title, serviceName, priceList,
 }) {
+    const { ranks } = useAppSelector((states) => states);
+
+    const [selectedRank, setSelectedRank] = useState<any>(ranks[0]);
+    const [selectedDivision, setSelectedDivision] = useState<any>(1);
+
+    const dispatch = useAppDispatch();
+
     function sendData(data) {
-        const newData = { numberGame: data };
-        getData(newData, title);
+        dispatch(editBoostDetail(data, title));
     }
+
+    function getRank() {
+        const setupRank = { ...selectedRank, name: `${selectedRank.name} ${selectedDivision}` };
+        sendData(setupRank);
+    }
+
+    useEffect(() => {
+        getRank();
+    }, [selectedDivision, selectedRank]);
+
+    useEffect(() => {
+        setSelectedRank(ranks[0]);
+    }, [ranks, serviceName]);
+
+    return (
+        <div className={styles.container}>
+            <h1 className={styles['title-form']}>{title}</h1>
+            <Row className={styles['rank-division-container']}>
+                <Col className={`${styles['rank-container']} col-md-6 gap-2 col-12`}>
+                    {ranks.map((rank) => (
+                        <Image className={`${styles['rank-list']} ${selectedRank.name === rank.name ? (styles.active) : ('')} p-1`} key={rank.name} src={rank.badge} width={60} height={60} onClick={() => { setSelectedRank(rank); setSelectedDivision(1); }} />
+                    ))}
+                </Col>
+                <Col className={`${styles['division-container']} col-md-6 col-12`}>
+                    <div className={`${styles['division-list']} ${selectedDivision === 1 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(1)}>I</div>
+                    <div className={`${styles['division-list']} ${selectedDivision === 2 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(2)}>II</div>
+                    <div className={`${styles['division-list']} ${selectedDivision === 3 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(3)}>III</div>
+                </Col>
+            </Row>
+        </div>
+    );
+}
+
+export function NumberGame({
+    max, min, title, serviceName,
+}) {
+    const dispatch = useAppDispatch();
+
+    function sendData(data) {
+        dispatch(editBoostDetail(data, title));
+    }
+
     const [num, setNum] = useState<number>(1);
 
     useEffect(() => {
-        sendData(num);
+        sendData(1);
         setNum(1);
     }, [serviceName]);
 
@@ -125,10 +177,12 @@ export function NumberGame({
 }
 
 export function Points({
-    start, to, title, unit, getData, serviceName,
+    start, to, title, unit, serviceName,
 }) {
     const [max, setMax] = useState(to);
     const [min, setMin] = useState(start);
+
+    const dispatch = useAppDispatch();
 
     function rangeLogic(value, kind) {
         if (kind === 'max') {
@@ -147,8 +201,8 @@ export function Points({
     }
 
     function sendData() {
-        const newData = { start: min, to: max, unit_type: unit };
-        getData(newData, title);
+        const newData = { start: min * 1, to: max * 1, unit_type: unit };
+        dispatch(editBoostDetail(newData, unit));
     }
 
     useEffect(() => {
@@ -206,12 +260,12 @@ export function Points({
 }
 
 export function ListForm({
-    title, items, getData, serviceName, unit,
+    title, items, serviceName, unit,
 }) {
+    const dispatch = useAppDispatch();
+
     function sendData(data) {
-        const newData = {};
-        newData[unit] = data;
-        getData(newData, `${unit}`);
+        dispatch(editBoostDetail(data, unit));
     }
 
     useEffect(() => {
@@ -228,16 +282,59 @@ export function ListForm({
     );
 }
 
-export function ServerSelect({
-    servers, getData, serviceName,
+export function NestedListForm({
+    title, items, serviceName, unit,
 }) {
-    function sendData(data) {
-        const newData = { server: data };
-        getData(newData, 'Server Require');
+    const dispatch = useAppDispatch();
+
+    const [keysItems, setKeysItems] = useState<any>(Object.keys(items));
+    const [selectedKey, setSelectedKey] = useState<any>(keysItems[0]);
+    const [itemsByKey, setItemsByKey] = useState<any>(items[selectedKey]);
+    const [selectedItem, setSelectedItem] = useState<any>(itemsByKey[0]);
+
+    function sendData() {
+        const data = `${selectedKey.replace(/ /g, '_')}/${selectedItem}`;
+        dispatch(editBoostDetail(data, unit));
     }
 
     useEffect(() => {
-        sendData(servers[0].name);
+        sendData();
+    }, [selectedItem, selectedKey]);
+
+    useEffect(() => {
+        const keys = Object.keys(items);
+        setKeysItems(keys);
+        setSelectedKey(keys[0]);
+        setItemsByKey(items[keys[0]]);
+        setSelectedItem(items[keys[0]][0]);
+
+        sendData();
+    }, [serviceName, items]);
+
+    return (
+        <Col className="flex-down fullwidth">
+            <Form.Label>{title}</Form.Label>
+            <Form.Select className="form-layout mb-4" onChange={(e) => { setSelectedKey(e.target.value); setItemsByKey(items[e.target.value]); }}>
+                {keysItems.map((key) => <option key={key} value={key}>{key}</option>)}
+            </Form.Select>
+            <Form.Select className="form-layout mb-4" onChange={(e) => setSelectedItem(e.target.value)}>
+                {itemsByKey.map((item) => <option key={item} value={item}>{item}</option>)}
+            </Form.Select>
+        </Col>
+    );
+}
+
+export function ServerSelect({
+    servers, serviceName,
+}) {
+    const dispatch = useAppDispatch();
+
+    function sendData(data) {
+        dispatch(editBoostDetail(data, 'server'));
+    }
+
+    useEffect(() => {
+        sendData(servers[0].name || 'NA');
     }, [serviceName]);
 
     return (

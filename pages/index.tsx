@@ -5,21 +5,18 @@
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
 import { Row, Col } from 'react-bootstrap';
-import axios from 'axios';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { useAppSelector } from '../hooks';
+import ErrorPage from '../component/ErrorPage';
+
 import {
   Jumbotron, GameCard, FeaturedBenefit, Testimonial, FAQ, Step,
 } from '../component';
+
 import styles from '../styles/Home.module.css';
 
 function Home() {
-  const [games, setGames] = useState([
-    {
-      name: null,
-      logo_url: '/valo.png',
-      id: null,
-    },
-  ]);
+  const { games, error }: any = useAppSelector((states) => states);
 
   const Row1 = useRef(null);
   const Row2 = useRef(null);
@@ -29,40 +26,42 @@ function Home() {
   const Row6 = useRef(null);
   const Row7 = useRef(null);
 
-  async function getGames() {
-    await axios.get(`${process.env.API}/games`).then((res) => setGames(res.data.data)).catch((res) => console.log(res));
+  async function animate() {
+    if (Row1.current) {
+      const sr = (await import('scrollreveal')).default;
+      sr().reveal(Row1.current, {
+        delay: 200, mobile: false, distance: '100px',
+      });
+      sr().reveal(Row2.current, {
+        delay: 200, mobile: false, distance: '100px',
+      });
+      sr().reveal(Row3.current, {
+        delay: 200, mobile: false, distance: '100px',
+      });
+      sr().reveal(Row4.current, {
+        delay: 200, mobile: false, distance: '100px',
+      });
+      sr().reveal(Row5.current, {
+        delay: 200, mobile: false, distance: '100px',
+      });
+      sr().reveal(Row6.current, {
+        delay: 200, mobile: false, distance: '100px',
+      });
+      sr().reveal(Row7.current, {
+        delay: 200, mobile: false,
+      });
+    }
   }
 
   useEffect(() => {
-    async function animate() {
-      if (Row1.current) {
-        const sr = (await import('scrollreveal')).default;
-        sr().reveal(Row1.current, {
-          delay: 200, mobile: false, distance: '100px',
-        });
-        sr().reveal(Row2.current, {
-          delay: 200, mobile: false, distance: '100px',
-        });
-        sr().reveal(Row3.current, {
-          delay: 200, mobile: false, distance: '100px',
-        });
-        sr().reveal(Row4.current, {
-          delay: 200, mobile: false, distance: '100px',
-        });
-        sr().reveal(Row5.current, {
-          delay: 200, mobile: false, distance: '100px',
-        });
-        sr().reveal(Row6.current, {
-          delay: 200, mobile: false, distance: '100px',
-        });
-        sr().reveal(Row7.current, {
-          delay: 200, mobile: false,
-        });
-      }
-    }
     animate();
-    getGames();
   }, []);
+
+  if (error) {
+    return (
+      <ErrorPage />
+    );
+  }
 
   return (
     <main className="pt-4">

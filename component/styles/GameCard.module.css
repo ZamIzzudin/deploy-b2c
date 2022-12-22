@@ -30,6 +30,8 @@
     position: relative;
     min-height: 100px;
     overflow: hidden;
+    cursor: pointer;
+    transition: .3s;
 }
 
 .remove-toogle {
@@ -46,10 +48,6 @@
     border-radius: 50%;
     border: 1px solid var(--yellow);
     transition: .3s;
-}
-
-.remove-toogle:hover {
-    transform: scale(1.1);
 }
 
 .text-container {
@@ -69,4 +67,8 @@
 .thumbnail {
     position: absolute;
     top: -100%;
+}
+
+.actived {
+    background-color: var(--primColor) !important;
 }

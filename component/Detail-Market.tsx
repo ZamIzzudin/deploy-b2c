@@ -22,6 +22,7 @@ import Image from 'next/image';
 import AccountCard from './Account-Card';
 import DetailModal from './Detail-Modal';
 import styles from './styles/DetailPage.module.css';
+import { encrypt, decrypt } from '../utils/crypto';
 
 function DetailMarket(props: any) {
     const { role, token } = props;
@@ -48,6 +49,12 @@ function DetailMarket(props: any) {
     const [newSkins, setNewSkins] = useState<any>([]);
     const [newAgents, setNewAgents] = useState<any>([]);
     const [newId, setId] = useState<any>();
+
+    // Credential
+    const [accountEmail, setAccountEmail] = useState('');
+    const [accountEmailPass, setAccountEmailPass] = useState('');
+    const [accountUsername, setAccountUsername] = useState('');
+    const [accountPass, setAccountPass] = useState('');
 
     const [addMoreSkins, setAddMoreSkins] = useState('');
     const [addMoreAgents, setAddMoreAgents] = useState('');
@@ -126,7 +133,6 @@ function DetailMarket(props: any) {
         formData.append('description', newAccountDesc);
         formData.append('in_stocks', '1');
 
-        console.log(newScreenshoot.length);
         if (newScreenshoot?.length > 0) {
             newScreenshoot.forEach((SS) => {
                 formData.append('screenshots[]', SS);
@@ -136,6 +142,11 @@ function DetailMarket(props: any) {
         }
 
         const url = `${process.env.API}/accounts`;
+
+        formData.append('account_username', encrypt(accountUsername));
+        formData.append('account_password', encrypt(accountPass));
+        formData.append('account_email', encrypt(accountEmail));
+        formData.append('account_email_password', encrypt(accountEmailPass));
 
         await axios.post(url, formData, config).then((res) => {
             clearData();
@@ -171,6 +182,11 @@ function DetailMarket(props: any) {
             formData.append('screenshots[]', ' ');
         }
 
+        formData.append('account_username', encrypt(accountUsername));
+        formData.append('account_password', encrypt(accountPass));
+        formData.append('account_email', encrypt(accountEmail));
+        formData.append('account_email_password', encrypt(accountEmailPass));
+
         const url = `${process.env.API}/accounts/${id}`;
 
         await axios.post(url, formData, config).then((res) => {
@@ -199,8 +215,8 @@ function DetailMarket(props: any) {
 
     function getCurrentAccount(data) {
         clearData();
-        setNewSkins(data.skin_list.split(' '));
-        setNewAgents(data.agent_list.split(' '));
+        setNewSkins(data.skin_list);
+        setNewAgents(data.agent_list);
         setNewHighestRank(data.highest_rank_id);
         setNewAccountPrice(data.price);
         setNewAccountServer(data.server_id);
@@ -208,6 +224,10 @@ function DetailMarket(props: any) {
         setNewAccountDesc(data.description);
         setCurrentScreenShoot(JSON.parse(data.screenshots));
         setId(data.id);
+        setAccountEmail(decrypt(data.account_email));
+        setAccountEmailPass(decrypt(data.account_email_password));
+        setAccountUsername(decrypt(data.account_username));
+        setAccountPass(decrypt(data.account_password));
     }
 
     async function getAccountbyFilter() {
@@ -512,6 +532,30 @@ function DetailMarket(props: any) {
                                     </button>
                                 </Col>
                             </Row>
+                            <h5>Credential Account</h5>
+                            <hr />
+                            <Row>
+                                <Col className="flex-down">
+                                    <Form.Group className="flex-down mb-2">
+                                        <Form.Label>Username Account</Form.Label>
+                                        <Form.Control value={accountUsername} onChange={(e) => setAccountUsername(e.target.value)} className="form-layout" />
+                                    </Form.Group>
+                                    <Form.Group className="flex-down mb-2">
+                                        <Form.Label>Password Account</Form.Label>
+                                        <Form.Control value={accountPass} onChange={(e) => setAccountPass(e.target.value)} className="form-layout" />
+                                    </Form.Group>
+                                </Col>
+                                <Col className="flex-down">
+                                    <Form.Group className="flex-down mb-2">
+                                        <Form.Label>Email</Form.Label>
+                                        <Form.Control value={accountEmail} onChange={(e) => setAccountEmail(e.target.value)} className="form-layout" />
+                                    </Form.Group>
+                                    <Form.Group className="flex-down mb-2">
+                                        <Form.Label>Password Email</Form.Label>
+                                        <Form.Control value={accountEmailPass} onChange={(e) => setAccountEmailPass(e.target.value)} className="form-layout" />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
                             <Row>
                                 <Col className="flex-horizon-centered-right">
                                     <div>
@@ -544,6 +588,7 @@ function DetailMarket(props: any) {
                     >
                         <h3 className="sec-font">Add New Account</h3>
                         <Form.Group className="fullwidth">
+                            {/* Price and Server Form */}
                             <Row className="gap-3">
                                 <Col className="flex-down">
                                     <Form.Label>Price</Form.Label>
@@ -558,6 +603,7 @@ function DetailMarket(props: any) {
                                     </Form.Select>
                                 </Col>
                             </Row>
+                            {/* Rank Form */}
                             <Row className="gap-3">
                                 <Col className="flex-down">
                                     <Form.Label>Highest Rank</Form.Label>
@@ -576,12 +622,14 @@ function DetailMarket(props: any) {
                                     </Form.Select>
                                 </Col>
                             </Row>
+                            {/* Description Form */}
                             <Row>
                                 <Col className="flex-down">
                                     <Form.Label>Description</Form.Label>
                                     <Form.Control className="form-layout mb-4" onChange={(e) => setNewAccountDesc(e.target.value)} />
                                 </Col>
                             </Row>
+                            {/* Detail Skin List */}
                             <Row>
                                 <Col className="flex-down space-between">
                                     <Form.Label>Skins</Form.Label>
@@ -610,6 +658,7 @@ function DetailMarket(props: any) {
                                     </InputGroup>
                                 </Col>
                             </Row>
+                            {/* Detail Agent List */}
                             <Row>
                                 <Col className="flex-down space-between">
                                     <Form.Label>Agents</Form.Label>
@@ -638,6 +687,7 @@ function DetailMarket(props: any) {
                                     </InputGroup>
                                 </Col>
                             </Row>
+                            {/* Screenshoot Form */}
                             <Row>
                                 <Col className="flex-down mb-3">
                                     <Form.Label>Screenshoot</Form.Label>
@@ -656,8 +706,34 @@ function DetailMarket(props: any) {
                                     </button>
                                 </Col>
                             </Row>
+                            {/* Credential Account */}
+                            <h5>Credential Account</h5>
+                            <hr />
                             <Row>
-                                <Col className="flex-horizon-centered-right">
+                                <Col className="flex-down">
+                                    <Form.Group className="flex-down mb-2">
+                                        <Form.Label>Username Account</Form.Label>
+                                        <Form.Control value={accountUsername} onChange={(e) => setAccountUsername(e.target.value)} className="form-layout" />
+                                    </Form.Group>
+                                    <Form.Group className="flex-down mb-2">
+                                        <Form.Label>Password Account</Form.Label>
+                                        <Form.Control value={accountPass} onChange={(e) => setAccountPass(e.target.value)} className="form-layout" />
+                                    </Form.Group>
+                                </Col>
+                                <Col className="flex-down">
+                                    <Form.Group className="flex-down mb-2">
+                                        <Form.Label>Email</Form.Label>
+                                        <Form.Control value={accountEmail} onChange={(e) => setAccountEmail(e.target.value)} className="form-layout" />
+                                    </Form.Group>
+                                    <Form.Group className="flex-down mb-2">
+                                        <Form.Label>Password Email</Form.Label>
+                                        <Form.Control value={accountEmailPass} onChange={(e) => setAccountEmailPass(e.target.value)} className="form-layout" />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            {/* Button Submit */}
+                            <Row>
+                                <Col className="flex-horizon-centered-right mt-3">
                                     <div>
                                         <button onClick={() => newAccount()} className="button capsule">Add</button>
                                     </div>

@@ -25,7 +25,13 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "assets/ParticleConfig.js"
+    "assets/ParticleConfig.js",
+    "utils/api.tsx",
+    "state/index.tsx",
+    "state/index.tsx",
+    "state/games/action.js",
+    "state/games/reducer.js",
+    "utils/api.tsx"
   ],
   "exclude": [
     "node_modules"
