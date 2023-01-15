@@ -11,6 +11,8 @@
 /* eslint-disable no-unused-vars */
 import Link from 'next/link';
 import Image from 'next/image';
+import Head from 'next/head';
+
 import { Container, Row, Col } from 'react-bootstrap';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { SDetailAccount } from '../../component/Skeleton-Loading';
@@ -27,16 +29,19 @@ function AccountDetails() {
         dispatch(setCheckoutAccount(accountDetail));
     }
 
-    const screenshoot = JSON.parse(accountDetail.screenshots);
+    const screenshoot = JSON.parse(accountDetail?.screenshots || '[]');
 
     return (
         <Container className="my-5 py-3">
+            <Head>
+                <title>Lunar Boost | Detail</title>
+            </Head>
             <h1 className="text-center mt-5 section-title">Account Details</h1>
             <h2 className="section-subtitle text-center mb-5 px-3">Know about the details before make decision</h2>
             <Row>
                 <Col className="flex-down col-md-8 px-4 col-12">
                     <h1 className={styles['server-name']}>
-                        {accountDetail?.server.name}
+                        {accountDetail?.server?.name}
                         {' '}
                         <span className={styles['id-account']}>
                             /
@@ -57,7 +62,7 @@ function AccountDetails() {
             </Row>
             {accountDetail?.price > 0 ? (
                 <Row className="mt-4 px-4">
-                    {accountDetail.agent_list.length > 0 && (
+                    {accountDetail?.agent_list.length > 0 && (
                         <Col className="col-6 col-md-4 mb-3 pad-right-1-res">
                             <div className="w-95-res center-start card">
                                 <h2 className={styles['detail-account-title']}>Agent</h2>
@@ -65,18 +70,18 @@ function AccountDetails() {
                                     <Row className="full-width">
                                         <Col className="col-md-6 col-12 centered-start">
                                             <div className="text-center">
-                                                {accountDetail.agent_list.map((i, key) => key % 2 === 0 && (<li key={i} className={styles['detail-list']}>{i}</li>))}
+                                                {accountDetail.agent_list.map((i, key) => key % 2 === 0 && (<li key={i} className={styles['detail-list']}>{i.replace(',', ' ')}</li>))}
                                             </div>
                                         </Col>
                                         <Col className="col-md-6 col-12 centered-start">
                                             <div className="text-center">
-                                                {accountDetail.agent_list.map((i, key) => key % 2 === 1 && (<li key={i} className={styles['detail-list']}>{i}</li>))}
+                                                {accountDetail.agent_list.map((i, key) => key % 2 === 1 && (<li key={i} className={styles['detail-list']}>{i.replace(',', ' ')}</li>))}
                                             </div>
                                         </Col>
                                     </Row>
                                 ) : (
                                     <>
-                                        {accountDetail.agent_list.map((i) => <li key={i} className={styles['detail-list']}>{i}</li>)}
+                                        {accountDetail.agent_list.map((i) => <li key={i} className={styles['detail-list']}>{i.replace(',', ' ')}</li>)}
                                     </>
                                 )}
                             </div>
@@ -90,18 +95,18 @@ function AccountDetails() {
                                     <Row className="full-width">
                                         <Col className="col-md-6 col-12 centered-start">
                                             <div className="text-center">
-                                                {accountDetail.skin_list.map((i, key) => key % 2 === 0 && (<li key={i} className={styles['detail-list']}>{i}</li>))}
+                                                {accountDetail.skin_list.map((i, key) => key % 2 === 0 && (<li key={i} className={styles['detail-list']}>{i.replace(',', ' ')}</li>))}
                                             </div>
                                         </Col>
                                         <Col className="col-md-6 col-12 centered-start">
                                             <div className="text-center">
-                                                {accountDetail.skin_list.map((i, key) => key % 2 === 1 && (<li key={i} className={styles['detail-list']}>{i}</li>))}
+                                                {accountDetail.skin_list.map((i, key) => key % 2 === 1 && (<li key={i} className={styles['detail-list']}>{i.replace(',', ' ')}</li>))}
                                             </div>
                                         </Col>
                                     </Row>
                                 ) : (
                                     <>
-                                        {accountDetail.skin_list.map((i) => <li key={i} className={styles['detail-list']}>{i}</li>)}
+                                        {accountDetail.skin_list.map((i) => <li key={i} className={styles['detail-list']}>{i.replace(',', ' ')}</li>)}
                                     </>
                                 )}
                             </div>

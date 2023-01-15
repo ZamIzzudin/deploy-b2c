@@ -20,6 +20,7 @@
 import {
     Container, Row, Col, Form, Pagination,
 } from 'react-bootstrap';
+import Head from 'next/head';
 
 import { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../hooks';
@@ -63,6 +64,9 @@ function Market() {
 
     return (
         <Container className="mt-5 pt-5 centered-down">
+            <Head>
+                <title>Lunar Boost | Market</title>
+            </Head>
             <h1 className="section-title mt-5 text-center">Market</h1>
             <span className="section-subtitle">You don't have to start from scratch</span>
             <Row className={`${styles['filter-container']} mt-5 py-4 px-2`}>
@@ -74,7 +78,7 @@ function Market() {
                                 <Form.Select className="form-layout" value={filterServer} onChange={(e) => setFilterServer(e.target.value)}>
                                     <option value="All">All</option>
                                     {servers?.map((server) => (
-                                        <option value={server.id} key={server.id}>{server.server_name}</option>
+                                        <option value={server.id} key={server.id}>{server.name}</option>
                                     ))}
                                 </Form.Select>
                             </Form.Group>

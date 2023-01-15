@@ -28,6 +28,7 @@ function Footer() {
                             <ul className={styles['footer-list']}>
                                 <li>Apex</li>
                                 <li>Valorant</li>
+                                <li>New World</li>
                             </ul>
                         </div>
                     </Col>

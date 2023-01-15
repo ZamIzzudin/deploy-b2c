@@ -7,15 +7,15 @@
 import { Row, Col } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useAppSelector, useAppDispatch } from '../hooks';
-import { OptionalAddons } from '../component';
+import { useAppSelector, useAppDispatch } from '../../hooks';
+import OptionalAddons from './Checkout-AddOns';
 import {
     DoubleIncludeRank, RankAndGame, NumberGame, Point,
 } from './Checkout-Overview';
 
-import { setAddOnsDetail } from '../state/addonsDetail/action';
-import { asyncCalculatePrice } from '../state/price/action';
-import { setCheckoutBoosting } from '../state/checkoutDetail/action';
+import { setAddOnsDetail } from '../../state/addonsDetail/action';
+import { asyncCalculatePrice } from '../../state/price/action';
+import { setCheckoutBoosting } from '../../state/checkoutDetail/action';
 
 function Checkout(props: any) {
     const {

@@ -120,6 +120,13 @@
 
 
 /* Other */
+.list-container {
+    max-height: 50vh;
+    overflow: hidden;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+}
+
 .FAQ-card {
     background-color: var(--insideCard);
     margin: 12px 0;
@@ -127,6 +134,7 @@
     border-radius: 12px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .button-container {

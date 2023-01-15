@@ -33,6 +33,16 @@
     letter-spacing: 1px;
 }
 
+.discord-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: url('../assets/dc.webp');
+    background-position: center;
+    background-size: cover;
+    border-radius: 25px;
+}
+
 @media only screen and (max-width: 1000px) {
     .content-title {
         font-size: 3em;

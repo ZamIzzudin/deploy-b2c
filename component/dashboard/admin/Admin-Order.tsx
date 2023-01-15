@@ -9,10 +9,13 @@ import {
 import { useState, useEffect } from 'react';
 import { useAppDispatch } from '../../../hooks';
 import DetailModal from '../../Detail-Modal';
-import styles from '../../styles/DetailPage.module.css';
+
+import { giveCredential } from '../../../state/flow/admin-action';
 import { asyncAdminGetBoostOrder, asyncAdminGetAccountOrder } from '../../../state/orderList/action';
 
-export default function AdminOrder({ orders, token }) {
+import styles from '../../styles/DetailPage.module.css';
+
+export default function AdminOrder({ orders }) {
     const [selectedOrder, setSelectedOrder] = useState<any>();
     const [typeOrder, setTypeOrder] = useState('boost');
     const [ShowDetailModal, setDetailModal] = useState(false);
@@ -21,10 +24,14 @@ export default function AdminOrder({ orders, token }) {
 
     function getOrderByType() {
         if (typeOrder === 'boost') {
-            dispatch(asyncAdminGetBoostOrder(token));
+            dispatch(asyncAdminGetBoostOrder());
         } else {
-            dispatch(asyncAdminGetAccountOrder(token));
+            dispatch(asyncAdminGetAccountOrder());
         }
+    }
+
+    function finishAccountOrder(id) {
+        dispatch(giveCredential(id));
     }
 
     useEffect(() => {
@@ -55,11 +62,14 @@ export default function AdminOrder({ orders, token }) {
                 <tbody>
                     {orders?.map((order) => (
                         <tr key={order.boost_id}>
-                            <td>{order.order_date}</td>
-                            <td>{order.game}</td>
-                            <td>{order.service}</td>
+                            <td>{order.order_date || order.order_created.slice(0, 10)}</td>
+                            <td>{order.game_name || order.game}</td>
+                            <td>{order.service_name || order.service}</td>
                             <td>{order.status}</td>
                             <td>
+                                {order.status !== 'Finished' && typeOrder !== 'boost' && (
+                                    <button className="capsule button-border mx-2" onClick={() => finishAccountOrder(order.detail.account_order_id)}>Send Credential</button>
+                                )}
                                 <button onClick={() => { setDetailModal(true); setSelectedOrder(order); }} className="capsule button-org">Details</button>
                             </td>
                         </tr>
@@ -79,34 +89,52 @@ export default function AdminOrder({ orders, token }) {
                         {selectedOrder?.total_price}
                     </span>
                     <span>
-                        Payment Method :
+                        Order Date :
                         {' '}
-                        {selectedOrder?.payment}
+                        {selectedOrder?.order_date}
+                    </span>
+                    <span>
+                        Game :
+                        {' '}
+                        {selectedOrder?.game}
+                    </span>
+                    <span>
+                        Service :
+                        {' '}
+                        {selectedOrder?.service}
+                    </span>
+                    <span>
+                        Status :
+                        {' '}
+                        {selectedOrder?.status}
                     </span>
                 </Row>
+                <hr />
                 {/* Boost Detail */}
                 <Row>
+                    <h5 className="text-org">Spesification</h5>
                     {
                         selectedOrder?.detail.boost_detail?.map((item) => (
                             <span className={styles['booster-detail-list']}>
-                                {Object.keys(item)}
-                                {' '}
-                                :
-                                {' '}
-                                {item[Object.keys(item).toString()]}
+                                {`${Object.keys(item).toString().replace('_', ' ')} : ${item[Object.keys(item).toString()].start ? (`${item[Object.keys(item).toString()].start} - ${item[Object.keys(item).toString()].to}`) : (item[Object.keys(item).toString()])}`}
                             </span>
                         ))
                     }
                 </Row>
+                <hr />
                 {/* Add Ons */}
                 <Row>
-                    <span>Add Ons : </span>
-                    <ul className="px-5">
-                        {selectedOrder?.detail.add_ons?.map((list) => (
-                            <li>{list.name}</li>
-                        ))}
-                    </ul>
-
+                    {selectedOrder?.detail.add_ons[0].name !== 'None' && (
+                        <Row>
+                            <h5 className="text-org">Add Ons</h5>
+                            <span>Add Ons : </span>
+                            <ul className="px-5">
+                                {selectedOrder?.detail.add_ons?.map((list) => (
+                                    <li>{list.name}</li>
+                                ))}
+                            </ul>
+                        </Row>
+                    )}
                 </Row>
             </DetailModal>
         </div>

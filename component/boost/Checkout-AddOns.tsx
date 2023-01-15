@@ -6,8 +6,8 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
-import { useAppSelector } from '../hooks';
-import DetailModal from './Detail-Modal';
+import { useAppSelector } from '../../hooks';
+import DetailModal from '../Detail-Modal';
 
 export default function OptionalAddons(props) {
     const { data, getAddOns } = props;

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
 /* eslint-disable no-return-assign */
@@ -10,14 +11,15 @@ import api from '../../utils/api';
 import { handleShowErrorPage } from '../errorHandle/action';
 
 const ActionType = {
-    ACCOUNT_CHEAKOUT: 'ACCOUNT_CHEAKOUT',
+    GET_DETAIL_ORDER_ACCOUNT: 'GET_DETAIL_ORDER_ACCOUNT',
     GET_DETAIL_BOOSTING: 'GET_DETAIL_BOOSTING',
+    CHECK_CHECKOUT_DETAIL: 'CHECK_CHECKOUT_DETAIL',
 };
 
 // Action
 function setCheckoutAccountAction(accountDetail) {
     return {
-        type: ActionType.GET_DETAIL_ACCOUNT,
+        type: ActionType.GET_DETAIL_ORDER_ACCOUNT,
         payload: {
             accountDetail,
         },
@@ -29,6 +31,15 @@ function setCheckoutBoostingAction(boostDetail) {
         type: ActionType.GET_DETAIL_BOOSTING,
         payload: {
             boostDetail,
+        },
+    };
+}
+
+function checkCheckoutDetailAction(checkoutDetail) {
+    return {
+        type: ActionType.CHECK_CHECKOUT_DETAIL,
+        payload: {
+            checkoutDetail,
         },
     };
 }
@@ -72,21 +83,28 @@ function setCheckoutBoosting(boostingDetail) {
     };
 }
 
-function asyncMakeBoostOrder(config, form, serviceRequire, serviceName) {
+function checkCheckoutDetail() {
+    return (dispatch) => {
+        const data = sessionStorage.getItem('checkoutData');
+        dispatch(checkCheckoutDetailAction(JSON.parse(data)));
+    };
+}
+
+function asyncMakeBoostOrder(form, serviceRequire, serviceName) {
     return async (dispatch) => {
         try {
             const slugServiceName = serviceName.toLowerCase().replace(/ /g, '-');
-            await api.makeBoostOrder(config, form, serviceRequire, slugServiceName);
+            await api.makeBoostOrder(form, serviceRequire, slugServiceName);
         } catch (err) {
             dispatch(handleShowErrorPage());
         }
     };
 }
 
-function asyncMakeAccountOrder(config, form, accountId) {
+function asyncMakeAccountOrder(form, accountId) {
     return async (dispatch) => {
         try {
-            await api.checkoutAccountOrder(config, form, accountId);
+            await api.checkoutAccountOrder(form, accountId);
         } catch (err) {
             dispatch(handleShowErrorPage());
         }
@@ -94,5 +112,5 @@ function asyncMakeAccountOrder(config, form, accountId) {
 }
 
 export {
-    ActionType, setCheckoutAccount, setCheckoutBoosting, asyncMakeBoostOrder, asyncMakeAccountOrder,
+    ActionType, setCheckoutAccount, setCheckoutBoosting, checkCheckoutDetail, asyncMakeBoostOrder, asyncMakeAccountOrder,
 };

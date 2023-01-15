@@ -10,15 +10,17 @@
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
 import { useState, useEffect } from 'react';
-import { useAppSelector } from '../hooks';
+import { useAppSelector } from '../../hooks';
+
 import {
     IncludeRank, NumberGame, Points, ListForm, ServerSelect, ApexIncludeRank, NestedListForm,
 } from './Form-Boost-Type';
-import styles from './styles/FormBoost.module.css';
+
+import styles from '../styles/FormBoost.module.css';
 
 function FormBoost(props: any) {
     const {
-        form, titleService, priceList,
+        form, titleService,
     } = props;
 
     const { servers } = useAppSelector((states) => states);
@@ -34,10 +36,10 @@ function FormBoost(props: any) {
             {/* Solo Form */}
             {typeForm?.map((f) => {
                 if (f.type === 'apexIncludeRank') {
-                    return (<ApexIncludeRank key={f.title} title={f.title} priceList={priceList} serviceName={titleService} />);
+                    return (<ApexIncludeRank key={f.title} title={f.title} serviceName={titleService} />);
                 }
                 if (f.type === 'includeRank') {
-                    return (<IncludeRank key={f.title} title={f.title} priceList={priceList} serviceName={titleService} />);
+                    return (<IncludeRank key={f.title} title={f.title} serviceName={titleService} />);
                 } if (f.type === 'gameNumber') {
                     return (<NumberGame key={f.title} max={f.maxGameorder} min={f.minGameOrder} title={f.title} serviceName={titleService} />);
                 } if (f.type === 'points') {

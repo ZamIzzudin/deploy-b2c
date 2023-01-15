@@ -14,12 +14,12 @@
 import { Form, Row, Col } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { editBoostDetail } from '../state/boostDetail/action';
-import { useAppSelector, useAppDispatch } from '../hooks';
-import styles from './styles/FormBoost.module.css';
+import { editBoostDetail } from '../../state/boostDetail/action';
+import { useAppSelector, useAppDispatch } from '../../hooks';
+import styles from '../styles/FormBoost.module.css';
 
 export function IncludeRank({
-    title, serviceName, priceList,
+    title, serviceName,
 }) {
     const { ranks } = useAppSelector((states) => states);
     const [clearRanks, setClearRanks] = useState<any>([]);
@@ -56,12 +56,11 @@ export function IncludeRank({
     }
 
     function getRank() {
-        const addpriceList = {
+        const data = {
             ...ranks[selectedRank.id + selectedDivision - 1],
-            priceList: priceList[(selectedRank.id + selectedDivision) - 1] || ranks[0],
         };
 
-        sendData(addpriceList);
+        sendData(data);
     }
 
     useEffect(() => {
@@ -92,7 +91,7 @@ export function IncludeRank({
 }
 
 export function ApexIncludeRank({
-    title, serviceName, priceList,
+    title, serviceName,
 }) {
     const { ranks } = useAppSelector((states) => states);
 

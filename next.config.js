@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
-    domains: ['52.53.213.105', 'ec2-54-219-168-219.us-west-1.compute.amazonaws.com'],
+    domains: ['52.53.213.105', 'ec2-54-219-168-219.us-west-1.compute.amazonaws.com', 'lunarboost.net', 'api.lunarboost.net'],
   },
   env: {
     API: process.env.API_URL,

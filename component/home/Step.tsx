@@ -8,7 +8,7 @@ import { Col, Row } from 'react-bootstrap';
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import styles from './styles/Step.module.css';
+import styles from '../styles/Step.module.css';
 
 function Step() {
     const [step, setStep] = useState(1);

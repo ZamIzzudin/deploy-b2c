@@ -11,14 +11,18 @@
 import {
     Modal, Row, Col, Form, InputGroup,
 } from 'react-bootstrap';
-import Image from 'next/image';
-import axios from 'axios';
 import { useState } from 'react';
+import Image from 'next/image';
+import { useAppDispatch } from '../hooks';
 import { googleProvider } from '../config/socialAuth';
-import socialMediaAuth from '../login-auth/auth';
+
+import { AsyncLogin, AsyncGoogleLogin, AsyncRegister } from '../state/auth/action';
+
 import styles from './styles/LoginModal.module.css';
 
 export default function LoginModal(props: any) {
+    const dispatch = useAppDispatch();
+
     const [selectOption, setSelectionOption] = useState('login');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -30,39 +34,9 @@ export default function LoginModal(props: any) {
 
     const [errorMsg, setErrorMsg] = useState(false);
 
-    const saveDataLogin = (data: any, token: any, roles: any) => {
-        if (data !== undefined) {
-            const dataUser = {
-                user: {
-                    isLogin: data.emailVerified,
-                },
-                token,
-                roles,
-            };
-
-            const expiryDate = new Date();
-            const month = (expiryDate.getMonth() + 1) % 12;
-            expiryDate.setMonth(month);
-
-            sessionStorage.setItem('user', JSON.stringify(dataUser));
-        }
-    };
-
-    const handleLogin = async (provider: any) => {
-        const res = await socialMediaAuth(provider);
-        const auth = {
-            username: res.displayName,
-            email: res.email,
-            firebase_id: res.uid,
-        };
-
-        const url = `${process.env.API}/v1/auth`;
-
-        await axios.post(url, auth).then((response) => {
-            saveDataLogin(res, response.data.token, response.data.role);
-            window.location.reload();
-        }).catch((response) => console.log(response));
-    };
+    async function handleLogin(provider: any) {
+        dispatch(AsyncGoogleLogin(provider));
+    }
 
     async function handleLoginAccount(e) {
         e.preventDefault();
@@ -71,12 +45,7 @@ export default function LoginModal(props: any) {
             email,
         };
 
-        const url = `${process.env.API}/v1/auth/login`;
-
-        await axios.post(url, auth).then((response) => {
-            saveDataLogin({ emailVerified: true }, response.data.token, response.data.role);
-            window.location.reload();
-        }).catch((err) => { setErrorMsg(true); });
+        dispatch(AsyncLogin(auth));
     }
 
     async function handleRegisterAccount(e) {
@@ -88,10 +57,8 @@ export default function LoginModal(props: any) {
             password_confirmation: rePassword,
         };
 
-        const url = `${process.env.API}/v1/auth/register`;
         if (password === rePassword) {
-            await axios.post(url, auth).then((response) => saveDataLogin({ emailVerified: true }, response.data.token, response.data.role)).catch((response) => console.log(response));
-            window.location.reload();
+            dispatch(AsyncRegister(auth));
         } else {
             setErrorMsg(true);
         }
@@ -134,7 +101,7 @@ export default function LoginModal(props: any) {
                                     <Form.Control required className="form-layout mb-3" placeholder="Email" type="email" onChange={(e) => setEmail(e.target.value)} />
                                     <InputGroup>
                                         <Form.Control required type={showPass ? ('type') : ('password')} className="form-layout mb-3" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-                                        <button className={styles['show-password-button']} onClick={() => { setShowPass(!showPass); }}>
+                                        <button type="button" className={styles['show-password-button']} onClick={() => { setShowPass(!showPass); }}>
                                             {showPass ? (
                                                 <i className="fa-regular fa-eye" />
                                             ) : (
@@ -160,7 +127,7 @@ export default function LoginModal(props: any) {
                                     )}
                                     <InputGroup>
                                         <Form.Control required type={showPass ? ('type') : ('password')} className="form-layout mb-3" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-                                        <button className={styles['show-password-button']} onClick={() => { setShowPass(!showPass); }}>
+                                        <button type="button" className={styles['show-password-button']} onClick={() => { setShowPass(!showPass); }}>
                                             {showPass ? (
                                                 <i className="fa-regular fa-eye" />
                                             ) : (
@@ -170,7 +137,7 @@ export default function LoginModal(props: any) {
                                     </InputGroup>
                                     <InputGroup>
                                         <Form.Control required type={showRePass ? ('type') : ('password')} className="form-layout mb-3" placeholder="Rewrite Password" onChange={(e) => setRePassword(e.target.value)} />
-                                        <button className={styles['show-password-button']} onClick={() => { setShowRePass(!showRePass); }}>
+                                        <button type="button" className={styles['show-password-button']} onClick={() => { setShowRePass(!showRePass); }}>
                                             {showRePass ? (
                                                 <i className="fa-regular fa-eye" />
                                             ) : (

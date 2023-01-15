@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 /* eslint-disable react/self-closing-comp */
 import Link from 'next/link';
-import styles from './styles/FeaturedBenefit.module.css';
+import styles from '../styles/FeaturedBenefit.module.css';
 
 function FeaturedBenefit() {
     return (

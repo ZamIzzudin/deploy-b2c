@@ -11,21 +11,25 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-unused-vars */
 import { Container, Row, Col } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 import Image from 'next/image';
+import Head from 'next/head';
 import Link from 'next/link';
-import {
-    SideBar, DetailOrder, DetailMarket, DetailBooster, DetailInvoice, DetailOther,
-} from '../component';
+import { useAppSelector } from '../hooks';
+
+import DetailOrder from '../component/dashboard/Detail-Order';
+import DetailMarket from '../component/dashboard/Detail-Market';
+import DetailBooster from '../component/dashboard/Detail-Booster';
+import DetailInvoice from '../component/dashboard/Detail-Invoice';
+import DetailOther from '../component/dashboard/Detail-Other';
+
+import { SideBar } from '../component';
 import styles from '../styles/User.module.css';
 
 function Dashboard() {
-    const [role, setRole] = useState('user');
-    const [component, setComponent] = useState('order');
+    const { auth } = useAppSelector((states) => states);
 
-    const [token, setToken] = useState<any | null>(null);
-    const [userData, setUserData] = useState<any | null>(null);
+    const [component, setComponent] = useState('order');
 
     const [showSide, setShowSide] = useState(false);
 
@@ -33,40 +37,19 @@ function Dashboard() {
         setShowSide(showing);
     }
 
-    useEffect(() => {
-        const dataStore: any = sessionStorage.getItem('user');
-
-        if (dataStore === '') {
-            setUserData(null);
-            setToken(null);
-        } else if (dataStore !== null) {
-            if (userData === null) {
-                const User = JSON.parse(dataStore);
-                setUserData(User.user);
-                setRole(User.roles[0]);
-                setToken(User.token);
-            } else {
-                setUserData(userData);
-                setRole(JSON.parse(dataStore).roles[0]);
-                setToken(token);
-            }
-        } else {
-            setUserData(null);
-            setToken(null);
-            setRole('user');
-        }
-    }, [userData, token]);
-
     function getComponent(comp: string) {
         setComponent(comp);
     }
 
     return (
         <>
-            {userData?.isLogin ? (
+            <Head>
+                <title>Lunar Boost | Dashboard</title>
+            </Head>
+            {auth.user.emailVerified ? (
                 <Container className="py-5">
                     <div className="mt-5">
-                        <SideBar role={role} getComponent={getComponent} show={showSide} close={closeSide} active={component} />
+                        <SideBar getComponent={getComponent} show={showSide} close={closeSide} active={component} />
                     </div>
                     <Row>
                         <Col className="centered-down">
@@ -76,11 +59,11 @@ function Dashboard() {
                                 </div>
                             </Row>
                             <Row className="full-width centered">
-                                {component === 'market' && (<DetailMarket role={role} token={token} />)}
-                                {component === 'order' && (<DetailOrder role={role} token={token} />)}
-                                {component === 'invoice' && (<DetailInvoice role={role} />)}
-                                {component === 'other' && (<DetailOther role={role} token={token} />)}
-                                {component === 'boost' && (<DetailBooster role={role} token={token} />)}
+                                {component === 'market' && (<DetailMarket />)}
+                                {component === 'order' && (<DetailOrder />)}
+                                {component === 'invoice' && (<DetailInvoice />)}
+                                {component === 'other' && (<DetailOther />)}
+                                {component === 'boost' && (<DetailBooster />)}
                             </Row>
                         </Col>
                     </Row>

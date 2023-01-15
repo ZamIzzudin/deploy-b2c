@@ -19,23 +19,32 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import Image from 'next/image';
-import AccountCard from './Account-Card';
-import DetailModal from './Detail-Modal';
-import styles from './styles/DetailPage.module.css';
-import { encrypt, decrypt } from '../utils/crypto';
+import { useAppSelector, useAppDispatch } from '../../hooks';
 
-function DetailMarket(props: any) {
-    const { role, token } = props;
+import { asyncGetAllAccountByFilter, asyncShowAccountsWithPagination } from '../../state/accounts/action';
+import { asyncGetAllServersByGame } from '../../state/servers/action';
+import { asyncGetAllRanksByGame } from '../../state/ranks/action';
+import {
+    makeAccountOnMarket, editAccountOnMarket, deleteAccountOnMarket,
+} from '../../state/flow/admin-action';
+
+import AccountCard from '../Account-Card';
+import DetailModal from '../Detail-Modal';
+import styles from '../styles/DetailPage.module.css';
+import { encrypt, decrypt } from '../../utils/crypto';
+
+function DetailMarket() {
+    const {
+        auth, accounts = {}, ranks = [], servers = [],
+    } = useAppSelector((states) => states);
+    const dispatch = useAppDispatch();
+
     const [modal, showModal] = useState(false);
     const [modal2, showModal2] = useState(false);
     const [modal3, showModal3] = useState(false);
 
-    const [accounts, setAccounts] = useState({ last_page: 0, data: [] });
-    const [Ranks, setRanks] = useState([{ name: '', id: 0, badge: 'http://ec2-54-219-168-219.us-west-1.compute.amazonaws.com/storage/images/rank-badges/valorant/unranked.png' }]);
-    const [Servers, setServers] = useState([{ id: 0, server_name: '' }]);
-
-    const [filterRank, setFilterRank] = useState('99');
-    const [filterServer, setFilterServer] = useState<any>('99');
+    const [filterRank, setFilterRank] = useState('All');
+    const [filterServer, setFilterServer] = useState<any>('All');
     const [filterSort, setFilterSort] = useState('asc');
 
     const [newHighestRank, setNewHighestRank] = useState<any>(1);
@@ -65,32 +74,18 @@ function DetailMarket(props: any) {
     const fileForm = useRef<any>();
 
     useEffect(() => {
-        getAccount();
-        getServer();
-        getRank();
+        dispatch(asyncGetAllRanksByGame('valorant'));
+        dispatch(asyncGetAllServersByGame('valorant'));
     }, []);
 
     useEffect(() => {
-        getAccountbyFilter();
+        dispatch(asyncGetAllAccountByFilter(filterSort, filterRank, filterServer));
+        setPaginationPage(1);
     }, [filterRank, filterServer, filterSort]);
 
-    async function getServer() {
-        const url = `${process.env.API}/servers`;
-
-        await axios.get(url).then((res) => setServers(res.data.data)).catch((err) => console.log(err));
-    }
-
-    async function getRank() {
-        const url = `${process.env.API}/ranks?game=valorant`;
-
-        await axios.get(url).then((res) => setRanks(res.data.ranks.data)).catch((err) => console.log(err));
-    }
-
-    async function getAccount() {
-        await axios.get(`${process.env.API}/accounts`)
-            .then((res) => setAccounts(res.data.accounts))
-            .catch((res) => console.log(res));
-    }
+    useEffect(() => {
+        dispatch(asyncShowAccountsWithPagination(paginationPage));
+    }, [paginationPage]);
 
     function setModal(type) {
         if (type === 'delete') {
@@ -111,17 +106,14 @@ function DetailMarket(props: any) {
         setShowScreenShoot([]);
         setNewSkins([]);
         setNewAgents([]);
+        setAccountEmail('');
+        setAccountEmailPass('');
+        setAccountUsername('');
+        setAccountPass('');
     }
 
-    async function newAccount() {
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        };
-
+    // CRUD
+    function newAccount() {
         const formData = new FormData();
 
         formData.append('current_rank_id', newCurrentRank);
@@ -141,29 +133,21 @@ function DetailMarket(props: any) {
             formData.append('screenshots[]', ' ');
         }
 
-        const url = `${process.env.API}/accounts`;
-
         formData.append('account_username', encrypt(accountUsername));
         formData.append('account_password', encrypt(accountPass));
         formData.append('account_email', encrypt(accountEmail));
         formData.append('account_email_password', encrypt(accountEmailPass));
 
-        await axios.post(url, formData, config).then((res) => {
+        try {
+            dispatch(makeAccountOnMarket(formData));
             clearData();
             showModal3(false);
-            getAccount();
-        }).catch((err) => console.log(err));
+        } catch (err) {
+            console.log(err);
+        }
     }
 
-    async function updateAccount(id) {
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        };
-
+    function updateAccount(id) {
         const formData = new FormData();
 
         formData.append('current_rank_id', newCurrentRank);
@@ -187,30 +171,22 @@ function DetailMarket(props: any) {
         formData.append('account_email', encrypt(accountEmail));
         formData.append('account_email_password', encrypt(accountEmailPass));
 
-        const url = `${process.env.API}/accounts/${id}`;
-
-        await axios.post(url, formData, config).then((res) => {
-            showModal(false);
+        try {
+            dispatch(editAccountOnMarket(formData, id));
             clearData();
-            getAccount();
-        }).catch((err) => console.log(err));
+            showModal(false);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
-    async function deleteAccount(id) {
-        const url = `${process.env.API}/accounts/${id}`;
-
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        };
-
-        await axios.delete(url, config).then((res) => {
+    function deleteAccount(id) {
+        try {
+            dispatch(deleteAccountOnMarket(id));
             showModal2(false);
-            getAccount();
-        });
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     function getCurrentAccount(data) {
@@ -230,27 +206,7 @@ function DetailMarket(props: any) {
         setAccountPass(decrypt(data.account_password));
     }
 
-    async function getAccountbyFilter() {
-        let url = `${process.env.API}/accounts/?sortOrder=${filterSort}`;
-
-        if (filterRank === '99' || filterServer === '99') {
-            getAccount();
-            setFilterRank('0');
-            setFilterServer('0');
-        } else {
-            if (filterRank !== '99') {
-                url += `&rank=${filterRank}`;
-            }
-            if (filterServer !== '99') {
-                url += `&server_region=${filterServer}`;
-            }
-
-            const response = await axios.get(url).then((res) => res.data.accounts).catch((res) => console.log(res));
-            setAccounts(response);
-            setPaginationPage(1);
-        }
-    }
-
+    // Form Utils
     function removeSkins(index) {
         newSkins.splice(index, 1);
         const [...arrSkins] = newSkins;
@@ -296,18 +252,10 @@ function DetailMarket(props: any) {
     }
 
     async function deleteScreenshoot(link) {
-        const name = link.slice(56).split('.')[0];
+        const name = link.slice(62).split('.')[0];
         const url = `${process.env.API}/accounts/${newId}/${name}`;
 
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        };
-
-        await axios.delete(url, config).then(async (res) => {
+        await axios.delete(url).then(async (res) => {
             setCurrentScreenShoot(JSON.parse(res.data.data.screenshots));
         }).catch((err) => console.log(err));
     }
@@ -319,17 +267,9 @@ function DetailMarket(props: any) {
         setShowScreenShoot(showSS);
     }
 
-    async function handlePagination(page) {
-        const url = `${process.env.API}/accounts?page=${page}`;
-
-        await axios.get(url).then((res) => setAccounts(res.data.accounts)).catch((res) => console.log(res));
-
-        setPaginationPage(page);
-    }
-
     for (let i = 1; i <= accounts.last_page; i++) {
         pagination.push(
-            <Pagination.Item className="pagination-items mx-1" key={i} active={i === paginationPage} onClick={() => handlePagination(i)}>
+            <Pagination.Item className="pagination-items mx-1" key={i} active={i === paginationPage} onClick={() => setPaginationPage(i)}>
                 {i}
             </Pagination.Item>,
         );
@@ -337,7 +277,7 @@ function DetailMarket(props: any) {
 
     return (
         <>
-            {role === 'admin' && (
+            {auth?.role[0] === 'admin' && (
                 <div className="centered-down">
                     <Row className="fullwidth mt-3">
                         <Col className="flex-horizon-centered-right">
@@ -352,8 +292,8 @@ function DetailMarket(props: any) {
                                         <Form.Label>Server</Form.Label>
                                         <Form.Select className="form-layout" value={filterServer} onChange={(e) => setFilterServer(e.target.value)}>
                                             <option value="99">All</option>
-                                            {Servers.map((server) => (
-                                                <option value={server.id} key={server.id}>{server.server_name}</option>
+                                            {servers.map((server) => (
+                                                <option value={server.id} key={server.id}>{server.name}</option>
                                             ))}
                                         </Form.Select>
                                     </Form.Group>
@@ -363,7 +303,7 @@ function DetailMarket(props: any) {
                                         <Form.Label>Rank</Form.Label>
                                         <Form.Select className="form-layout" value={filterRank} onChange={(e) => setFilterRank(e.target.value)}>
                                             <option value="99">All</option>
-                                            {Ranks.map((rank) => (
+                                            {ranks.map((rank) => (
                                                 <option value={rank.id} key={rank.id}>{rank.name}</option>
                                             ))}
                                         </Form.Select>
@@ -375,9 +315,9 @@ function DetailMarket(props: any) {
                     <Row className="fullwidth my-4">
                         <Col className="gap-4 debug fullwidth flex-horizon-centered-right">
                             <span>Sort By</span>
-                            <span className={filterSort === 'asc' ? ('active-org') : ('')} onClick={() => { setFilterSort('asc'); getAccountbyFilter(); }}>ASC</span>
+                            <span className={filterSort === 'asc' ? ('active-org') : ('')} onClick={() => setFilterSort('asc')}>ASC</span>
                             <span>||</span>
-                            <span className={filterSort === 'desc' ? ('active-org') : ('')} onClick={() => { setFilterSort('desc'); getAccountbyFilter(); }}>DESC</span>
+                            <span className={filterSort === 'desc' ? ('active-org') : ('')} onClick={() => setFilterSort('desc')}>DESC</span>
                         </Col>
                     </Row>
                     <Row className={`${styles['card-container']} centered`}>
@@ -390,13 +330,13 @@ function DetailMarket(props: any) {
                             <Col>
                                 <Pagination className={styles['pagination-container']}>
                                     {paginationPage > 1 && (
-                                        <Pagination.Prev className="mx-1" onClick={() => handlePagination(paginationPage - 1)} />
+                                        <Pagination.Prev className="mx-1" onClick={() => setPaginationPage(paginationPage - 1)} />
                                     )}
 
                                     {pagination}
 
                                     {paginationPage !== accounts.last_page && (
-                                        <Pagination.Next className="mx-1" onClick={() => handlePagination(paginationPage + 1)} />
+                                        <Pagination.Next className="mx-1" onClick={() => setPaginationPage(paginationPage + 1)} />
                                     )}
                                 </Pagination>
                             </Col>
@@ -418,8 +358,8 @@ function DetailMarket(props: any) {
                                 <Col className="flex-down">
                                     <Form.Label>Server</Form.Label>
                                     <Form.Select className="form-layout mb-4" value={newAccountServer} onChange={(e) => setNewAccountServer(e.target.value)}>
-                                        {Servers.map((server) => (
-                                            <option value={server.id} key={server.id}>{server.server_name}</option>
+                                        {servers.map((server) => (
+                                            <option value={server.id} key={server.id}>{server.name}</option>
                                         ))}
                                     </Form.Select>
                                 </Col>
@@ -428,7 +368,7 @@ function DetailMarket(props: any) {
                                 <Col className="flex-down">
                                     <Form.Label>Highest Rank</Form.Label>
                                     <Form.Select className="form-layout mb-4" value={newHighestRank} onChange={(e) => setNewHighestRank(e.target.value)}>
-                                        {Ranks.map((rank) => (
+                                        {ranks.map((rank) => (
                                             <option value={rank.id} key={rank.id}>{rank.name}</option>
                                         ))}
                                     </Form.Select>
@@ -436,7 +376,7 @@ function DetailMarket(props: any) {
                                 <Col className="flex-down">
                                     <Form.Label>Current Rank</Form.Label>
                                     <Form.Select className="form-layout mb-4" value={newCurrentRank} onChange={(e) => setNewCurrentRank(e.target.value)}>
-                                        {Ranks.map((rank) => (
+                                        {ranks.map((rank) => (
                                             <option value={rank.id} key={rank.id}>{rank.name}</option>
                                         ))}
                                     </Form.Select>
@@ -597,8 +537,8 @@ function DetailMarket(props: any) {
                                 <Col className="flex-down">
                                     <Form.Label>Server</Form.Label>
                                     <Form.Select className="form-layout mb-4" defaultValue={newAccountServer} onChange={(e) => setNewAccountServer(e.target.value)}>
-                                        {Servers.map((server) => (
-                                            <option value={server.id} key={server.id}>{server.server_name}</option>
+                                        {servers.map((server) => (
+                                            <option value={server.id} key={server.id}>{server.name}</option>
                                         ))}
                                     </Form.Select>
                                 </Col>
@@ -608,7 +548,7 @@ function DetailMarket(props: any) {
                                 <Col className="flex-down">
                                     <Form.Label>Highest Rank</Form.Label>
                                     <Form.Select className="form-layout mb-4" value={newHighestRank} onChange={(e) => setNewHighestRank(e.target.value)}>
-                                        {Ranks.map((rank) => (
+                                        {ranks.map((rank) => (
                                             <option value={rank.id} key={rank.id}>{rank.name}</option>
                                         ))}
                                     </Form.Select>
@@ -616,7 +556,7 @@ function DetailMarket(props: any) {
                                 <Col className="flex-down">
                                     <Form.Label>Current Rank</Form.Label>
                                     <Form.Select className="form-layout mb-4" value={newCurrentRank} onChange={(e) => setNewCurrentRank(e.target.value)}>
-                                        {Ranks.map((rank) => (
+                                        {ranks.map((rank) => (
                                             <option value={rank.id} key={rank.id}>{rank.name}</option>
                                         ))}
                                     </Form.Select>
@@ -744,7 +684,7 @@ function DetailMarket(props: any) {
                 </div>
             )}
             {
-                role !== 'admin' && (
+                auth?.role[0] !== 'admin' && (
                     <div className="error-container fullwidth">
                         <Image src="/Jett-Sticker.png" width="300" height="300" />
                         <span className="sec-font">Go Back to Home Page</span>

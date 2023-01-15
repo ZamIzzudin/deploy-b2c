@@ -7,7 +7,7 @@
 import { useEffect } from 'react';
 import Vivus from 'vivus';
 import Link from 'next/link';
-import styles from './styles/Jumbotron.module.css';
+import styles from '../styles/Jumbotron.module.css';
 
 function Jumbotron() {
     const useMountEffect = (fun) => useEffect(fun, []);

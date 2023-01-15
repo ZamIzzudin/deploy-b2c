@@ -10,17 +10,22 @@
 /* eslint-disable import/no-unresolved */
 import { Container, Row, Col } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { GameCard, FormBoost, Checkout } from '../component';
+import Head from 'next/head';
 import { useAppSelector, useAppDispatch } from '../hooks';
+
+import Checkout from '../component/boost/Checkout';
+import FormBoost from '../component/boost/Form-Boost';
+import { GameCard } from '../component';
+
 import { SForm, SGameList, SServiceList } from '../component/Skeleton-Loading';
-import styles from '../styles/Boost.module.css';
 
 import { asyncGetServicesPerGame } from '../state/services/action';
 import { asyncGetAllRanksByGame } from '../state/ranks/action';
 import { asyncGetAllServersByGame } from '../state/servers/action';
 import { setupBoostiDetail } from '../state/boostDetail/action';
 import { setupAddOnsDetail } from '../state/addonsDetail/action';
+
+import styles from '../styles/Boost.module.css';
 
 function Order() {
     const {
@@ -32,8 +37,6 @@ function Order() {
     const [requireOrder, setRequireOrder] = useState<any>(services[0]?.require['order-options']);
     const [addonsOrder, setAddonsOrder] = useState<any>(services[0]?.require['add-ons']);
     const [titleOrder, setTitleOrder] = useState<any>(services[0]?.name);
-
-    const [priceList, setPriceList] = useState<any>([]);
 
     // Get Data Service From API With Selected Game
     async function getServices(game) {
@@ -50,15 +53,7 @@ function Order() {
         setTitleOrder(service.name);
     }
 
-    // Get Prices list
-    async function getPriceList() {
-        const url = `${process.env.API}/service/prices`;
-
-        await axios.get(url).then((res) => setPriceList(res.data.data)).catch((err) => console.log(err));
-    }
-
     useEffect(() => {
-        getPriceList();
         dispatch(asyncGetAllRanksByGame(gameOrder.name));
         dispatch(setupAddOnsDetail());
         getServices({ name: 'Valorant' });
@@ -78,6 +73,9 @@ function Order() {
 
     return (
         <Container className="my-5 py-5 centered-down">
+            <Head>
+                <title>Lunar Boost | Boost</title>
+            </Head>
             <h1 className="section-title mt-5 text-center">Boost</h1>
             <span className="section-subtitle">What we can help you</span>
             <span className="section-subtitle"></span>
@@ -103,7 +101,7 @@ function Order() {
                     <Row className="mt-3 px-3 fullwidth centered">
                         <Col className="col-md-8 col-12">
                             <div className="fullwidth">
-                                <FormBoost priceList={priceList} form={requireOrder} titleService={titleOrder} />
+                                <FormBoost form={requireOrder} titleService={titleOrder} />
                             </div>
                         </Col>
                         <Col className="col-md-4 col-12 flex-horizon-centered-start">

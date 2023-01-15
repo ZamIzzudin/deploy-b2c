@@ -1,4 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
+
+import authReducer from './auth/reducer';
 import gamesReducer from './games/reducer';
 import accountsReducer from './accounts/reducer';
 import ranksReducer from './ranks/reducer';
@@ -10,10 +12,13 @@ import boostDetailReducer from './boostDetail/reducer';
 import addonsDetailReducer from './addonsDetail/reducer';
 import priceReducer from './price/reducer';
 import orderListReducer from './orderList/reducer';
+import orderTakeReducer from './orderTake/reducer';
+import FAQReducer from './faq/reducer';
 import errorReducer from './errorHandle/reducer';
 
 const store = configureStore({
     reducer: {
+        auth: authReducer,
         games: gamesReducer,
         accounts: accountsReducer,
         ranks: ranksReducer,
@@ -25,6 +30,8 @@ const store = configureStore({
         checkoutDetail: checkoutDetailReducer,
         price: priceReducer,
         orderList: orderListReducer,
+        orderTake: orderTakeReducer,
+        faq: FAQReducer,
         error: errorReducer,
     },
 });

@@ -12,27 +12,36 @@
 /* eslint-disable react/jsx-no-useless-fragment */
 import { Row, Col, Form } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
+
 import axios from 'axios';
 import Link from 'next/link';
 import Image from 'next/image';
-import DetailModal from './Detail-Modal';
-import styles from './styles/DetailPage.module.css';
+import { useAppSelector, useAppDispatch } from '../../hooks';
+import DetailModal from '../Detail-Modal';
 
-function DetailOther(props: any) {
+import {
+    asyncGetAllFAQ, asyncCreateAllFAQ, asyncEditAllFAQ, asyncRemoveAllFAQ,
+} from '../../state/faq/action';
+
+import styles from '../styles/DetailPage.module.css';
+
+function DetailOther() {
+    const { auth, faq } = useAppSelector((states) => states);
+    const dispatch = useAppDispatch();
+
     const [addFaqModal, showAddFaqModal] = useState(false);
     const [editFaqModal, showEditFaqModal] = useState(false);
 
-    const { role, token } = props;
-
-    const [FAQ, setFAQ] = useState<any>([]);
     const [newQuestion, setNewQuestion] = useState<any>();
     const [newAnswer, setNewAnswer] = useState<any>();
     const [selectedFaqID, setSelectedFaqID] = useState<any>();
 
-    // Function to get all FAQ data
-    async function getFAQ() {
-        const url = `${process.env.API}/faqs`;
-        await axios.get(url).then((res) => setFAQ(res.data.data)).catch((err) => console.log(err));
+    const [users, setUsers] = useState<any>([]);
+
+    async function getUsers() {
+        const url = `${process.env.API}/admin/users?role=user`;
+
+        await axios.get(url).then((res) => setUsers(res.data.data)).catch((err) => console.log(err));
     }
 
     // Function to get spesfic data about FAQ
@@ -43,60 +52,42 @@ function DetailOther(props: any) {
     }
 
     // Function to add new FAQ data
-    async function addNewFAQ(e) {
+    function addNewFAQ(e) {
         e.preventDefault();
-        const url = `${process.env.API}/faqs`;
-
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        };
-
         const data = {
             question: newQuestion,
             answer: newAnswer,
         };
 
-        await axios.post(url, data, config).then(() => { getFAQ(); showAddFaqModal(false); }).catch((err) => console.log(err));
+        dispatch(asyncCreateAllFAQ(data));
+        showAddFaqModal(false);
     }
 
-    // Function to delete FAQ data
-    async function deleteFAQ(id) {
-        const url = `${process.env.API}/faqs/${id}`;
+    async function addNewBooster(id) {
+        const url = `${process.env.API}/admin/set-role/${id}`;
 
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
+        const data = {
+            role: 'booster',
         };
 
-        await axios.delete(url, config).then((res) => getFAQ()).catch((err) => console.log(err));
+        await axios.put(url, data).then(() => getUsers()).catch((err) => console.log(err));
     }
 
     // Function to edit FAQ data
-    async function editFAQ(e, id) {
+    function editFAQ(e, id) {
         e.preventDefault();
-        const url = `${process.env.API}/faqs/${id}`;
-
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        };
-
         const data = {
             question: newQuestion,
             answer: newAnswer,
         };
 
-        await axios.put(url, data, config).then((res) => { getFAQ(); showEditFaqModal(false); }).catch((err) => console.log(err));
+        dispatch(asyncEditAllFAQ(data, id));
+        showEditFaqModal(false);
+    }
+
+    // Function to delete FAQ data
+    function deleteFAQ(id) {
+        dispatch(asyncRemoveAllFAQ(id));
     }
 
     // Function to clear a form
@@ -108,35 +99,56 @@ function DetailOther(props: any) {
 
     // Get data when load the page
     useEffect(() => {
-        getFAQ();
+        dispatch(asyncGetAllFAQ());
+        getUsers();
     }, []);
 
     return (
         <>
-            {role === 'admin' ? (
-                <Row className="centered mt-4">
+            {auth?.role[0] === 'admin' ? (
+                <Row className="centered-start mt-4">
                     <Col className=" col-md-6 px-3">
                         <div className="card fullwidth">
                             <h3 className="sec-font">Manage FAQ</h3>
                             {/* Looping All FAQ that exist */}
-                            {FAQ?.map((item) => (
-                                <div className={styles['FAQ-card']} key={item.id}>
-                                    <span>{item.question}</span>
-                                    <div className={styles['button-container']}>
-                                        {/* Edit FAQ Button */}
-                                        <button className={styles['edit-btn']} onClick={() => { showEditFaqModal(true); selectFAQ(item); }}>
-                                            <i className="fa-solid fa-pen" />
-                                        </button>
-                                        {/* Delete FAQ Button */}
-                                        <button className={styles['delete-btn']} onClick={() => deleteFAQ(item.id)}>
-                                            <i className="fa-solid fa-trash-can" />
-                                        </button>
+                            <div className={styles['list-container']}>
+                                {faq?.map((item) => (
+                                    <div className={styles['FAQ-card']} key={item.id}>
+                                        <span>{item.question}</span>
+                                        <div className={styles['button-container']}>
+                                            {/* Edit FAQ Button */}
+                                            <button className={styles['edit-btn']} onClick={() => { showEditFaqModal(true); selectFAQ(item); }}>
+                                                <i className="fa-solid fa-pen" />
+                                            </button>
+                                            {/* Delete FAQ Button */}
+                                            <button className={styles['delete-btn']} onClick={() => deleteFAQ(item.id)}>
+                                                <i className="fa-solid fa-trash-can" />
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                             {/* Add FAQ Button */}
-                            <div className="mt-3">
+                            <div>
                                 <button className="button capsule" onClick={() => showAddFaqModal(true)}>Add FAQ</button>
+                            </div>
+                        </div>
+                    </Col>
+                    <Col className=" col-md-6 px-3">
+                        <div className="card fullwidth">
+                            <h3 className="sec-font">Manage Booster Account</h3>
+                            <div className={styles['list-container']}>
+                                {users?.map((user) => (
+                                    <div className={styles['FAQ-card']} key={user.id}>
+                                        <span>{user.email}</span>
+                                        <div className={styles['button-container']}>
+                                            {/* Delete FAQ Button */}
+                                            <button className={styles['delete-btn']} onClick={() => addNewBooster(user.user_id)}>
+                                                <i className="fa-solid fa-pen" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </Col>

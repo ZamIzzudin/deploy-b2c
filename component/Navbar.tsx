@@ -18,52 +18,41 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { LoginModal } from '.';
 import { useAppSelector, useAppDispatch } from '../hooks';
-import { socialMediaLogout } from '../login-auth/auth';
-import styles from './styles/Navbar.module.css';
 
+import { AsyncLogout, AsyncCheckLogin } from '../state/auth/action';
 import { asyncGetAllGames } from '../state/games/action';
-import { asyncGetAllRanksByGame } from '../state/ranks/action';
+// import { asyncGetAllRanksByGame } from '../state/ranks/action';
 import { asyncGetAllServersByGame } from '../state/servers/action';
 import { asyncGetAllAccount } from '../state/accounts/action';
 import { asyncGetServicesPerGame } from '../state/services/action';
 
+import styles from './styles/Navbar.module.css';
+
 function TabBar() {
+    const { auth } = useAppSelector((states) => states);
     const dispatch = useAppDispatch();
+    const router = useRouter();
 
     const [scrollY, setScrollY] = useState(0);
     const [sideBar, setSideBar] = useState(false);
     const [modal, showModal] = useState(false);
-    const [userData, setUserData] = useState<any | null>(null);
 
     const handleModal = () => {
         showModal(true);
     };
 
     const handleLogout = async () => {
-        socialMediaLogout();
-        sessionStorage.setItem('user', '');
-        window.location.replace('/');
-        setUserData(null);
+        dispatch(AsyncLogout());
+        router.push('/');
     };
 
+    // Hide Modal
     useEffect(() => {
-        const dataStore: any = sessionStorage.getItem('user');
-
-        if (dataStore === "") {
-            setUserData(null);
-        } else if (dataStore !== null) {
-            if (userData === null) {
-                const User = JSON.parse(dataStore);
-                setUserData(User.user);
-            } else {
-                setUserData(userData);
-            }
-        } else {
-            setUserData(null);
-        }
-    }, [userData]);
+        showModal(false);
+    }, [auth]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -79,6 +68,7 @@ function TabBar() {
     }, []);
 
     useEffect(() => {
+        dispatch(AsyncCheckLogin());
         dispatch(asyncGetAllGames());
         dispatch(asyncGetAllAccount());
         dispatch(asyncGetServicesPerGame('valorant'));
@@ -100,12 +90,10 @@ function TabBar() {
                     <Link href="/market" scroll>Market</Link>
                 </div>
                 <div className={styles['navbar-button']} onClick={() => setSideBar(false)}>
-                    {userData ? (
+                    {auth.user.emailVerified ? (
                         <div className="gap-3 w-90 centered">
                             <Link scroll href="/dashboard">
-                                <a>
-                                    <button className="button-border capsule">Profile</button>
-                                </a>
+                                <button className="button-border capsule">Profile</button>
                             </Link>
                             <span onClick={() => handleLogout()} className="button capsule">
                                 Logout

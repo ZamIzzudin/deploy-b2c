@@ -9,17 +9,18 @@ import {
 import { useState, useEffect } from 'react';
 import { useAppDispatch } from '../../../hooks';
 import DetailModal from '../../Detail-Modal';
-import styles from '../../styles/DetailPage.module.css';
-import { asyncUserGetBoostOrder, asyncUserGetAccountOrder } from '../../../state/orderList/action';
-import { encrypt, decrypt } from '../../../utils/crypto';
 
-export default function UserOrder({ orders, token }) {
+import { asyncUserGetBoostOrder, asyncUserGetAccountOrder, asyncUserMakeReview } from '../../../state/orderList/action';
+
+import styles from '../../styles/DetailPage.module.css';
+
+export default function UserOrder({ orders }) {
+    const dispatch = useAppDispatch();
+
     const [selectedOrder, setSelectedOrder] = useState<any>();
     const [typeOrder, setTypeOrder] = useState('boost');
     const [ShowDetailModal, setDetailModal] = useState(false);
 
-    const [credentialEmail, setCredentialEmail] = useState('');
-    const [credentialPass, setCredentialPass] = useState('');
     const [ShowCredentialModal, setCredentialModal] = useState(false);
 
     const [titleReview, setTitleReview] = useState('');
@@ -27,39 +28,31 @@ export default function UserOrder({ orders, token }) {
     const [rateReview, setRateReview] = useState('0');
     const [ShowReviewModal, setReviewModal] = useState(false);
 
-    const dispatch = useAppDispatch();
-
-    function getOrderByType() {
-        if (typeOrder === 'boost') {
-            dispatch(asyncUserGetBoostOrder(token));
-        } else {
-            dispatch(asyncUserGetAccountOrder(token));
-        }
-    }
-
-    function sendCredential(e) {
-        e.preventDefault();
-        const data = {
-            account_email: encrypt(credentialEmail),
-            account_password: encrypt(credentialPass),
-        };
-        setCredentialModal(false);
-        setCredentialEmail('');
-        setCredentialPass('');
-    }
-
-    function sendReview(e) {
-        e.preventDefault();
-        const data = {
-            title: titleReview,
-            body: bodyReview,
-            rate: rateReview,
-        };
-
+    function clearForm() {
         setReviewModal(false);
         setTitleReview('');
         setBodyReview('');
         setRateReview('0');
+    }
+
+    function getOrderByType() {
+        if (typeOrder === 'boost') {
+            dispatch(asyncUserGetBoostOrder());
+        } else {
+            dispatch(asyncUserGetAccountOrder());
+        }
+    }
+
+    async function sendReview(e) {
+        e.preventDefault();
+        const data = {
+            review_title: titleReview,
+            review_body: bodyReview,
+            rating: rateReview,
+            is_shown: false,
+        };
+        dispatch(asyncUserMakeReview(data));
+        clearForm();
     }
 
     useEffect(() => {
@@ -95,12 +88,14 @@ export default function UserOrder({ orders, token }) {
                             <td>{order.service}</td>
                             <td>{order.status}</td>
                             <td>
-                                {order.status !== 'Finished' && (
-                                    <button onClick={() => setCredentialModal(true)} className="capsule button mx-2">Credential</button>
-                                )}
                                 {order.status === 'Finished' && (
                                     <>
-                                        <button className="capsule button">Attachment</button>
+                                        {typeOrder === 'Boost' ? (
+                                            <button className="capsule button">Attachment</button>
+
+                                        ) : (
+                                            <button onClick={() => setCredentialModal(true)} className="capsule button mx-2">Credential</button>
+                                        )}
                                         <button onClick={() => setReviewModal(true)} className="capsule button-org-border mx-2">Review</button>
                                     </>
                                 )}
@@ -119,11 +114,13 @@ export default function UserOrder({ orders, token }) {
                 {/* General Detail */}
                 <Row>
                     <h5 className="text-org">General</h5>
-                    <span>
-                        Total Price :
-                        {' '}
-                        {selectedOrder?.total_price}
-                    </span>
+                    {selectedOrder?.total_price !== undefined && (
+                        <span>
+                            Total Price :
+                            {' '}
+                            {selectedOrder?.total_price}
+                        </span>
+                    )}
                     <span>
                         Payment Method :
                         {' '}
@@ -152,31 +149,44 @@ export default function UserOrder({ orders, token }) {
                 </Row>
                 <hr />
                 {/* Boost Detail */}
-                <Row>
-                    <h5 className="text-org">Spesification</h5>
-                    {
-                        selectedOrder?.detail.boost_detail?.map((item) => (
-                            <span className={styles['booster-detail-list']}>
-                                {Object.keys(item)}
-                                {' '}
-                                :
-                                {' '}
-                                {item[Object.keys(item).toString()]}
-                            </span>
-                        ))
-                    }
-                </Row>
+                <h5 className="text-org">Spesification</h5>
+                {selectedOrder?.detail.boost_detail !== undefined ? (
+                    <Row>
+                        {
+                            selectedOrder?.detail.boost_detail?.map((item) => (
+                                <span className={styles['booster-detail-list']}>
+                                    {`${Object.keys(item).toString().replace('_', ' ')} : ${item[Object.keys(item).toString()].start ? (`${item[Object.keys(item).toString()].start} - ${item[Object.keys(item).toString()].to}`) : (item[Object.keys(item).toString()])}`}
+                                </span>
+                            ))
+                        }
+                    </Row>
+                ) : (
+                    <Row>
+                        {
+                            selectedOrder?.detail.account_detail?.map((item) => (
+                                <span className={styles['booster-detail-list']}>
+                                    {`${Object.keys(item).toString().replace('_', ' ')} : ${item[Object.keys(item).toString()].start ? (`${item[Object.keys(item).toString()].start} - ${item[Object.keys(item).toString()].to}`) : (item[Object.keys(item).toString()])}`}
+                                </span>
+                            ))
+                        }
+                    </Row>
+                )}
+
                 <hr />
                 {/* Add Ons */}
-                {selectedOrder?.detail.add_ons[0].name !== 'None' && (
+                {selectedOrder?.detail?.add_ons !== undefined && (
                     <Row>
-                        <h5 className="text-org">Add Ons</h5>
-                        <span>Add Ons : </span>
-                        <ul className="px-5">
-                            {selectedOrder?.detail.add_ons?.map((list) => (
-                                <li>{list.name}</li>
-                            ))}
-                        </ul>
+                        {selectedOrder?.detail?.add_ons[0].name !== 'None' && (
+                            <>
+                                <h5 className="text-org">Add Ons</h5>
+                                <span>Add Ons : </span>
+                                <ul className="px-5">
+                                    {selectedOrder?.detail?.add_ons?.map((list) => (
+                                        <li>{list.name}</li>
+                                    ))}
+                                </ul>
+                            </>
+                        )}
                     </Row>
                 )}
             </DetailModal>
@@ -186,21 +196,10 @@ export default function UserOrder({ orders, token }) {
                 onHide={() => setCredentialModal(false)}
             >
                 <h2>Your Credential</h2>
-                <Form className="mt-3" onSubmit={(e) => sendCredential(e)}>
-                    <Form.Group>
-                        <Form.Label>Username / Email</Form.Label>
-                        <Form.Control value={credentialEmail} onChange={(e) => setCredentialEmail(e.target.value)} className="form-layout mb-2" type="email" required />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label className="mt-0">Password</Form.Label>
-                        <Form.Control value={credentialPass} onChange={(e) => setCredentialPass(e.target.value)} className="form-layout mb-2" type="text" required />
-                    </Form.Group>
-                    <Row>
-                        <Col className="mt-3">
-                            <button type="submit" className="button capsule">Send</button>
-                        </Col>
-                    </Row>
-                </Form>
+                <div>
+                    <h5 className="text-org">Credential Account</h5>
+                    <span>Ini Credential</span>
+                </div>
             </DetailModal>
             {/* Review Modal */}
             <DetailModal

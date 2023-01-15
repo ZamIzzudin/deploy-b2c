@@ -14,33 +14,24 @@ import { asyncBoosterGetBoostOrder } from '../../../state/orderList/action';
 
 import styles from '../../styles/DetailPage.module.css';
 
-export default function BoosterOrder({ orders, token }) {
+export default function BoosterOrder({ orders }) {
     const [selectedOrder, setSelectedOrder] = useState<any>();
     const [ShowDetailModal, setDetailModal] = useState(false);
 
     const dispatch = useAppDispatch();
 
     async function finishOrder(id) {
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        };
-
         const url = `${process.env.API}/boosts/${id}?status=finished`;
 
-        await axios.put(url, {}, config).then((res) => {
-            dispatch(asyncBoosterGetBoostOrder(token));
+        await axios.put(url, {}).then((res) => {
+            dispatch(asyncBoosterGetBoostOrder());
         }).catch((err) => console.log(err));
     }
 
     useEffect(() => {
-        dispatch(asyncBoosterGetBoostOrder(token));
+        dispatch(asyncBoosterGetBoostOrder());
     }, []);
 
-    console.log(orders);
     return (
         <Table responsive="sm" borderless>
             <thead>
@@ -55,13 +46,13 @@ export default function BoosterOrder({ orders, token }) {
             <tbody>
                 {orders?.map((order) => (
                     <tr key={order.boost_id}>
-                        <td>{order.order_created.slice(0, 10)}</td>
-                        <td>{order.game_name}</td>
-                        <td>{order.service_name}</td>
+                        <td>{order.order_date}</td>
+                        <td>{order.game}</td>
+                        <td>{order.service}</td>
                         <td>{order.status}</td>
                         <td>
                             {order.status !== 'Finished' && (
-                                <button onClick={() => finishOrder(order.boost_id)} className="capsule button-org-border">Finish</button>
+                                <button onClick={() => finishOrder(order.id)} className="capsule button-org-border">Finish</button>
                             )}
                             {order.status === 'On Progress' && (
                                 <button className="capsule button mx-2">Credential</button>
@@ -91,17 +82,17 @@ export default function BoosterOrder({ orders, token }) {
                     <span>
                         Order Date :
                         {' '}
-                        {selectedOrder?.order_created?.slice(0, 10)}
+                        {selectedOrder?.order_date}
                     </span>
                     <span>
                         Game :
                         {' '}
-                        {selectedOrder?.game_name}
+                        {selectedOrder?.game}
                     </span>
                     <span>
                         Service :
                         {' '}
-                        {selectedOrder?.service_name}
+                        {selectedOrder?.service}
                     </span>
                     <span>
                         Status :
@@ -114,20 +105,19 @@ export default function BoosterOrder({ orders, token }) {
                 <Row>
                     <h5 className="text-org">Spesification</h5>
                     {
-                        selectedOrder?.boost_detail?.map((item) => (
+                        selectedOrder?.detail.boost_detail?.map((item) => (
                             <span className={styles['booster-detail-list']}>
-                                {Object.keys(item)}
-                                {' '}
-                                :
-                                {' '}
-                                {item[Object.keys(item).toString()]}
+                                {`${Object.keys(item).toString().replace('_', ' ')} : 
+                                ${item[Object.keys(item).toString()].start
+                                        ? (`${item[Object.keys(item).toString()].start} - ${item[Object.keys(item).toString()].to}`)
+                                        : (item[Object.keys(item).toString()])}`}
                             </span>
                         ))
                     }
                 </Row>
                 <hr />
                 {/* Add Ons */}
-                {selectedOrder?.add_ons[0].name !== 'None' && (
+                {selectedOrder?.detail.add_ons[0].name !== 'None' && (
                     <Row>
                         <h5 className="text-org">Add Ons</h5>
                         <span>Add Ons : </span>

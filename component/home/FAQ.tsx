@@ -3,7 +3,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import styles from './styles/FAQ.module.css';
+import styles from '../styles/FAQ.module.css';
 
 function FAQ() {
     const [faqs, setFaqs] = useState([{ id: 0, question: '', answer: '' }]);
@@ -24,7 +24,7 @@ function FAQ() {
 
     return (
         <div className="mb-5 mt-3 centered-down">
-            {expandFAQ ? (
+            {!expandFAQ ? (
                 <div className="w-100">
                     {faqs?.map((faq) => (
                         <div key={`faq${faq.id}`} className={`${styles['container-card']} card my-2`}>

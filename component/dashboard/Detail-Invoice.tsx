@@ -5,7 +5,7 @@ import { Table } from 'react-bootstrap';
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import DetailModal from './Detail-Modal';
+import DetailModal from '../Detail-Modal';
 
 function DetailInvoice(props: any) {
     const { role } = props;

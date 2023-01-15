@@ -6,12 +6,16 @@
 /* eslint-disable import/no-unresolved */
 import { Row, Col } from 'react-bootstrap';
 import { useEffect, useRef } from 'react';
+import Head from 'next/head';
 import { useAppSelector } from '../hooks';
-import ErrorPage from '../component/ErrorPage';
 
-import {
-  Jumbotron, GameCard, FeaturedBenefit, Testimonial, FAQ, Step,
-} from '../component';
+import ErrorPage from '../component/ErrorPage';
+import Jumbotron from '../component/home/Jumbotron';
+import FeaturedBenefit from '../component/home/Featured-Benefit';
+import Testimonial from '../component/home/Testimonial';
+import FAQ from '../component/home/FAQ';
+import Step from '../component/home/Step';
+import { GameCard } from '../component';
 
 import styles from '../styles/Home.module.css';
 
@@ -65,6 +69,10 @@ function Home() {
 
   return (
     <main className="pt-4">
+      <Head>
+        <title>Lunar Boost | Home</title>
+      </Head>
+
       <Jumbotron />
       <div className={`${styles['main-container']} py-5 z-upper`}>
         <Row ref={Row1}>
@@ -96,7 +104,7 @@ function Home() {
           <FAQ />
         </Row>
         <Row ref={Row7} className="p-4 centered">
-          <Col className="centered-down card">
+          <Col className={`${styles['discord-card']}`}>
             <h3 className={`${styles['content-title']} text-center mt-5`}>Discord Channel</h3>
             <button type="button" className="button capsule mt-3 mb-5">Join Now</button>
           </Col>

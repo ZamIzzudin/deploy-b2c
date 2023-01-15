@@ -82,7 +82,7 @@ b {
 .button {
   border-radius: 5px;
   font-family: var(--secFont);
-  padding: 8px 32px;
+  padding: 8px 28px;
   background: var(--primColor);
   border: 2px solid var(--primColor);
   transition: .5s;
@@ -93,7 +93,7 @@ b {
 .button-border {
   border-radius: 5px;
   font-family: var(--secFont);
-  padding: 8px 32px;
+  padding: 8px 28px;
   background: transparent;
   border: 2px solid var(--primColor);
   transition: .5s;

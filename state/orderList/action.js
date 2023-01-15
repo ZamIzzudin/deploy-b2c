@@ -28,10 +28,32 @@ function getAccountOrderAction(accountOrder) {
 }
 
 // Middleware
-function asyncUserGetBoostOrder(token) {
+function asyncUserGetBoostOrder() {
     return async (dispatch) => {
         try {
-            const boostOrder = await api.userGetBoost(token);
+            const boostOrder = await api.userGetOrder();
+            dispatch(getBoostOrderAction(boostOrder.boost_order));
+        } catch (err) {
+            console.log(err.message);
+        }
+    };
+}
+
+function asyncUserGetAccountOrder() {
+    return async (dispatch) => {
+        try {
+            const boostOrder = await api.userGetOrder();
+            dispatch(getBoostOrderAction(boostOrder.account_order));
+        } catch (err) {
+            console.log(err.message);
+        }
+    };
+}
+
+function asyncBoosterGetBoostOrder() {
+    return async (dispatch) => {
+        try {
+            const boostOrder = await api.boosterGetBoost();
             dispatch(getBoostOrderAction(boostOrder));
         } catch (err) {
             console.log(err.message);
@@ -39,10 +61,21 @@ function asyncUserGetBoostOrder(token) {
     };
 }
 
-function asyncUserGetAccountOrder(token) {
+function asyncAdminGetBoostOrder() {
     return async (dispatch) => {
         try {
-            const accountOrder = await api.userGetAccount(token);
+            const boostOrder = await api.adminGetBoost();
+            dispatch(getBoostOrderAction(boostOrder));
+        } catch (err) {
+            console.log(err.message);
+        }
+    };
+}
+
+function asyncAdminGetAccountOrder() {
+    return async (dispatch) => {
+        try {
+            const accountOrder = await api.adminGetAccount();
             dispatch(getAccountOrderAction(accountOrder));
         } catch (err) {
             console.log(err.message);
@@ -50,33 +83,11 @@ function asyncUserGetAccountOrder(token) {
     };
 }
 
-function asyncBoosterGetBoostOrder(token) {
-    return async (dispatch) => {
+function asyncUserMakeReview(data) {
+    return async () => {
         try {
-            const boostOrder = await api.boosterGetBoost(token);
-            dispatch(getBoostOrderAction(boostOrder));
-        } catch (err) {
-            console.log(err.message);
-        }
-    };
-}
-
-function asyncAdminGetBoostOrder(token) {
-    return async (dispatch) => {
-        try {
-            const boostOrder = await api.adminGetBoost(token);
-            dispatch(getBoostOrderAction(boostOrder));
-        } catch (err) {
-            console.log(err.message);
-        }
-    };
-}
-
-function asyncAdminGetAccountOrder(token) {
-    return async (dispatch) => {
-        try {
-            const accountOrder = await api.adminGetAccount(token);
-            dispatch(getAccountOrderAction(accountOrder));
+            const review = await api.userMakeReview(data);
+            console.log(review);
         } catch (err) {
             console.log(err.message);
         }
@@ -84,5 +95,5 @@ function asyncAdminGetAccountOrder(token) {
 }
 
 export {
-    ActionType, asyncUserGetBoostOrder, asyncUserGetAccountOrder, asyncBoosterGetBoostOrder, asyncAdminGetBoostOrder, asyncAdminGetAccountOrder,
+    ActionType, asyncUserGetBoostOrder, asyncUserGetAccountOrder, asyncBoosterGetBoostOrder, asyncAdminGetBoostOrder, asyncAdminGetAccountOrder, asyncUserMakeReview,
 };
