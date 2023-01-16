@@ -84,8 +84,13 @@ export default function AdminOrder({ orders }) {
                 {/* General Detail */}
                 <Row>
                     <span>
-                        Total Price :
+                        Order ID :
                         {' '}
+                        {selectedOrder?.id}
+                    </span>
+                    <span>
+                        Total Price :
+                        {' $'}
                         {selectedOrder?.total_price}
                     </span>
                     <span>

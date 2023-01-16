@@ -182,15 +182,15 @@ const api = (() => {
     async function boosterSeeAvailableOrder() {
         const url = `${BASE_URL}/boosts`;
 
-        await axios.get(url)
-            .then((res) => res.data.data)
-            .catch((err) => console.log(err));
+        const response = await axios.get(url);
+
+        return response.data.data;
     }
 
     async function boosterTakeOrder(id) {
-        const url = `${BASE_URL}/boosts/${id}?status=on-progress`;
+        const url = `${BASE_URL}/boost-order/${id}?status=on-progress`;
 
-        await axios.put(url, {})
+        await axios.post(url, {})
             .then((res) => res.data.data)
             .catch((err) => console.log(err));
     }

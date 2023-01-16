@@ -116,8 +116,13 @@ function DetailBooster() {
                 <Row>
                     <h5 className="text-org">General</h5>
                     <span>
-                        Total Price :
+                        Order ID :
                         {' '}
+                        {selectedOrder?.id}
+                    </span>
+                    <span>
+                        Total Price :
+                        {' $'}
                         {selectedOrder?.total_price}
                     </span>
                     <span>
@@ -128,7 +133,7 @@ function DetailBooster() {
                     <span>
                         Game :
                         {' '}
-                        {selectedOrder?.newGame}
+                        {selectedOrder?.game}
                     </span>
                     <span>
                         Service :

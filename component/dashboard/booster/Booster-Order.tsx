@@ -76,7 +76,7 @@ export default function BoosterOrder({ orders }) {
                     <h5 className="text-org">General</h5>
                     <span>
                         Total Price :
-                        {' '}
+                        {' $'}
                         {selectedOrder?.total_price}
                     </span>
                     <span>

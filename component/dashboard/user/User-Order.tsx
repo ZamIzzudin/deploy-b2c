@@ -114,10 +114,15 @@ export default function UserOrder({ orders }) {
                 {/* General Detail */}
                 <Row>
                     <h5 className="text-org">General</h5>
+                    <span>
+                        Order ID :
+                        {' '}
+                        {selectedOrder?.id || selectedOrder?.detail.account_order_id}
+                    </span>
                     {selectedOrder?.total_price !== undefined && (
                         <span>
                             Total Price :
-                            {' '}
+                            {' $'}
                             {selectedOrder?.total_price}
                         </span>
                     )}
@@ -152,13 +157,11 @@ export default function UserOrder({ orders }) {
                 <h5 className="text-org">Spesification</h5>
                 {selectedOrder?.detail.boost_detail !== undefined ? (
                     <Row>
-                        {
-                            selectedOrder?.detail.boost_detail?.map((item) => (
-                                <span className={styles['booster-detail-list']}>
-                                    {`${Object.keys(item).toString().replace('_', ' ')} : ${item[Object.keys(item).toString()].start ? (`${item[Object.keys(item).toString()].start} - ${item[Object.keys(item).toString()].to}`) : (item[Object.keys(item).toString()])}`}
-                                </span>
-                            ))
-                        }
+                        {selectedOrder?.detail.boost_detail?.map((item) => (
+                            <span className={styles['booster-detail-list']}>
+                                {`${Object.keys(item).toString().replace('_', ' ')} : ${item[Object.keys(item).toString()].start ? (`${item[Object.keys(item).toString()].start} - ${item[Object.keys(item).toString()].to}`) : (item[Object.keys(item).toString()])}`}
+                            </span>
+                        ))}
                     </Row>
                 ) : (
                     <Row>
@@ -189,6 +192,39 @@ export default function UserOrder({ orders }) {
                         )}
                     </Row>
                 )}
+
+                {/* Address */}
+                {selectedOrder?.order_address !== undefined && (
+                    <Row>
+                        <h5 className="text-org">Address</h5>
+                        <span>
+                            Name :
+                            {' '}
+                            {selectedOrder?.order_address.full_name}
+                        </span>
+                        <span>
+                            Country :
+                            {' '}
+                            {selectedOrder?.order_address.country}
+                        </span>
+                        <span>
+                            City :
+                            {' '}
+                            {selectedOrder?.order_address.city}
+                        </span>
+                        <span>
+                            Billing Address :
+                            {' '}
+                            {selectedOrder?.order_address.billing_address}
+                        </span>
+                        <span>
+                            Zip Code :
+                            {' '}
+                            {selectedOrder?.order_address.zip_code}
+                        </span>
+                    </Row>
+                )}
+
             </DetailModal>
             {/* Credential Modal */}
             <DetailModal
