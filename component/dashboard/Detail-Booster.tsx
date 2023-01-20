@@ -26,7 +26,7 @@ function DetailBooster() {
     const dispatch = useAppDispatch();
     const { orderTake, auth } = useAppSelector((states) => states);
 
-    const [modal3, showModal3] = useState(false);
+    const [modal, showModal] = useState(false);
 
     // const [boostOrder, setBoostOrder] = useState<any>([]);
     const [selectedOrder, setSelectedOrder] = useState<any>({
@@ -49,7 +49,12 @@ function DetailBooster() {
     }
 
     function takeOrder(id) {
-        dispatch(asyncTakeOrder(id));
+        try {
+            dispatch(asyncTakeOrder(id));
+            showModal(false);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     return (
@@ -86,7 +91,7 @@ function DetailBooster() {
                                             </Col>
                                         </Row>
                                         <div className="centered">
-                                            <button onClick={() => { showModal3(true); setSelectedOrder(order); }} className="button-org capsule">Details</button>
+                                            <button onClick={() => { showModal(true); setSelectedOrder(order); }} className="button-org capsule">Details</button>
                                         </div>
                                     </div>
                                 </Col>
@@ -108,8 +113,8 @@ function DetailBooster() {
             )}
             {/* Take Order */}
             <DetailModal
-                show={modal3}
-                onHide={() => showModal3(false)}
+                show={modal}
+                onHide={() => showModal(false)}
             >
                 <h1>Details</h1>
                 {/* General Detail */}
@@ -118,7 +123,7 @@ function DetailBooster() {
                     <span>
                         Order ID :
                         {' '}
-                        {selectedOrder?.id}
+                        {selectedOrder?.detail?.boost_order_id}
                     </span>
                     <span>
                         Total Price :
@@ -180,7 +185,7 @@ function DetailBooster() {
                 )}
                 <Row>
                     <Col className="mt-3">
-                        <button onClick={() => takeOrder(selectedOrder.id)} className="button-org capsule">Take Order</button>
+                        <button onClick={() => takeOrder(selectedOrder?.detail?.boost_order_id)} className="button-org capsule">Take Order</button>
                     </Col>
                 </Row>
             </DetailModal>

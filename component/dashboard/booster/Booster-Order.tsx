@@ -4,28 +4,62 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-unused-vars */
 import {
-    Table, Row,
+    Table, Row, Col,
 } from 'react-bootstrap';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { useAppDispatch } from '../../../hooks';
 import DetailModal from '../../Detail-Modal';
+
 import { asyncBoosterGetBoostOrder } from '../../../state/orderList/action';
 
 import styles from '../../styles/DetailPage.module.css';
 
 export default function BoosterOrder({ orders }) {
+    const [newScreenshoot, setNewScreenShoot] = useState<any>([]);
+    const [showScreenshoot, setShowScreenShoot] = useState<any>([]);
+
     const [selectedOrder, setSelectedOrder] = useState<any>();
     const [ShowDetailModal, setDetailModal] = useState(false);
+    const [ShowAttachModal, setAttachModal] = useState(false);
 
     const dispatch = useAppDispatch();
+    const fileForm = useRef<any>();
 
     async function finishOrder(id) {
-        const url = `${process.env.API}/boosts/${id}?status=finished`;
+        const url = `${process.env.API}/booster/boost-order/${id}?status=finished`;
 
-        await axios.put(url, {}).then((res) => {
+        await axios.post(url, {
+            boost_done_ss: newScreenshoot,
+        }).then((res) => {
             dispatch(asyncBoosterGetBoostOrder());
         }).catch((err) => console.log(err));
+    }
+
+    function addScreenshoot(e) {
+        const file = e.target.files[0];
+        setNewScreenShoot([...newScreenshoot, file]);
+
+        if (file !== undefined) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const { result } = reader;
+                const detail = {
+                    src: result,
+                    name: file.name,
+                };
+                setShowScreenShoot([...showScreenshoot, detail]);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function deleteShowScreenshoot(name) {
+        const showSS = showScreenshoot.filter((item) => item.name !== name);
+        const showFile = newScreenshoot.filter((file) => file.name !== name);
+        setNewScreenShoot(showFile);
+        setShowScreenShoot(showSS);
     }
 
     useEffect(() => {
@@ -52,7 +86,7 @@ export default function BoosterOrder({ orders }) {
                         <td>{order.status}</td>
                         <td>
                             {order.status !== 'Finished' && (
-                                <button onClick={() => finishOrder(order.id)} className="capsule button-org-border">Finish</button>
+                                <button onClick={() => { setAttachModal(true); setSelectedOrder(order); }} className="capsule button-org-border">Finish</button>
                             )}
                             {order.status === 'On Progress' && (
                                 <button className="capsule button mx-2">Credential</button>
@@ -66,6 +100,7 @@ export default function BoosterOrder({ orders }) {
                     </tr>
                 ))}
             </tbody>
+            {/* Detail Modal */}
             <DetailModal
                 show={ShowDetailModal}
                 onHide={() => setDetailModal(false)}
@@ -74,6 +109,11 @@ export default function BoosterOrder({ orders }) {
                 {/* General Detail */}
                 <Row>
                     <h5 className="text-org">General</h5>
+                    <span>
+                        Order ID :
+                        {' '}
+                        {selectedOrder?.id}
+                    </span>
                     <span>
                         Total Price :
                         {' $'}
@@ -129,7 +169,36 @@ export default function BoosterOrder({ orders }) {
                     </Row>
                 )}
             </DetailModal>
-
+            {/* Credential Modal */}
+            {/* Finish Attachment */}
+            <DetailModal
+                show={ShowAttachModal}
+                onHide={() => setAttachModal(false)}
+            >
+                <h5>Upload Attachment</h5>
+                <Row>
+                    <Col className="flex-down mb-3">
+                        <span>Screenshoot</span>
+                        <span>{selectedOrder?.id}</span>
+                        {showScreenshoot?.map((image) => (
+                            <div className="spbetween-horizontal mb-3">
+                                <Image src={image.src} height="60px" width="90px" />
+                                <span>{image.name}</span>
+                                <button className={styles['delete-btn']} onClick={() => deleteShowScreenshoot(image.name)}>
+                                    <i className="fa-solid fa-trash-can" />
+                                </button>
+                            </div>
+                        ))}
+                        <input type="file" onChange={(e) => { addScreenshoot(e); }} accept="image/png, image/jpg, image/jpeg" hidden ref={fileForm} />
+                        <button className="button-org-border capsule" onClick={() => fileForm.current?.click()}>
+                            Choose File
+                        </button>
+                    </Col>
+                </Row>
+                <Row>
+                    <button onClick={() => finishOrder(selectedOrder?.id)} className="button capsule">Finish Order</button>
+                </Row>
+            </DetailModal>
         </Table>
     );
 }

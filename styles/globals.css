@@ -716,6 +716,10 @@ td:first-child {
   cursor: pointer;
 }
 
+.hide {
+  display: none;
+}
+
 @media only screen and (max-width: 1000px) {
   .title {
     font-size: 2.5em;

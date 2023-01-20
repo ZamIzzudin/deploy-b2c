@@ -76,7 +76,7 @@ function asyncEditAllFAQ(id, data) {
 
 function asyncRemoveAllFAQ(id) {
     return async (dispatch) => {
-        await api.removeFAQ(id);
+        await api.deleteFAQ(id);
 
         const response = await api.getFAQ();
 

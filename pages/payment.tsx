@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
 /* eslint-disable no-trailing-spaces */
@@ -18,6 +19,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import Image from 'next/image';
+import { ethers } from 'ethers';
 import { PayPalButton } from 'react-paypal-button-v2';
 import { useRouter } from 'next/router';
 import { useAppSelector, useAppDispatch } from '../hooks';
@@ -25,6 +27,7 @@ import { useAppSelector, useAppDispatch } from '../hooks';
 import { LoginModal } from '../component';
 import { checkCheckoutDetail, asyncMakeBoostOrder, asyncMakeAccountOrder } from '../state/checkoutDetail/action';
 
+import exchange from '../utils/exchange';
 import { encrypt } from '../utils/crypto';
 import countries from '../utils/country.json';
 
@@ -43,6 +46,7 @@ function Payment() {
     const [zipCode, setZip] = useState('');
     const [Address, setAddress] = useState('');
     const [paymentMethod, setPayment] = useState('Paypal');
+    const [totalPrice, setTotalPrice] = useState(checkoutDetail?.total_price);
 
     // Credential
     const [username, setUsername] = useState('');
@@ -50,8 +54,11 @@ function Payment() {
 
     const [showPass, setShowPass] = useState(false);
     const [accForm, setAcc] = useState(false);
+
     // Paypal script load
     const [scriptLoaded, setScriptLoaded] = useState<any>(false);
+    // Metamask
+    const [ethereum, setEthereum] = useState<any>();
 
     const dispatch = useAppDispatch();
 
@@ -93,7 +100,16 @@ function Payment() {
         }
 
         if (accForm) {
-            await doPayment(form, serviceRequire);
+            if (paymentMethod === 'Metamask') {
+                console.log('ini');
+                if (ethereum !== undefined) {
+                    payMetamask(form, serviceRequire);
+                } else {
+                    alert('You have to install Metamask first');
+                }
+            } else {
+                await doPayment(form, serviceRequire);
+            }
         }
     }
 
@@ -109,18 +125,50 @@ function Payment() {
 
     useEffect(() => {
         dispatch(checkCheckoutDetail());
-
-        // Setup Script Paypal
-        const setUpPaypal = () => {
-            const script = document.createElement('script');
-            script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.CLIENT_ID}`;
-            script.type = 'text/javascript';
-            script.async = true;
-            script.onload = () => setScriptLoaded(true);
-            document.body.appendChild(script);
-        };
-        setUpPaypal();
+        setupPaypal();
+        setupETH(window);
     }, []);
+
+    // Setup Payment Gateaway
+    const setupPaypal = () => {
+        const script = document.createElement('script');
+        script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.CLIENT_ID}`;
+        script.type = 'text/javascript';
+        script.async = true;
+        script.onload = () => setScriptLoaded(true);
+        document.body.appendChild(script);
+    };
+
+    function setupETH(window: any) {
+        setEthereum(window.ethereum);
+    }
+
+    async function convertETH(price) {
+        const priceConverted = await exchange.USD2ETH(price);
+        setTotalPrice(priceConverted);
+    }
+
+    async function payMetamask(form, serviceRequire) {
+        await ethereum.send('eth_requestAccounts');
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        await signer.sendTransaction({
+            to: process.env.CRYPTO_WALLET_ADDRESS,
+            value: ethers.utils.parseEther(totalPrice)
+        }).then(async (res) => {
+            await doPayment(form, serviceRequire);
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
+
+    useEffect(() => {
+        if (paymentMethod === 'Metamask') {
+            convertETH(checkoutDetail.total_price);
+        } else if (paymentMethod === 'Paypal') {
+            setTotalPrice(checkoutDetail.total_price);
+        }
+    }, [paymentMethod, checkoutDetail]);
 
     if (checkoutDetail.service === undefined) {
         return (
@@ -170,6 +218,12 @@ function Payment() {
                                             <div className={`${paymentMethod === 'Paypal' ? ('active') : ('')} centered-down inside-card fullwidth p-2 card-hovering`} onClick={() => setPayment('Paypal')}>
                                                 <Image src="/paypal.png" width="90" height="90" />
                                                 <h5 className="mt-3">PayPal</h5>
+                                            </div>
+                                        </Col>
+                                        <Col className="p-4">
+                                            <div className={`${paymentMethod === 'Metamask' ? ('active') : ('')} centered-down inside-card fullwidth p-2 card-hovering`} onClick={() => setPayment('Metamask')}>
+                                                <Image src="/metamask.png" width="100" height="100" />
+                                                <h5 className="mt-3">Metamask</h5>
                                             </div>
                                         </Col>
                                     </Row>
@@ -222,7 +276,7 @@ function Payment() {
                                         </div>
                                         <span className={styles['sub-mini-text']}>Further information will be requested after payment.</span>
                                         <div className=" centered mt-4 px-5">
-                                            {paymentMethod === 'Paypal' && scriptLoaded ? (
+                                            <div className={`${paymentMethod !== 'Paypal' && ('hide')}`}>
                                                 <PayPalButton
                                                     style={{
                                                         color: 'blue', layout: 'horizontal', tagline: false, shape: 'pill', height: 40
@@ -230,9 +284,10 @@ function Payment() {
                                                     amount={checkoutDetail?.total_price}
                                                     onSuccess={() => paymentForm(null)}
                                                 />
-                                            ) : (
+                                            </div>
+                                            <div className={`${paymentMethod !== 'Metamask' && ('hide')}`}>
                                                 <button className="button capsule mb-2" type="submit">Pay Now</button>
-                                            )}
+                                            </div>
                                         </div>
                                     </Row>
                                 </Form>
@@ -278,7 +333,7 @@ function Payment() {
                                         </Col>
                                         <Col>
                                             <h5 className={styles['service-price']}>
-                                                {`$ ${checkoutDetail?.total_price}`}
+                                                {`$ ${totalPrice}`}
                                             </h5>
                                         </Col>
                                     </Row>

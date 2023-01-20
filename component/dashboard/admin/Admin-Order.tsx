@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
 /* eslint-disable react/button-has-type */
@@ -86,7 +87,7 @@ export default function AdminOrder({ orders }) {
                     <span>
                         Order ID :
                         {' '}
-                        {selectedOrder?.id}
+                        {selectedOrder?.detail.boost_order_id || selectedOrder?.detail.account_order_id}
                     </span>
                     <span>
                         Total Price :

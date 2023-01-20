@@ -90,7 +90,7 @@ function Home() {
           <FeaturedBenefit />
         </Row>
         <Row ref={Row4}>
-          <h1 className={`${styles['content-title']} text-end mt-3`}>Experiance Flow</h1>
+          <h1 className={`${styles['content-title']} text-end mt-3`}>Experience Flow</h1>
           <h2 className={`${styles['content-subtitle']} text-end mb-5`}>An effortless rank-up process.</h2>
           <Step />
         </Row>

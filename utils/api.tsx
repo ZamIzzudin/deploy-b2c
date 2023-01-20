@@ -180,7 +180,7 @@ const api = (() => {
     }
 
     async function boosterSeeAvailableOrder() {
-        const url = `${BASE_URL}/boosts`;
+        const url = `${BASE_URL}/booster/boost-order/available`;
 
         const response = await axios.get(url);
 
@@ -188,7 +188,7 @@ const api = (() => {
     }
 
     async function boosterTakeOrder(id) {
-        const url = `${BASE_URL}/boost-order/${id}?status=on-progress`;
+        const url = `${BASE_URL}/booster/boost-order/${id}?status=on-progress`;
 
         await axios.post(url, {})
             .then((res) => res.data.data)

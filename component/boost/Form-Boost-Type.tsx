@@ -153,7 +153,11 @@ export function NumberGame({
     }, [serviceName]);
 
     useEffect(() => {
-        sendData(num);
+        const delayDebounceFn = setTimeout(() => {
+            sendData(num);
+        }, 1000);
+
+        return () => clearTimeout(delayDebounceFn);
     }, [num]);
 
     return (
@@ -166,7 +170,7 @@ export function NumberGame({
                     <h1 className={styles['title-form']}>{title}</h1>
                 </div>
                 <div>
-                    <input className="fullwidth range-input mt-3" type="range" min={min} max={max} value={num} onChange={(e) => { setNum(+e.target.value); sendData(e.target.value); }} />
+                    <input className="fullwidth range-input mt-3" type="range" min={min} max={max} value={num} onChange={(e) => setNum(+e.target.value)} />
                 </div>
             </Col>
 
@@ -205,7 +209,11 @@ export function Points({
     }
 
     useEffect(() => {
-        sendData();
+        const delayDebounceFn = setTimeout(() => {
+            sendData();
+        }, 1000);
+
+        return () => clearTimeout(delayDebounceFn);
     }, [max, min]);
 
     useEffect(() => {
@@ -216,7 +224,7 @@ export function Points({
 
     useEffect(() => {
         sendData();
-    }, []);
+    }, [serviceName]);
 
     return (
         <Row className={styles.container}>
