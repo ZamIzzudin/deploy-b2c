@@ -282,7 +282,7 @@ function Payment() {
                                                         color: 'blue', layout: 'horizontal', tagline: false, shape: 'pill', height: 40
                                                     }}
                                                     amount={checkoutDetail?.total_price}
-                                                    onSuccess={() => paymentForm(null)}
+                                                    onSuccess={(e) => { paymentForm(null); console.log(e); }}
                                                 />
                                             </div>
                                             <div className={`${paymentMethod !== 'Metamask' && ('hide')}`}>
