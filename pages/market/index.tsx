@@ -105,9 +105,9 @@ function Market() {
                     <span className={filterSort === 'desc' ? ('active-org') : ('none')} onClick={() => { setFilterSort('desc'); }}>DESC</span>
                 </Col>
             </Row>
-            {accounts.data !== undefined ? (
+            {accounts.length !== 0 ? (
                 <Row className={`${styles['card-container']} centered`}>
-                    {accounts.data.map((i: any, index) => (
+                    {accounts?.map((i: any, index) => (
                         <AccountCard data={i} key={index} />
                     ))}
                 </Row>

@@ -32,7 +32,8 @@ function asyncUserGetBoostOrder() {
     return async (dispatch) => {
         try {
             const boostOrder = await api.userGetOrder();
-            dispatch(getBoostOrderAction(boostOrder.boost_order));
+            const data = boostOrder.boost_order.concat(boostOrder.finished_boost_order);
+            dispatch(getBoostOrderAction(data));
         } catch (err) {
             console.log(err.message);
         }
@@ -43,7 +44,8 @@ function asyncUserGetAccountOrder() {
     return async (dispatch) => {
         try {
             const boostOrder = await api.userGetOrder();
-            dispatch(getBoostOrderAction(boostOrder.account_order));
+            const data = boostOrder.account_order.concat(boostOrder.finished_account_order);
+            dispatch(getBoostOrderAction(data));
         } catch (err) {
             console.log(err.message);
         }

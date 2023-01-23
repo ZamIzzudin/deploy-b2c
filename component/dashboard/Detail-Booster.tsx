@@ -73,7 +73,7 @@ function DetailBooster() {
                     {orderTake.length !== 0 ? (
                         <Row className="fullwidth">
                             {orderTake?.map((order) => (
-                                <Col className="col-md-3 my-2 col-12" key={order?.boost_id}>
+                                <Col className="col-md-4 col-12 mb-3" key={order?.boost_id}>
                                     <div className="centered w-95-res card flex-down">
                                         <div className="fullwidth flex-right">
                                             <span className={styles['booster-card-date']}>{order?.order_date}</span>
@@ -123,7 +123,7 @@ function DetailBooster() {
                     <span>
                         Order ID :
                         {' '}
-                        {selectedOrder?.detail?.boost_order_id}
+                        {selectedOrder?.boost_id}
                     </span>
                     <span>
                         Total Price :
@@ -185,7 +185,7 @@ function DetailBooster() {
                 )}
                 <Row>
                     <Col className="mt-3">
-                        <button onClick={() => takeOrder(selectedOrder?.detail?.boost_order_id)} className="button-org capsule">Take Order</button>
+                        <button onClick={() => takeOrder(selectedOrder?.boost_id)} className="button-org capsule">Take Order</button>
                     </Col>
                 </Row>
             </DetailModal>

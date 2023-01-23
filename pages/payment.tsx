@@ -62,7 +62,7 @@ function Payment() {
 
     const dispatch = useAppDispatch();
 
-    async function paymentForm(e) {
+    async function paymentForm(e, data) {
         if (e !== null) {
             e.preventDefault();
         }
@@ -76,10 +76,11 @@ function Payment() {
             city: City,
             zip_code: zipCode,
             address: Address,
-            payment_method: paymentMethod
+            payment_method: paymentMethod,
+            payment_id: data.id,
         };
 
-        if (checkoutDetail !== 'Valorant Account') {
+        if (checkoutDetail.type !== 'Valorant Account') {
             const credential = {
                 username,
                 password
@@ -89,19 +90,17 @@ function Payment() {
                 boost_detail: checkoutDetail?.require,
                 add_ons: checkoutDetail?.add_ons,
                 total_price: checkoutDetail?.total_price,
-                notes: encrypt(JSON.stringify(credential))
+                notes: encrypt(JSON.stringify(credential)),
+                payment_id: data.id,
             };
         } else {
             serviceRequire = {
-                boost_detail: checkoutDetail?.require,
-                add_ons: checkoutDetail?.add_ons,
-                total_price: checkoutDetail?.total_price,
+                payment_id: data.id,
             };
         }
 
         if (accForm) {
             if (paymentMethod === 'Metamask') {
-                console.log('ini');
                 if (ethereum !== undefined) {
                     payMetamask(form, serviceRequire);
                 } else {
@@ -118,7 +117,7 @@ function Payment() {
             dispatch(asyncMakeBoostOrder(form, serviceRequire, checkoutDetail.type));
             router.push('/dashboard');
         } else {
-            dispatch(asyncMakeAccountOrder(form, checkoutDetail.id_account));
+            dispatch(asyncMakeAccountOrder(form, checkoutDetail.account_id));
             router.push('/dashboard');
         }
     }
@@ -160,6 +159,22 @@ function Payment() {
         }).catch((err) => {
             console.log(err);
         });
+    }
+
+    function validationForm() {
+        if (accForm) {
+            setAcc(false);
+        } else if (fullName !== '' && billingAddress !== '' && City !== '' && zipCode !== '' && Address !== '') {
+            if (checkoutDetail.type === 'Valorant Account') {
+                setAcc(true);
+            } else if (username !== '' && password !== '') {
+                setAcc(true);
+            } else {
+                setAcc(false);
+            }
+        } else {
+            setAcc(false);
+        }
     }
 
     useEffect(() => {
@@ -211,7 +226,7 @@ function Payment() {
                     {auth.role[0] === 'user' ? (
                         <Row className="flex-center-start">
                             <Col className="col-md-7 col-12 mb-4">
-                                <Form className="card" onSubmit={(e) => paymentForm(e)}>
+                                <Form className="card" onSubmit={(e) => paymentForm(e, null)}>
                                     <h3 className="section-subtitle">Payement Gateaway</h3>
                                     <Row>
                                         <Col className="p-4">
@@ -266,7 +281,7 @@ function Payment() {
                                     <Row>
                                         <div className="center-horizontal mb-3">
                                             <div>
-                                                <input type="checkbox" className="checkbox" onClick={() => setAcc(!accForm)} />
+                                                <input type="checkbox" className="checkbox" checked={accForm} onClick={() => validationForm()} />
                                             </div>
                                             <span className={`${styles['mini-text']} mx-2`}>
                                                 I confirm that all the entered information is accurate and I agree to your
@@ -275,20 +290,22 @@ function Payment() {
                                             </span>
                                         </div>
                                         <span className={styles['sub-mini-text']}>Further information will be requested after payment.</span>
-                                        <div className=" centered mt-4 px-5">
-                                            <div className={`${paymentMethod !== 'Paypal' && ('hide')}`}>
-                                                <PayPalButton
-                                                    style={{
-                                                        color: 'blue', layout: 'horizontal', tagline: false, shape: 'pill', height: 40
-                                                    }}
-                                                    amount={checkoutDetail?.total_price}
-                                                    onSuccess={(e) => { paymentForm(null); console.log(e); }}
-                                                />
+                                        {accForm && (
+                                            <div className=" centered mt-4 px-5">
+                                                <div className={`${paymentMethod !== 'Paypal' && scriptLoaded ? ('hide') : (null)}`}>
+                                                    <PayPalButton
+                                                        style={{
+                                                            color: 'blue', layout: 'horizontal', tagline: false, shape: 'pill', height: 40
+                                                        }}
+                                                        amount={checkoutDetail?.total_price}
+                                                        onSuccess={(data) => paymentForm(null, data)}
+                                                    />
+                                                </div>
+                                                <div className={`${paymentMethod !== 'Metamask' && ('hide')}`}>
+                                                    <button className="button capsule mb-2" type="submit">Pay Now</button>
+                                                </div>
                                             </div>
-                                            <div className={`${paymentMethod !== 'Metamask' && ('hide')}`}>
-                                                <button className="button capsule mb-2" type="submit">Pay Now</button>
-                                            </div>
-                                        </div>
+                                        )}
                                     </Row>
                                 </Form>
                             </Col>

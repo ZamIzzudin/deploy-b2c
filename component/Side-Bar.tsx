@@ -29,10 +29,6 @@ function SideBar(props: any) {
                             <i className="fa-solid fa-cart-shopping" />
                             <span className={styles.mobile}>Order</span>
                         </button>
-                        <button className={`${styles['list-item']} ${active === 'invoice' ? (styles.active) : ('')}`} onClick={() => setComponent('invoice')}>
-                            <i className="fa-solid fa-file-invoice-dollar" />
-                            <span className={styles.mobile}>Invoice</span>
-                        </button>
                     </div>
                 )}
                 {auth?.role[0] === 'booster' && (

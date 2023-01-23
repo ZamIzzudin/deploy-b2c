@@ -11,6 +11,7 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useAppDispatch } from '../../../hooks';
 import DetailModal from '../../Detail-Modal';
+import { decrypt } from '../../../utils/crypto';
 
 import { asyncBoosterGetBoostOrder } from '../../../state/orderList/action';
 
@@ -22,17 +23,23 @@ export default function BoosterOrder({ orders }) {
 
     const [selectedOrder, setSelectedOrder] = useState<any>();
     const [ShowDetailModal, setDetailModal] = useState(false);
+    const [ShowCredentialsModal, setCredentialsModal] = useState(false);
     const [ShowAttachModal, setAttachModal] = useState(false);
+
+    const [credentials, setCredentials] = useState<any>();
 
     const dispatch = useAppDispatch();
     const fileForm = useRef<any>();
 
     async function finishOrder(id) {
-        const url = `${process.env.API}/booster/boost-order/${id}?status=finished`;
+        const url = `${process.env.API}/booster/boost/${id}?status=finished`;
+        const form = new FormData();
 
-        await axios.post(url, {
-            boost_done_ss: newScreenshoot,
-        }).then((res) => {
+        newScreenshoot.forEach((image) => {
+            form.append('boost_done_ss', image);
+        });
+
+        await axios.post(url, form).then((res) => {
             dispatch(asyncBoosterGetBoostOrder());
         }).catch((err) => console.log(err));
     }
@@ -62,6 +69,11 @@ export default function BoosterOrder({ orders }) {
         setShowScreenShoot(showSS);
     }
 
+    function getCredentials(data) {
+        const accountCredential = decrypt(data.notes);
+        setCredentials(JSON.parse(accountCredential));
+    }
+
     useEffect(() => {
         dispatch(asyncBoosterGetBoostOrder());
     }, []);
@@ -89,7 +101,7 @@ export default function BoosterOrder({ orders }) {
                                 <button onClick={() => { setAttachModal(true); setSelectedOrder(order); }} className="capsule button-org-border">Finish</button>
                             )}
                             {order.status === 'On Progress' && (
-                                <button className="capsule button mx-2">Credential</button>
+                                <button onClick={() => { setCredentialsModal(true); getCredentials(order); }} className="capsule button mx-2">Credential</button>
                             )}
 
                             {order.status === 'Finished' && (
@@ -110,20 +122,30 @@ export default function BoosterOrder({ orders }) {
                 <Row>
                     <h5 className="text-org">General</h5>
                     <span>
-                        Order ID :
+                        Status :
                         {' '}
-                        {selectedOrder?.id}
+                        {selectedOrder?.status}
                     </span>
                     <span>
-                        Total Price :
-                        {' $'}
-                        {selectedOrder?.total_price}
+                        Order ID :
+                        {' '}
+                        {selectedOrder?.boost_id}
                     </span>
                     <span>
                         Order Date :
                         {' '}
                         {selectedOrder?.order_date}
                     </span>
+                    <span>
+                        Total Price :
+                        {' $'}
+                        {selectedOrder?.total_price}
+                    </span>
+                </Row>
+                <hr />
+                {/* Boost Detail */}
+                <Row>
+                    <h5 className="text-org">Spesification</h5>
                     <span>
                         Game :
                         {' '}
@@ -134,16 +156,6 @@ export default function BoosterOrder({ orders }) {
                         {' '}
                         {selectedOrder?.service}
                     </span>
-                    <span>
-                        Status :
-                        {' '}
-                        {selectedOrder?.status}
-                    </span>
-                </Row>
-                <hr />
-                {/* Boost Detail */}
-                <Row>
-                    <h5 className="text-org">Spesification</h5>
                     {
                         selectedOrder?.detail.boost_detail?.map((item) => (
                             <span className={styles['booster-detail-list']}>
@@ -170,6 +182,24 @@ export default function BoosterOrder({ orders }) {
                 )}
             </DetailModal>
             {/* Credential Modal */}
+            <DetailModal
+                show={ShowCredentialsModal}
+                onHide={() => setCredentialsModal(false)}
+            >
+                <h1>Credential</h1>
+                <Row>
+                    <span>
+                        Username :
+                        {' '}
+                        {credentials?.username}
+                    </span>
+                    <span>
+                        Password :
+                        {' '}
+                        {credentials?.password}
+                    </span>
+                </Row>
+            </DetailModal>
             {/* Finish Attachment */}
             <DetailModal
                 show={ShowAttachModal}
@@ -196,7 +226,7 @@ export default function BoosterOrder({ orders }) {
                     </Col>
                 </Row>
                 <Row>
-                    <button onClick={() => finishOrder(selectedOrder?.id)} className="button capsule">Finish Order</button>
+                    <button onClick={() => finishOrder(selectedOrder?.boost_id)} className="button capsule">Finish Order</button>
                 </Row>
             </DetailModal>
         </Table>

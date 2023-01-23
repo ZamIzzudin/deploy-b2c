@@ -62,12 +62,17 @@ function Checkout(props: any) {
         const tempRequire: any = [];
 
         boostDetail?.forEach((detail) => {
-            const require = {
-                [detail.title.toLowerCase().split(' ').join('_')]: detail[detail.title] || detail.name || detail.numberGame || detail.server || detail[detail.title].name || { start: detail.start, to: detail.to },
-            };
-
+            let require;
+            if (detail.title === 'platform') {
+                require = { platform: 'PC' };
+            } else {
+                require = {
+                    [detail.title.toLowerCase().split(' ').join('_')]: detail[detail.title.toLowerCase().split(' ').join('_')] || detail.name || detail.numberGame || detail.server || detail[detail.title].name || { start: detail[detail.title].start, to: detail[detail.title].to },
+                };
+            }
             tempRequire.push(require);
         });
+        console.log(tempRequire);
         data.require = tempRequire;
         dispatch(setCheckoutBoosting((data)));
     }

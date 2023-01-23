@@ -1,12 +1,12 @@
 import { Modal } from 'react-bootstrap';
 
 function DetailModal(props: any) {
-    const { children } = props;
+    const { children, sizing } = props;
     return (
         <Modal
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            size="md"
+            size={sizing === 'lg' ? ('lg') : ('md')}
             centered
         >
             <Modal.Body>

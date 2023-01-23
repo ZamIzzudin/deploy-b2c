@@ -11,14 +11,14 @@ export function DoubleIncludeRank({ details }) {
             <Row className="flex-horizon fullwidth">
                 <Col className="centered-down gap-2 pad-0">
                     <Image src={badges[0]?.badge || '/kosong.png'} width={65} height={65} />
-                    <span>{badges[0]?.name}</span>
+                    <span className="set2">{badges[0]?.name?.replace('_', ' ')}</span>
                 </Col>
                 <Col className="centered h-100 pad-0">
                     <Image src="/arrow.png" width={40} height={20} />
                 </Col>
                 <Col className="centered-down gap-2 pad-0">
                     <Image src={badges[1]?.badge || '/kosong.png'} width={65} height={65} />
-                    <span>{badges[1]?.name}</span>
+                    <span className="set2">{badges[1]?.name?.replace('_', ' ')}</span>
                 </Col>
             </Row>
         </Col>
@@ -43,12 +43,20 @@ export function RankAndGame({ details }) {
 
 export function NumberGame({ details }) {
     const display = details[0][details[0].title];
+
     return (
         <Col className="centered-down gap-2">
             <span className="content-text">
-                <b className="sec-font">{display}</b>
+                <b className="sec-font">
+                    {display}
+                    {details[0].title === 'Sell Coin /k' && ('K')}
+                </b>
                 {' '}
-                Game
+                {details[0].title === 'Sell Coin /k' ? (
+                    'Coins'
+                ) : (
+                    'Games'
+                )}
             </span>
         </Col>
     );

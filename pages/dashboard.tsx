@@ -20,7 +20,6 @@ import { useAppSelector } from '../hooks';
 import DetailOrder from '../component/dashboard/Detail-Order';
 import DetailMarket from '../component/dashboard/Detail-Market';
 import DetailBooster from '../component/dashboard/Detail-Booster';
-import DetailInvoice from '../component/dashboard/Detail-Invoice';
 import DetailOther from '../component/dashboard/Detail-Other';
 
 import { SideBar } from '../component';
@@ -61,7 +60,6 @@ function Dashboard() {
                             <Row className="full-width centered">
                                 {component === 'market' && (<DetailMarket />)}
                                 {component === 'order' && (<DetailOrder />)}
-                                {component === 'invoice' && (<DetailInvoice />)}
                                 {component === 'other' && (<DetailOther />)}
                                 {component === 'boost' && (<DetailBooster />)}
                             </Row>

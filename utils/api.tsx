@@ -4,16 +4,6 @@ import axios from 'axios';
 const api = (() => {
     const BASE_URL = process.env.API;
 
-    // function setConfig(token) {
-    //     return {
-    //         headers: {
-    //             Authorization: `Bearer ${token}`,
-    //             Accept: 'application/json',
-    //             'Content-Type': 'application/json',
-    //         },
-    //     };
-    // }
-
     async function Login(data) {
         const url = `${BASE_URL}/v1/auth/login`;
 
@@ -161,7 +151,7 @@ const api = (() => {
         const url = `${process.env.API}/boosts/${serviceName}`;
 
         await axios.post(url, serviceRequire).then(async (res) => {
-            await checkoutBoostOrder(res.data.data.id, form);
+            await checkoutBoostOrder(res.data.data.boost_id, form);
         });
     }
 
@@ -180,7 +170,7 @@ const api = (() => {
     }
 
     async function boosterSeeAvailableOrder() {
-        const url = `${BASE_URL}/booster/boost-order/available`;
+        const url = `${BASE_URL}/booster/boost/available`;
 
         const response = await axios.get(url);
 
@@ -188,7 +178,7 @@ const api = (() => {
     }
 
     async function boosterTakeOrder(id) {
-        const url = `${BASE_URL}/booster/boost-order/${id}?status=on-progress`;
+        const url = `${BASE_URL}/booster/boost/${id}?status=on-progress`;
 
         await axios.post(url, {})
             .then((res) => res.data.data)

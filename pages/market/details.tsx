@@ -14,6 +14,7 @@ import Image from 'next/image';
 import Head from 'next/head';
 
 import { Container, Row, Col } from 'react-bootstrap';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { SDetailAccount } from '../../component/Skeleton-Loading';
 import { ImageGalery } from '../../component';
@@ -29,7 +30,7 @@ function AccountDetails() {
         dispatch(setCheckoutAccount(accountDetail));
     }
 
-    const screenshoot = JSON.parse(accountDetail?.screenshots || '[]');
+    const screenshoot = accountDetail?.screenshots || '[]';
 
     return (
         <Container className="my-5 py-3">
@@ -41,7 +42,7 @@ function AccountDetails() {
             <Row>
                 <Col className="flex-down col-md-8 px-4 col-12">
                     <h1 className={styles['server-name']}>
-                        {accountDetail?.server?.name}
+                        {accountDetail?.server.name}
                         {' '}
                         <span className={styles['id-account']}>
                             /
@@ -118,19 +119,19 @@ function AccountDetails() {
                             <Row className={styles['stats-card']}>
                                 <Col className="flex-down col-8">
                                     <h3 className={styles['stats-card-title']}>Current Rank</h3>
-                                    <span className={styles['stats-card-subtitle']}>{accountDetail.current_rank?.name}</span>
+                                    <span className={styles['stats-card-subtitle']}>{accountDetail.current_rank.name}</span>
                                 </Col>
                                 <Col className="col-4">
-                                    <Image src={accountDetail.current_rank?.badge} width="100%" height="100%" />
+                                    <Image src={accountDetail.current_rank.badge} width="100%" height="100%" />
                                 </Col>
                             </Row>
                             <Row className={styles['stats-card']}>
                                 <Col className="flex-down col-8">
                                     <h3 className={styles['stats-card-title']}>Highest Rank</h3>
-                                    <span className={styles['stats-card-subtitle']}>{accountDetail.highest_rank?.name}</span>
+                                    <span className={styles['stats-card-subtitle']}>{accountDetail.highest_rank.name}</span>
                                 </Col>
                                 <Col className="col-4">
-                                    <Image src={accountDetail.highest_rank?.badge} width="100%" height="100%" />
+                                    <Image src={accountDetail.highest_rank.badge} width="100%" height="100%" />
                                 </Col>
                             </Row>
                         </div>

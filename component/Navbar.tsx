@@ -39,6 +39,8 @@ function TabBar() {
     const [scrollY, setScrollY] = useState(0);
     const [sideBar, setSideBar] = useState(false);
     const [modal, showModal] = useState(false);
+    const [mobile, setMobile] = useState(false);
+    const [showDropdown, setShowDropdown] = useState(false);
 
     const handleModal = () => {
         showModal(true);
@@ -68,6 +70,13 @@ function TabBar() {
     }, []);
 
     useEffect(() => {
+        const screenWidth = window.innerWidth;
+        if (screenWidth < 700) {
+            setMobile(true);
+        }
+    }, []);
+
+    useEffect(() => {
         dispatch(AsyncCheckLogin());
         dispatch(asyncGetAllGames());
         dispatch(asyncGetAllAccount());
@@ -92,12 +101,35 @@ function TabBar() {
                 <div className={styles['navbar-button']} onClick={() => setSideBar(false)}>
                     {auth.user.emailVerified ? (
                         <div className="gap-3 w-90 centered">
-                            <Link scroll href="/dashboard">
-                                <button className="button-border capsule">Profile</button>
-                            </Link>
-                            <span onClick={() => handleLogout()} className="button capsule">
-                                Logout
-                            </span>
+                            {mobile ? (
+                                <>
+                                    <Link scroll href="/dashboard">
+                                        <button className="button-border capsule">Profile</button>
+                                    </Link>
+                                    <span onClick={() => handleLogout()} className="button capsule">
+                                        Logout
+                                    </span>
+                                </>
+                            ) : (
+                                <div className={styles['navbar-dropdown']}>
+                                    <button onClick={() => setShowDropdown(!showDropdown)} className={`${styles['navbar-dropdown-button']} ${showDropdown && (styles.actived)}`}>
+                                        Hi,
+                                        {' '}
+                                        {auth.role[0]}
+                                    </button>
+                                    {showDropdown && (
+                                        <div className={styles['navbar-dropdown-list']}>
+                                            <Link scroll href="/dashboard">
+                                                Dashboard
+                                            </Link>
+                                            <hr />
+                                            <span onClick={() => handleLogout()}>
+                                                Logout
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     ) : (
                         <span onClick={() => handleModal()} className="button capsule">

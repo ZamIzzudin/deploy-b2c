@@ -41,7 +41,7 @@ function FormBoost(props: any) {
                 if (f.type === 'includeRank') {
                     return (<IncludeRank key={f.title} title={f.title} serviceName={titleService} />);
                 } if (f.type === 'gameNumber') {
-                    return (<NumberGame key={f.title} max={f.maxGameorder} min={f.minGameOrder} title={f.title} serviceName={titleService} />);
+                    return (<NumberGame key={f.title} max={f.maxGameOrder} min={f.minGameOrder} title={f.title} serviceName={titleService} />);
                 } if (f.type === 'points') {
                     return (<Points key={f.title} start={f.start} to={f.to} title={f.title} unit={f.unit} serviceName={titleService} />);
                 }

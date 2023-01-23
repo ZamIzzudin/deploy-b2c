@@ -105,7 +105,7 @@ export function ApexIncludeRank({
     }
 
     function getRank() {
-        const setupRank = { ...selectedRank, name: `${selectedRank.name} ${selectedDivision}` };
+        const setupRank = { ...selectedRank, name: `${selectedRank.name.toLowerCase()}_${selectedDivision}` };
         sendData(setupRank);
     }
 
@@ -130,6 +130,7 @@ export function ApexIncludeRank({
                     <div className={`${styles['division-list']} ${selectedDivision === 1 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(1)}>I</div>
                     <div className={`${styles['division-list']} ${selectedDivision === 2 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(2)}>II</div>
                     <div className={`${styles['division-list']} ${selectedDivision === 3 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(3)}>III</div>
+                    <div className={`${styles['division-list']} ${selectedDivision === 4 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(4)}>IV</div>
                 </Col>
             </Row>
         </div>
@@ -232,7 +233,7 @@ export function Points({
             <Row className="pt-1 pb-1 centered">
                 <Col className="col-md-6 col-12">
                     <Form.Group className="fullwidth py-4 centered-down">
-                        <span className="capitalized">
+                        <span className="capitalized set3">
                             Current
                             {' '}
                             {unit}
@@ -247,7 +248,7 @@ export function Points({
                 </Col>
                 <Col className="col-md-6 col-12">
                     <Form.Group className="fullwidth py-4 centered-down">
-                        <span className="capitalized">
+                        <span className="capitalized set3">
                             Desire
                             {' '}
                             {unit}
@@ -281,7 +282,7 @@ export function ListForm({
 
     return (
         <Col className="flex-down fullwidth">
-            <Form.Label>{title}</Form.Label>
+            <Form.Label className="set2">{title}</Form.Label>
             <Form.Select className="form-layout mb-4" onChange={(e) => sendData(e.target.value)}>
                 {items.map((item) => <option key={item} value={item}>{item}</option>)}
             </Form.Select>
@@ -320,7 +321,7 @@ export function NestedListForm({
 
     return (
         <Col className="flex-down fullwidth">
-            <Form.Label>{title}</Form.Label>
+            <Form.Label className="set2">{title}</Form.Label>
             <Form.Select className="form-layout mb-4" onChange={(e) => { setSelectedKey(e.target.value); setItemsByKey(items[e.target.value]); }}>
                 {keysItems.map((key) => <option key={key} value={key}>{key}</option>)}
             </Form.Select>
@@ -346,7 +347,7 @@ export function ServerSelect({
 
     return (
         <Col className="flex-down fullwidth">
-            <Form.Label>Select Your Server</Form.Label>
+            <Form.Label className="set2">Select Your Server</Form.Label>
             <Form.Select className="form-layout mb-4" onChange={(e) => sendData(e.target.value)}>
                 {servers.map((server) => <option key={server.name} value={server.name}>{server.name}</option>)}
             </Form.Select>

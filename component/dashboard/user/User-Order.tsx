@@ -8,8 +8,11 @@ import {
     Col, Form, Table, Row,
 } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useAppDispatch } from '../../../hooks';
 import DetailModal from '../../Detail-Modal';
+import ImageGalery from '../../ImageGalery';
+import { decrypt } from '../../../utils/crypto';
 
 import { asyncUserGetBoostOrder, asyncUserGetAccountOrder, asyncUserMakeReview } from '../../../state/orderList/action';
 
@@ -20,14 +23,18 @@ export default function UserOrder({ orders }) {
 
     const [selectedOrder, setSelectedOrder] = useState<any>();
     const [typeOrder, setTypeOrder] = useState('boost');
-    const [ShowDetailModal, setDetailModal] = useState(false);
 
+    const [ShowDetailModal, setDetailModal] = useState(false);
     const [ShowCredentialModal, setCredentialModal] = useState(false);
+    const [ShowAttachModal, setAttachModal] = useState(false);
+    const [ShowReviewModal, setReviewModal] = useState(false);
 
     const [titleReview, setTitleReview] = useState('');
     const [bodyReview, setBodyReview] = useState('');
     const [rateReview, setRateReview] = useState('0');
-    const [ShowReviewModal, setReviewModal] = useState(false);
+
+    const [credentials, setCredentials] = useState<any>();
+    const [attachments, setAttachments] = useState<any>([]);
 
     function clearForm() {
         setReviewModal(false);
@@ -54,6 +61,30 @@ export default function UserOrder({ orders }) {
         };
         dispatch(asyncUserMakeReview(data));
         clearForm();
+    }
+
+    function getCredentials(data) {
+        const accountCredential = {
+            email: decrypt(data?.detail?.account_credential?.account_email),
+            email_password: decrypt(data?.detail?.account_credential?.account_email_password),
+            username: decrypt(data?.detail?.account_credential?.account_username),
+            password: decrypt(data?.detail?.account_credential?.account_password),
+        };
+        setCredentials(accountCredential);
+    }
+
+    function seeAttachment(data) {
+        data.detail?.boost_done_ss.forEach(async (image) => {
+            await axios.get(image, {
+                responseType: 'blob',
+            })
+                .then((res: any) => res.data)
+                .then((imageBlob) => {
+                    const blobedImage = URL.createObjectURL(imageBlob);
+                    setAttachments([...attachments, blobedImage]);
+                    return () => URL.revokeObjectURL(blobedImage);
+                });
+        });
     }
 
     useEffect(() => {
@@ -91,13 +122,13 @@ export default function UserOrder({ orders }) {
                             <td>
                                 {order.status === 'Finished' && (
                                     <>
-                                        {typeOrder === 'Boost' ? (
-                                            <button className="capsule button">Attachment</button>
+                                        {typeOrder === 'boost' ? (
+                                            <button onClick={() => { setAttachModal(true); seeAttachment(order); }} className="capsule button">Attachment</button>
 
                                         ) : (
-                                            <button onClick={() => setCredentialModal(true)} className="capsule button mx-2">Credential</button>
+                                            <button onClick={() => { setCredentialModal(true); getCredentials(order); }} className="capsule button mx-1">Credential</button>
                                         )}
-                                        <button onClick={() => setReviewModal(true)} className="capsule button-org-border mx-2">Review</button>
+                                        <button onClick={() => setReviewModal(true)} className="capsule button-org-border mx-1">Review</button>
                                     </>
                                 )}
                                 <button onClick={() => { setDetailModal(true); setSelectedOrder(order); }} className="capsule button-org">Details</button>
@@ -116,9 +147,19 @@ export default function UserOrder({ orders }) {
                 <Row>
                     <h5 className="text-org">General</h5>
                     <span>
+                        Status :
+                        {' '}
+                        {selectedOrder?.status}
+                    </span>
+                    <span>
                         Order ID :
                         {' '}
-                        {selectedOrder?.detail.boost_order_id || selectedOrder?.detail.account_order_id}
+                        {selectedOrder?.detail.boost_id || selectedOrder?.detail.account_order_id}
+                    </span>
+                    <span>
+                        Order Date :
+                        {' '}
+                        {selectedOrder?.order_date}
                     </span>
                     {selectedOrder?.total_price !== undefined && (
                         <span>
@@ -132,32 +173,22 @@ export default function UserOrder({ orders }) {
                         {' '}
                         {selectedOrder?.payment}
                     </span>
-                    <span>
-                        Order Date :
-                        {' '}
-                        {selectedOrder?.order_date}
-                    </span>
-                    <span>
-                        Game :
-                        {' '}
-                        {selectedOrder?.game}
-                    </span>
-                    <span>
-                        Service :
-                        {' '}
-                        {selectedOrder?.service}
-                    </span>
-                    <span>
-                        Status :
-                        {' '}
-                        {selectedOrder?.status}
-                    </span>
                 </Row>
                 <hr />
                 {/* Boost Detail */}
                 <h5 className="text-org">Spesification</h5>
                 {selectedOrder?.detail.boost_detail !== undefined ? (
                     <Row>
+                        <span>
+                            Game :
+                            {' '}
+                            {selectedOrder?.game}
+                        </span>
+                        <span>
+                            Service :
+                            {' '}
+                            {selectedOrder?.service}
+                        </span>
                         {selectedOrder?.detail.boost_detail?.map((item) => (
                             <span className={styles['booster-detail-list']}>
                                 {`${Object.keys(item).toString().replace('_', ' ')} : ${item[Object.keys(item).toString()].start ? (`${item[Object.keys(item).toString()].start} - ${item[Object.keys(item).toString()].to}`) : (item[Object.keys(item).toString()])}`}
@@ -166,6 +197,16 @@ export default function UserOrder({ orders }) {
                     </Row>
                 ) : (
                     <Row>
+                        <span>
+                            Game :
+                            {' '}
+                            {selectedOrder?.game}
+                        </span>
+                        <span>
+                            Service :
+                            {' '}
+                            {selectedOrder?.service}
+                        </span>
                         {
                             selectedOrder?.detail.account_detail?.map((item) => (
                                 <span className={styles['booster-detail-list']}>
@@ -232,11 +273,41 @@ export default function UserOrder({ orders }) {
                 show={ShowCredentialModal}
                 onHide={() => setCredentialModal(false)}
             >
-                <h2>Your Credential</h2>
-                <div>
+                <h2>Credential</h2>
+                <Row>
                     <h5 className="text-org">Credential Account</h5>
-                    <span>Ini Credential</span>
-                </div>
+                    <span>
+                        Email :
+                        {' '}
+                        {credentials?.email}
+                    </span>
+                    <span>
+                        Email Password:
+                        {' '}
+                        {credentials?.email_password}
+                    </span>
+                    <span>
+                        Username :
+                        {' '}
+                        {credentials?.username}
+                    </span>
+                    <span>
+                        Password :
+                        {' '}
+                        {credentials?.password}
+                    </span>
+                </Row>
+            </DetailModal>
+            {/* Attachment Modal */}
+            <DetailModal
+                sizing="lg"
+                show={ShowAttachModal}
+                onHide={() => { setAttachModal(false); setAttachments([]); }}
+            >
+                <h2>Attachment</h2>
+                <Row>
+                    <ImageGalery images={attachments} />
+                </Row>
             </DetailModal>
             {/* Review Modal */}
             <DetailModal

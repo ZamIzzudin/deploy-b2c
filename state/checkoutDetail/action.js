@@ -49,7 +49,7 @@ function setCheckoutAccount(accountDetail) {
     return (dispatch) => {
         try {
             const checkoutAccountDetail = {
-                id_account: accountDetail.id,
+                account_id: accountDetail.account_id,
                 total_price: accountDetail.price,
                 service: 'Market',
                 type: 'Valorant Account',

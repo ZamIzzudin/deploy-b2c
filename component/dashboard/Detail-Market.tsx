@@ -195,15 +195,15 @@ function DetailMarket() {
         setNewAgents(data.agent_list);
         setNewHighestRank(data.highest_rank_id);
         setNewAccountPrice(data.price);
-        setNewAccountServer(data.server_id);
+        setNewAccountServer(data.server);
         setNewCurrentRank(data.current_rank_id);
         setNewAccountDesc(data.description);
-        setCurrentScreenShoot(JSON.parse(data.screenshots));
-        setId(data.id);
-        setAccountEmail(decrypt(data.account_email));
-        setAccountEmailPass(decrypt(data.account_email_password));
-        setAccountUsername(decrypt(data.account_username));
-        setAccountPass(decrypt(data.account_password));
+        setCurrentScreenShoot(data.screenshots);
+        setId(data.account_id);
+        setAccountEmail(decrypt(data?.account_email));
+        setAccountEmailPass(decrypt(data?.account_email_password));
+        setAccountUsername(decrypt(data?.account_username));
+        setAccountPass(decrypt(data?.account_password));
     }
 
     // Form Utils
@@ -321,12 +321,12 @@ function DetailMarket() {
                         </Col>
                     </Row>
                     <Row className={`${styles['card-container']} centered`}>
-                        {accounts.data.map((i: any, index) => (
+                        {accounts?.map((i: any, index) => (
                             <AccountCard data={i} key={index} setModal={setModal} getCurrent={getCurrentAccount} manage />
                         ))}
                     </Row>
                     <Row className="mt-4 mb-3">
-                        {accounts.last_page && (
+                        {accounts?.last_page && (
                             <Col>
                                 <Pagination className={styles['pagination-container']}>
                                     {paginationPage > 1 && (
