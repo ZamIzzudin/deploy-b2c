@@ -4,7 +4,7 @@ import { Carousel } from 'react-bootstrap';
 function ImageGalery({ images }) {
     return (
         <Carousel>
-            {images?.map((image, index) => (
+            {images.map((image, index) => (
                 <Carousel.Item interval={5000 * index}>
                     <img
                         className="d-block w-100"
@@ -13,7 +13,6 @@ function ImageGalery({ images }) {
                     />
                 </Carousel.Item>
             ))}
-
         </Carousel>
     );
 }

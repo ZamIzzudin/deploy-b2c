@@ -30,7 +30,7 @@ function AccountDetails() {
         dispatch(setCheckoutAccount(accountDetail));
     }
 
-    const screenshoot = accountDetail?.screenshots || '[]';
+    const screenshoot = accountDetail?.screenshots || [];
 
     return (
         <Container className="my-5 py-3">
@@ -42,7 +42,7 @@ function AccountDetails() {
             <Row>
                 <Col className="flex-down col-md-8 px-4 col-12">
                     <h1 className={styles['server-name']}>
-                        {accountDetail?.server.name}
+                        {accountDetail?.server?.name}
                         {' '}
                         <span className={styles['id-account']}>
                             /
@@ -88,7 +88,7 @@ function AccountDetails() {
                             </div>
                         </Col>
                     )}
-                    {accountDetail.skin_list.length > 0 && (
+                    {accountDetail?.skin_list.length > 0 && (
                         <Col className="col-6 col-md-4 mb-3 pad-left-1-res">
                             <div className="w-95-res center-start card">
                                 <h2 className={styles['detail-account-title']}>Skin</h2>
@@ -122,7 +122,7 @@ function AccountDetails() {
                                     <span className={styles['stats-card-subtitle']}>{accountDetail.current_rank.name}</span>
                                 </Col>
                                 <Col className="col-4">
-                                    <Image src={accountDetail.current_rank.badge} width="100%" height="100%" />
+                                    <Image src={accountDetail.current_rank?.badge} width="100%" height="100%" />
                                 </Col>
                             </Row>
                             <Row className={styles['stats-card']}>
@@ -131,7 +131,7 @@ function AccountDetails() {
                                     <span className={styles['stats-card-subtitle']}>{accountDetail.highest_rank.name}</span>
                                 </Col>
                                 <Col className="col-4">
-                                    <Image src={accountDetail.highest_rank.badge} width="100%" height="100%" />
+                                    <Image src={accountDetail.highest_rank?.badge} width="100%" height="100%" />
                                 </Col>
                             </Row>
                         </div>
@@ -140,7 +140,7 @@ function AccountDetails() {
             ) : (
                 <SDetailAccount />
             )}
-            {screenshoot.length > 0 ? (
+            {screenshoot?.length > 0 ? (
                 <Row className="mt-4 px-4">
                     <ImageGalery images={screenshoot} />
                 </Row>
