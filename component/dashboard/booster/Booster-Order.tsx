@@ -1,10 +1,11 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/button-has-type */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
 /* eslint-disable no-unused-vars */
 import {
-    Table, Row, Col,
+    Table, Row, Col, Pagination,
 } from 'react-bootstrap';
 import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
@@ -28,6 +29,9 @@ export default function BoosterOrder({ orders }) {
 
     const [credentials, setCredentials] = useState<any>();
 
+    const [paginationPage, setPaginationPage] = useState(1);
+    const pagination: any = [];
+
     const dispatch = useAppDispatch();
     const fileForm = useRef<any>();
 
@@ -41,6 +45,7 @@ export default function BoosterOrder({ orders }) {
 
         await axios.post(url, form).then((res) => {
             dispatch(asyncBoosterGetBoostOrder());
+            setAttachModal(false);
         }).catch((err) => console.log(err));
     }
 
@@ -75,43 +80,73 @@ export default function BoosterOrder({ orders }) {
     }
 
     useEffect(() => {
-        dispatch(asyncBoosterGetBoostOrder());
-    }, []);
+        dispatch(asyncBoosterGetBoostOrder(paginationPage));
+    }, [paginationPage]);
+
+    for (let i = 1; i <= orders?.last_page; i++) {
+        pagination.push(
+            <Pagination.Item className="pagination-items mx-1" key={i} active={i === paginationPage} onClick={() => setPaginationPage(i)}>
+                {i}
+            </Pagination.Item>,
+        );
+    }
 
     return (
-        <Table responsive="sm" borderless>
-            <thead>
-                <tr>
-                    <th>Order Date</th>
-                    <th>Game</th>
-                    <th>Service</th>
-                    <th>Status</th>
-                    <th>Details</th>
-                </tr>
-            </thead>
-            <tbody>
-                {orders?.map((order) => (
-                    <tr key={order.boost_id}>
-                        <td>{order.order_date}</td>
-                        <td>{order.game}</td>
-                        <td>{order.service}</td>
-                        <td>{order.status}</td>
-                        <td>
-                            {order.status !== 'Finished' && (
-                                <button onClick={() => { setAttachModal(true); setSelectedOrder(order); }} className="capsule button-org-border">Finish</button>
-                            )}
-                            {order.status === 'On Progress' && (
-                                <button onClick={() => { setCredentialsModal(true); getCredentials(order); }} className="capsule button mx-2">Credential</button>
+        <div>
+            <Table responsive="sm" borderless>
+                <thead>
+                    <tr>
+                        <th>Order Date</th>
+                        <th>Game</th>
+                        <th>Service</th>
+                        <th>Status</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {orders?.data?.map((order) => (
+                        <tr key={order.boost_id}>
+                            <td>{order.order_date}</td>
+                            <td>{order.game}</td>
+                            <td>{order.service}</td>
+                            <td>{order.status}</td>
+                            <td>
+                                {order.status !== 'Finished' && (
+                                    <button onClick={() => { setAttachModal(true); setSelectedOrder(order); }} className="capsule button-org-border">Finish</button>
+                                )}
+                                {order.status === 'On Progress' && (
+                                    <button onClick={() => { setCredentialsModal(true); getCredentials(order); }} className="capsule button mx-2">Credential</button>
+                                )}
+
+                                {order.status === 'Finished' && (
+                                    <button className="capsule button mx-2">Attachment</button>
+                                )}
+                                <button onClick={() => { setDetailModal(true); setSelectedOrder(order); }} className="capsule button-org">Details</button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
+
+            {/* Pagination */}
+            <Row className="mt-4 mb-3">
+                {orders?.last_page && (
+                    <Col>
+                        <Pagination className={styles['pagination-container']}>
+                            {paginationPage > 1 && (
+                                <Pagination.Prev className="mx-1" onClick={() => setPaginationPage(paginationPage - 1)} />
                             )}
 
-                            {order.status === 'Finished' && (
-                                <button className="capsule button mx-2">Attachment</button>
+                            {pagination}
+
+                            {paginationPage !== orders.last_page && (
+                                <Pagination.Next className="mx-1" onClick={() => setPaginationPage(paginationPage + 1)} />
                             )}
-                            <button onClick={() => { setDetailModal(true); setSelectedOrder(order); }} className="capsule button-org">Details</button>
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
+                        </Pagination>
+                    </Col>
+                )}
+            </Row>
+
             {/* Detail Modal */}
             <DetailModal
                 show={ShowDetailModal}
@@ -181,6 +216,7 @@ export default function BoosterOrder({ orders }) {
                     </Row>
                 )}
             </DetailModal>
+
             {/* Credential Modal */}
             <DetailModal
                 show={ShowCredentialsModal}
@@ -200,6 +236,7 @@ export default function BoosterOrder({ orders }) {
                     </span>
                 </Row>
             </DetailModal>
+
             {/* Finish Attachment */}
             <DetailModal
                 show={ShowAttachModal}
@@ -229,6 +266,6 @@ export default function BoosterOrder({ orders }) {
                     <button onClick={() => finishOrder(selectedOrder?.boost_id)} className="button capsule">Finish Order</button>
                 </Row>
             </DetailModal>
-        </Table>
+        </div>
     );
 }

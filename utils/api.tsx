@@ -36,16 +36,8 @@ const api = (() => {
         return games;
     }
 
-    async function getAllAccountsMarket() {
-        const url = `${BASE_URL}/accounts`;
-
-        const accounts = await axios.get(url);
-
-        return accounts;
-    }
-
-    async function getAllAccountsMarketByFilter(sort, rankID, serverID) {
-        let url = `${BASE_URL}/accounts/?sortOrder=${sort}`;
+    async function getAdminAllAccountsMarket(page, sort, rankID, serverID) {
+        let url = `${BASE_URL}/admin/accounts?page=${page}?sortOrder=${sort}`;
         let accounts = {};
 
         if (rankID === 'All' || serverID === 'All') {
@@ -62,11 +54,21 @@ const api = (() => {
         return accounts;
     }
 
-    async function showAccountsWithPagination(page) {
-        const url = `${BASE_URL}/accounts/?page=${page}`;
+    async function getAllAccountsMarketByFilter(page, sort, rankID, serverID) {
+        let url = `${BASE_URL}/accounts?page=${page}?sortOrder=${sort}`;
+        let accounts = {};
 
-        const accounts = await axios.get(url);
-
+        if (rankID === 'All' || serverID === 'All') {
+            accounts = await axios.get(url);
+        }
+        if (rankID !== 'All') {
+            url += `&rank=${rankID}`;
+            accounts = await axios.get(url);
+        }
+        if (serverID !== 'All') {
+            url += `&server_region=${serverID}`;
+            accounts = await axios.get(url);
+        }
         return accounts;
     }
 
@@ -102,32 +104,40 @@ const api = (() => {
         return price;
     }
 
-    async function userGetOrder() {
-        const url = `${BASE_URL}/profile/detail`;
+    async function userGetAccountOrder(page) {
+        const url = `${BASE_URL}/profile/detail?page${page}`;
 
         const orders = await axios.get(url);
 
         return orders.data;
     }
 
-    async function boosterGetBoost() {
-        const url = `${BASE_URL}/booster/detail`;
+    async function userGetBoostOrder(page) {
+        const url = `${BASE_URL}/profile/detail/boost?page${page}`;
+
+        const orders = await axios.get(url);
+
+        return orders.data;
+    }
+
+    async function boosterGetBoost(page) {
+        const url = `${BASE_URL}/booster/detail?page${page}`;
 
         const orders = await axios.get(url);
 
         return orders.data.data;
     }
 
-    async function adminGetBoost() {
-        const url = `${BASE_URL}/admin/boosts`;
+    async function adminGetBoost(page) {
+        const url = `${BASE_URL}/admin/boosts?page${page}`;
 
         const orders = await axios.get(url);
 
         return orders.data.data;
     }
 
-    async function adminGetAccount() {
-        const url = `${BASE_URL}/admin/account-orders`;
+    async function adminGetAccount(page) {
+        const url = `${BASE_URL}/admin/account-orders?page${page}`;
 
         const orders = await axios.get(url);
 
@@ -234,20 +244,20 @@ const api = (() => {
         GoogleLogin,
         Register,
         getAllGames,
-        getAllAccountsMarket,
+        getAdminAllAccountsMarket,
         getAllAccountsMarketByFilter,
-        showAccountsWithPagination,
         getAllRanks,
         getAllServers,
         getServicesPerGame,
         calculatePrice,
+        userGetAccountOrder,
+        userGetBoostOrder,
         boosterGetBoost,
         adminGetBoost,
         adminGetAccount,
         adminChangeStatusAccountOrder,
         makeBoostOrder,
         checkoutAccountOrder,
-        userGetOrder,
         userMakeReview,
         boosterSeeAvailableOrder,
         boosterTakeOrder,

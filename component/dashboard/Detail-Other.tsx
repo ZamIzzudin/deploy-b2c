@@ -30,6 +30,7 @@ function DetailOther() {
     const dispatch = useAppDispatch();
 
     const [addFaqModal, showAddFaqModal] = useState(false);
+    const [addReviewModal, showAddReviewModal] = useState(false);
     const [editFaqModal, showEditFaqModal] = useState(false);
 
     const [newQuestion, setNewQuestion] = useState<any>();
@@ -37,11 +38,15 @@ function DetailOther() {
     const [selectedFaqID, setSelectedFaqID] = useState<any>();
 
     const [users, setUsers] = useState<any>([]);
+    const [reviewsShown, setReviewShown] = useState<any>([]);
+    const [reviewsAll, setReviewAll] = useState<any>([]);
 
     async function getUsers() {
         const url = `${process.env.API}/admin/users?role=user`;
 
-        await axios.get(url).then((res) => setUsers(res.data.data)).catch((err) => console.log(err));
+        await axios.get(url)
+            .then((res) => setUsers(res.data.data))
+            .catch((err) => console.log(err));
     }
 
     // Function to get spesfic data about FAQ
@@ -97,17 +102,49 @@ function DetailOther() {
         setSelectedFaqID(null);
     }
 
+    async function getReviews() {
+        const url = `${process.env.API}/reviews`;
+
+        await axios.get(url)
+            .then((res) => {
+                setReviewShown(res.data.shown_reviews);
+                setReviewAll(res.data.all_review);
+            })
+            .catch((err) => console.log(err));
+    }
+
+    async function showReviews(id) {
+        const url = `${process.env.API}/reviews/${id}`;
+
+        const status = { is_shown: true };
+
+        await axios.put(url, status)
+            .then((res) => { getReviews(); showAddReviewModal(false); })
+            .catch((err) => console.log(err));
+    }
+
+    async function hideReviews(id) {
+        const url = `${process.env.API}/reviews/${id}`;
+
+        const status = { is_shown: false };
+
+        await axios.put(url, status)
+            .then((res) => getReviews())
+            .catch((err) => console.log(err));
+    }
+
     // Get data when load the page
     useEffect(() => {
         dispatch(asyncGetAllFAQ());
         getUsers();
+        getReviews();
     }, []);
 
     return (
         <>
             {auth?.role[0] === 'admin' ? (
                 <Row className="centered-start mt-4">
-                    <Col className=" col-md-6 px-3">
+                    <Col className=" col-md-6 px-3 mb-4">
                         <div className="card fullwidth">
                             <h3 className="sec-font">Manage FAQ</h3>
                             {/* Looping All FAQ that exist */}
@@ -130,11 +167,11 @@ function DetailOther() {
                             </div>
                             {/* Add FAQ Button */}
                             <div>
-                                <button className="button capsule" onClick={() => showAddFaqModal(true)}>Add FAQ</button>
+                                <button className="button capsule" onClick={() => showAddFaqModal(true)}>Add</button>
                             </div>
                         </div>
                     </Col>
-                    <Col className=" col-md-6 px-3">
+                    <Col className=" col-md-6 px-3 mb-4">
                         <div className="card fullwidth">
                             <h3 className="sec-font">Manage Booster Account</h3>
                             <div className={styles['list-container']}>
@@ -149,6 +186,27 @@ function DetailOther() {
                                         </div>
                                     </div>
                                 ))}
+                            </div>
+                        </div>
+                    </Col>
+                    <Col className=" col-md-6 px-3 mb-4">
+                        <div className="card fullwidth">
+                            <h3 className="sec-font">Manage Review</h3>
+                            <div className={styles['list-container']}>
+                                {reviewsShown?.map((review) => (
+                                    <div className={styles['FAQ-card']} key={review.id}>
+                                        <span>{review.review_title}</span>
+                                        <div className={styles['button-container']}>
+                                            {/* Delete FAQ Button */}
+                                            <button className={styles['delete-btn']} onClick={() => hideReviews(review.id)}>
+                                                <i className="fa-solid fa-trash-can" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div>
+                                <button className="button capsule" onClick={() => showAddReviewModal(true)}>Add</button>
                             </div>
                         </div>
                     </Col>
@@ -181,6 +239,27 @@ function DetailOther() {
                             <Form.Control className="form-layout mb-2" value={newAnswer} onChange={(e) => setNewAnswer(e.target.value)} />
                             <button className="button capsule mt-2" type="submit">Edit</button>
                         </Form>
+                    </DetailModal>
+
+                    {/* Add Shown Review Modal */}
+                    <DetailModal
+                        show={addReviewModal}
+                        onHide={() => showAddReviewModal(false)}
+                    >
+                        <h1>Show Review</h1>
+                        <div className={styles['list-container']}>
+                            {reviewsAll?.map((review) => (
+                                <div className={styles['FAQ-card']} key={review.id}>
+                                    <span>{review.review_title}</span>
+                                    <div className={styles['button-container']}>
+                                        {/* Delete FAQ Button */}
+                                        <button className={styles['delete-btn']} onClick={() => showReviews(review.id)}>
+                                            <i className="fa-solid fa-pen" />
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </DetailModal>
                 </Row>
             ) : (

@@ -62,11 +62,7 @@ function Payment() {
 
     const dispatch = useAppDispatch();
 
-    async function paymentForm(e, data) {
-        if (e !== null) {
-            e.preventDefault();
-        }
-
+    async function paymentForm(data) {
         let serviceRequire;
 
         const form = {
@@ -77,7 +73,7 @@ function Payment() {
             zip_code: zipCode,
             address: Address,
             payment_method: paymentMethod,
-            payment_id: data.id,
+            payment_id: data?.id || data?.hash,
         };
 
         if (checkoutDetail.type !== 'Valorant Account') {
@@ -91,25 +87,15 @@ function Payment() {
                 add_ons: checkoutDetail?.add_ons,
                 total_price: checkoutDetail?.total_price,
                 notes: encrypt(JSON.stringify(credential)),
-                payment_id: data.id,
+                payment_id: data?.id || data?.hash,
             };
         } else {
             serviceRequire = {
-                payment_id: data.id,
+                payment_id: data?.id || data?.hash,
             };
         }
 
-        if (accForm) {
-            if (paymentMethod === 'Metamask') {
-                if (ethereum !== undefined) {
-                    payMetamask(form, serviceRequire);
-                } else {
-                    alert('You have to install Metamask first');
-                }
-            } else {
-                await doPayment(form, serviceRequire);
-            }
-        }
+        await doPayment(form, serviceRequire);
     }
 
     async function doPayment(form, serviceRequire) {
@@ -147,18 +133,24 @@ function Payment() {
         setTotalPrice(priceConverted);
     }
 
-    async function payMetamask(form, serviceRequire) {
-        await ethereum.send('eth_requestAccounts');
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        await signer.sendTransaction({
-            to: process.env.CRYPTO_WALLET_ADDRESS,
-            value: ethers.utils.parseEther(totalPrice)
-        }).then(async (res) => {
-            await doPayment(form, serviceRequire);
-        }).catch((err) => {
-            console.log(err);
-        });
+    async function payMetamask(e) {
+        e.preventDefault();
+        if (ethereum !== undefined) {
+            await ethereum.send('eth_requestAccounts');
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            await signer.sendTransaction({
+                to: process.env.CRYPTO_WALLET_ADDRESS,
+                value: ethers.utils.parseEther(totalPrice),
+            })
+                .then((res) => {
+                    paymentForm(res);
+                }).catch((err) => {
+                    alert('Payment Cancelled');
+                });
+        } else {
+            alert('You have to install Metamask first');
+        }
     }
 
     function validationForm() {
@@ -226,7 +218,7 @@ function Payment() {
                     {auth.role[0] === 'user' ? (
                         <Row className="flex-center-start">
                             <Col className="col-md-7 col-12 mb-4">
-                                <Form className="card" onSubmit={(e) => paymentForm(e, null)}>
+                                <Form className="card" onSubmit={(e) => payMetamask(e)}>
                                     <h3 className="section-subtitle">Payement Gateaway</h3>
                                     <Row>
                                         <Col className="p-4">
@@ -298,7 +290,7 @@ function Payment() {
                                                             color: 'blue', layout: 'horizontal', tagline: false, shape: 'pill', height: 40
                                                         }}
                                                         amount={checkoutDetail?.total_price}
-                                                        onSuccess={(data) => paymentForm(null, data)}
+                                                        onSuccess={(data) => paymentForm(data)}
                                                     />
                                                 </div>
                                                 <div className={`${paymentMethod !== 'Metamask' && ('hide')}`}>

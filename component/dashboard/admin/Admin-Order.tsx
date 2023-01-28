@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable max-len */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
@@ -5,7 +6,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import {
-    Col, Form, Table, Row,
+    Col, Form, Table, Row, Pagination,
 } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -29,13 +30,16 @@ export default function AdminOrder({ orders }) {
     const [credentials, setCredentials] = useState<any>();
     const [attachments, setAttachments] = useState<any>([]);
 
+    const [paginationPage, setPaginationPage] = useState(1);
+    const pagination: any = [];
+
     const dispatch = useAppDispatch();
 
-    function getOrderByType() {
+    function getOrderByType(page) {
         if (typeOrder === 'boost') {
-            dispatch(asyncAdminGetBoostOrder());
+            dispatch(asyncAdminGetBoostOrder(page));
         } else {
-            dispatch(asyncAdminGetAccountOrder());
+            dispatch(asyncAdminGetAccountOrder(page));
         }
     }
 
@@ -64,8 +68,16 @@ export default function AdminOrder({ orders }) {
     }
 
     useEffect(() => {
-        getOrderByType();
-    }, [typeOrder]);
+        getOrderByType(paginationPage);
+    }, [typeOrder, paginationPage]);
+
+    for (let i = 1; i <= orders?.last_page; i++) {
+        pagination.push(
+            <Pagination.Item className="pagination-items mx-1" key={i} active={i === paginationPage} onClick={() => setPaginationPage(i)}>
+                {i}
+            </Pagination.Item>,
+        );
+    }
 
     return (
         <div>
@@ -89,7 +101,7 @@ export default function AdminOrder({ orders }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {orders?.map((order) => (
+                    {orders?.data?.map((order) => (
                         <tr key={order.boost_id}>
                             <td>{order.order_date || order.order_created.slice(0, 10)}</td>
                             <td>{order.game_name || order.game}</td>
@@ -112,6 +124,26 @@ export default function AdminOrder({ orders }) {
                     ))}
                 </tbody>
             </Table>
+
+            {/* Pagination */}
+            <Row className="mt-4 mb-3">
+                {orders?.last_page && (
+                    <Col>
+                        <Pagination className={styles['pagination-container']}>
+                            {paginationPage > 1 && (
+                                <Pagination.Prev className="mx-1" onClick={() => setPaginationPage(paginationPage - 1)} />
+                            )}
+
+                            {pagination}
+
+                            {paginationPage !== orders.last_page && (
+                                <Pagination.Next className="mx-1" onClick={() => setPaginationPage(paginationPage + 1)} />
+                            )}
+                        </Pagination>
+                    </Col>
+                )}
+            </Row>
+
             {/* Detail Modal */}
             <DetailModal
                 show={ShowDetailModal}
@@ -135,6 +167,16 @@ export default function AdminOrder({ orders }) {
                         Order Date :
                         {' '}
                         {selectedOrder?.order_date}
+                    </span>
+                    <span>
+                        Customer Username :
+                        {' '}
+                        {selectedOrder?.user_name}
+                    </span>
+                    <span>
+                        Booster Username :
+                        {' '}
+                        {selectedOrder?.booster_name}
                     </span>
                     <span>
                         Total Price :
@@ -204,6 +246,35 @@ export default function AdminOrder({ orders }) {
                         )}
                     </Row>
                 )}
+                <Row>
+                    <h5 className="text-org">Customer Address</h5>
+                    <span>
+                        Name :
+                        {' '}
+                        {selectedOrder?.address.full_name}
+                    </span>
+                    <span>
+                        Country :
+                        {' '}
+                        {selectedOrder?.address.country}
+                    </span>
+                    <span>
+                        City :
+                        {' '}
+                        {selectedOrder?.address.city}
+                    </span>
+                    <span>
+                        Billing Address :
+                        {' '}
+                        {selectedOrder?.address.billing_address}
+                    </span>
+                    <span>
+                        Zip Code :
+                        {' '}
+                        {selectedOrder?.address.zip_code}
+                    </span>
+                </Row>
+                <hr />
                 {/* Credential */}
                 {credentials?.username !== undefined && (
                     <Row>

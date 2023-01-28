@@ -20,10 +20,11 @@ function getAllAccountAction(accounts) {
 }
 
 // Middleware
-function asyncGetAllAccount() {
+
+function asyncAdminGetAllAccountByFilter(page = 1, sort = 'asc', rank = 'All', server = 'All') {
     return async (dispatch) => {
         try {
-            const { accounts } = await (await api.getAllAccountsMarket()).data;
+            const { accounts } = await (await api.getAdminAllAccountsMarket(page, sort, rank, server)).data;
             dispatch(getAllAccountAction(accounts));
         } catch (err) {
             dispatch(handleShowErrorPage());
@@ -31,31 +32,18 @@ function asyncGetAllAccount() {
     };
 }
 
-function asyncGetAllAccountByFilter(sort = 'asc', rank = 'All', server = 'All') {
+function asyncGetAllAccountByFilter(page = 1, sort = 'asc', rank = 'All', server = 'All') {
     return async (dispatch) => {
         try {
-            const { accounts } = await (await api.getAllAccountsMarketByFilter(sort, rank, server)).data;
+            const { accounts } = await (await api.getAllAccountsMarketByFilter(page, sort, rank, server)).data;
             dispatch(getAllAccountAction(accounts));
         } catch (err) {
             dispatch(handleShowErrorPage());
         }
     };
 }
-
-function asyncShowAccountsWithPagination(page) {
-    return async (dispatch) => {
-        try {
-            const { accounts } = await (await api.showAccountsWithPagination(page)).data;
-            dispatch(getAllAccountAction(accounts));
-        } catch (err) {
-            dispatch(handleShowErrorPage());
-        }
-    };
-}
-
 export {
     ActionType,
-    asyncGetAllAccount,
+    asyncAdminGetAllAccountByFilter,
     asyncGetAllAccountByFilter,
-    asyncShowAccountsWithPagination,
 };

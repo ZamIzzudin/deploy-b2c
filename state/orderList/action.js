@@ -28,34 +28,41 @@ function getAccountOrderAction(accountOrder) {
 }
 
 // Middleware
-function asyncUserGetBoostOrder() {
+function asyncUserGetBoostOrder(page = 1) {
     return async (dispatch) => {
         try {
-            const boostOrder = await api.userGetOrder();
-            const data = boostOrder.boost_order.concat(boostOrder.finished_boost_order);
-            dispatch(getBoostOrderAction(data));
+            const boostOrder = await api.userGetBoostOrder(page);
+
+            const order = {
+                ...boostOrder.boost_order,
+                data: boostOrder.boost_order.data.concat(boostOrder.finished_boost_order.data) || [],
+            };
+            dispatch(getBoostOrderAction(order));
         } catch (err) {
             console.log(err.message);
         }
     };
 }
 
-function asyncUserGetAccountOrder() {
+function asyncUserGetAccountOrder(page = 1) {
     return async (dispatch) => {
         try {
-            const boostOrder = await api.userGetOrder();
-            const data = boostOrder.account_order.concat(boostOrder.finished_account_order);
-            dispatch(getBoostOrderAction(data));
+            const boostOrder = await api.userGetAccountOrder(page);
+            const order = {
+                ...boostOrder.account_order,
+                data: boostOrder.account_order.data.concat(boostOrder.finished_account_order.data) || [],
+            };
+            dispatch(getBoostOrderAction(order));
         } catch (err) {
             console.log(err.message);
         }
     };
 }
 
-function asyncBoosterGetBoostOrder() {
+function asyncBoosterGetBoostOrder(page = 1) {
     return async (dispatch) => {
         try {
-            const boostOrder = await api.boosterGetBoost();
+            const boostOrder = await api.boosterGetBoost(page);
             dispatch(getBoostOrderAction(boostOrder));
         } catch (err) {
             console.log(err.message);
@@ -63,10 +70,10 @@ function asyncBoosterGetBoostOrder() {
     };
 }
 
-function asyncAdminGetBoostOrder() {
+function asyncAdminGetBoostOrder(page = 1) {
     return async (dispatch) => {
         try {
-            const boostOrder = await api.adminGetBoost();
+            const boostOrder = await api.adminGetBoost(page);
             dispatch(getBoostOrderAction(boostOrder));
         } catch (err) {
             console.log(err.message);
@@ -74,10 +81,10 @@ function asyncAdminGetBoostOrder() {
     };
 }
 
-function asyncAdminGetAccountOrder() {
+function asyncAdminGetAccountOrder(page = 1) {
     return async (dispatch) => {
         try {
-            const accountOrder = await api.adminGetAccount();
+            const accountOrder = await api.adminGetAccount(page);
             dispatch(getAccountOrderAction(accountOrder));
         } catch (err) {
             console.log(err.message);

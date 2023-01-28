@@ -2,7 +2,7 @@
 /* eslint-disable import/extensions */
 import api from '../../utils/api';
 import { asyncAdminGetAccountOrder } from '../orderList/action';
-import { asyncGetAllAccount } from '../accounts/action';
+import { asyncAdminGetAllAccountByFilter } from '../accounts/action';
 
 function giveCredential(id) {
     return async (dispatch) => {
@@ -17,7 +17,7 @@ function makeAccountOnMarket(data) {
     return async (dispatch) => {
         await api.makeAccount(data);
 
-        dispatch(asyncGetAllAccount());
+        dispatch(asyncAdminGetAllAccountByFilter());
     };
 }
 
@@ -25,7 +25,7 @@ function editAccountOnMarket(data, id) {
     return async (dispatch) => {
         await api.editAccount(data, id);
 
-        dispatch(asyncGetAllAccount());
+        dispatch(asyncAdminGetAllAccountByFilter());
     };
 }
 
@@ -33,7 +33,7 @@ function deleteAccountOnMarket(id) {
     return async (dispatch) => {
         await api.deleteAccount(id);
 
-        dispatch(asyncGetAllAccount());
+        dispatch(asyncAdminGetAllAccountByFilter());
     };
 }
 

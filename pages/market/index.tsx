@@ -30,7 +30,7 @@ import { SAccountList } from '../../component/Skeleton-Loading';
 
 import styles from '../../styles/Market.module.css';
 
-import { asyncGetAllAccountByFilter, asyncShowAccountsWithPagination } from '../../state/accounts/action';
+import { asyncGetAllAccountByFilter } from '../../state/accounts/action';
 
 function Market() {
     const { accounts = {}, ranks = [], servers = [] } = useAppSelector((states) => states);
@@ -54,13 +54,9 @@ function Market() {
     }
 
     useEffect(() => {
-        dispatch(asyncGetAllAccountByFilter(filterSort, filterRank, filterServer));
+        dispatch(asyncGetAllAccountByFilter(paginationPage, filterSort, filterRank, filterServer));
         setPaginationPage(1);
-    }, [filterRank, filterServer, filterSort]);
-
-    useEffect(() => {
-        dispatch(asyncShowAccountsWithPagination(paginationPage));
-    }, [paginationPage]);
+    }, [filterRank, filterServer, filterSort, paginationPage]);
 
     return (
         <Container className="mt-5 pt-5 centered-down">
@@ -105,9 +101,9 @@ function Market() {
                     <span className={filterSort === 'desc' ? ('active-org') : ('none')} onClick={() => { setFilterSort('desc'); }}>DESC</span>
                 </Col>
             </Row>
-            {accounts.length !== 0 ? (
+            {accounts?.data?.length !== 0 ? (
                 <Row className={`${styles['card-container']} centered`}>
-                    {accounts?.map((i: any, index) => (
+                    {accounts?.data?.map((i: any, index) => (
                         <AccountCard data={i} key={index} />
                     ))}
                 </Row>

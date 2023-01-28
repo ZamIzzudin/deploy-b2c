@@ -30,7 +30,7 @@ function AccountDetails() {
         dispatch(setCheckoutAccount(accountDetail));
     }
 
-    const screenshoot = accountDetail?.screenshots || [];
+    const screenshoot = JSON.parse(accountDetail?.screenshots || '[]') || [];
 
     return (
         <Container className="my-5 py-3">

@@ -21,7 +21,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 
-import { asyncGetAllAccountByFilter, asyncShowAccountsWithPagination } from '../../state/accounts/action';
+import { asyncAdminGetAllAccountByFilter } from '../../state/accounts/action';
 import { asyncGetAllServersByGame } from '../../state/servers/action';
 import { asyncGetAllRanksByGame } from '../../state/ranks/action';
 import {
@@ -74,18 +74,15 @@ function DetailMarket() {
     const fileForm = useRef<any>();
 
     useEffect(() => {
+        dispatch(asyncAdminGetAllAccountByFilter());
         dispatch(asyncGetAllRanksByGame('valorant'));
         dispatch(asyncGetAllServersByGame('valorant'));
     }, []);
 
     useEffect(() => {
-        dispatch(asyncGetAllAccountByFilter(filterSort, filterRank, filterServer));
+        dispatch(asyncAdminGetAllAccountByFilter(paginationPage, filterSort, filterRank, filterServer));
         setPaginationPage(1);
-    }, [filterRank, filterServer, filterSort]);
-
-    useEffect(() => {
-        dispatch(asyncShowAccountsWithPagination(paginationPage));
-    }, [paginationPage]);
+    }, [filterRank, filterServer, filterSort, paginationPage]);
 
     function setModal(type) {
         if (type === 'delete') {
@@ -148,6 +145,7 @@ function DetailMarket() {
     }
 
     function updateAccount(id) {
+        console.log(id);
         const formData = new FormData();
 
         formData.append('current_rank_id', newCurrentRank);
@@ -195,11 +193,11 @@ function DetailMarket() {
         setNewAgents(data.agent_list);
         setNewHighestRank(data.highest_rank_id);
         setNewAccountPrice(data.price);
-        setNewAccountServer(data.server);
+        setNewAccountServer(data.server_id);
         setNewCurrentRank(data.current_rank_id);
         setNewAccountDesc(data.description);
-        setCurrentScreenShoot(data.screenshots);
-        setId(data.account_id);
+        setCurrentScreenShoot(JSON.parse(data.screenshots));
+        setId(data.id);
         setAccountEmail(decrypt(data?.account_email));
         setAccountEmailPass(decrypt(data?.account_email_password));
         setAccountUsername(decrypt(data?.account_username));
@@ -321,7 +319,7 @@ function DetailMarket() {
                         </Col>
                     </Row>
                     <Row className={`${styles['card-container']} centered`}>
-                        {accounts?.map((i: any, index) => (
+                        {accounts?.data?.map((i: any, index) => (
                             <AccountCard data={i} key={index} setModal={setModal} getCurrent={getCurrentAccount} manage />
                         ))}
                     </Row>

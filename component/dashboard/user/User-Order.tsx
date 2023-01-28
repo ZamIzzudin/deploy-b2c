@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable max-len */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
@@ -5,7 +6,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import {
-    Col, Form, Table, Row,
+    Col, Form, Table, Row, Pagination,
 } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -36,6 +37,9 @@ export default function UserOrder({ orders }) {
     const [credentials, setCredentials] = useState<any>();
     const [attachments, setAttachments] = useState<any>([]);
 
+    const [paginationPage, setPaginationPage] = useState(1);
+    const pagination: any = [];
+
     function clearForm() {
         setReviewModal(false);
         setTitleReview('');
@@ -43,11 +47,11 @@ export default function UserOrder({ orders }) {
         setRateReview('0');
     }
 
-    function getOrderByType() {
+    function getOrderByType(page) {
         if (typeOrder === 'boost') {
-            dispatch(asyncUserGetBoostOrder());
+            dispatch(asyncUserGetBoostOrder(page));
         } else {
-            dispatch(asyncUserGetAccountOrder());
+            dispatch(asyncUserGetAccountOrder(page));
         }
     }
 
@@ -74,7 +78,7 @@ export default function UserOrder({ orders }) {
     }
 
     function seeAttachment(data) {
-        data.detail?.boost_done_ss.forEach(async (image) => {
+        data.detail?.boost_done_ss?.forEach(async (image) => {
             await axios.get(image, {
                 responseType: 'blob',
             })
@@ -88,8 +92,16 @@ export default function UserOrder({ orders }) {
     }
 
     useEffect(() => {
-        getOrderByType();
-    }, [typeOrder]);
+        getOrderByType(paginationPage);
+    }, [typeOrder, paginationPage]);
+
+    for (let i = 1; i <= orders?.last_page; i++) {
+        pagination.push(
+            <Pagination.Item className="pagination-items mx-1" key={i} active={i === paginationPage} onClick={() => setPaginationPage(i)}>
+                {i}
+            </Pagination.Item>,
+        );
+    }
 
     return (
         <div>
@@ -113,7 +125,7 @@ export default function UserOrder({ orders }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {orders?.map((order) => (
+                    {orders?.data?.map((order) => (
                         <tr key={order.boost_id}>
                             <td>{order.order_date}</td>
                             <td>{order.game}</td>
@@ -137,6 +149,26 @@ export default function UserOrder({ orders }) {
                     ))}
                 </tbody>
             </Table>
+
+            {/* Pagination */}
+            <Row className="mt-4 mb-3">
+                {orders?.last_page && (
+                    <Col>
+                        <Pagination className={styles['pagination-container']}>
+                            {paginationPage > 1 && (
+                                <Pagination.Prev className="mx-1" onClick={() => setPaginationPage(paginationPage - 1)} />
+                            )}
+
+                            {pagination}
+
+                            {paginationPage !== orders.last_page && (
+                                <Pagination.Next className="mx-1" onClick={() => setPaginationPage(paginationPage + 1)} />
+                            )}
+                        </Pagination>
+                    </Col>
+                )}
+            </Row>
+
             {/* Detail Modal */}
             <DetailModal
                 show={ShowDetailModal}
@@ -176,7 +208,7 @@ export default function UserOrder({ orders }) {
                 </Row>
                 <hr />
                 {/* Boost Detail */}
-                <h5 className="text-org">Spesification</h5>
+                <h5 className="text-org">Order Spesification</h5>
                 {selectedOrder?.detail.boost_detail !== undefined ? (
                     <Row>
                         <span>
@@ -238,7 +270,7 @@ export default function UserOrder({ orders }) {
                 {/* Address */}
                 {selectedOrder?.order_address !== undefined && (
                     <Row>
-                        <h5 className="text-org">Address</h5>
+                        <h5 className="text-org">My Address</h5>
                         <span>
                             Name :
                             {' '}

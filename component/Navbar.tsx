@@ -26,7 +26,6 @@ import { AsyncLogout, AsyncCheckLogin } from '../state/auth/action';
 import { asyncGetAllGames } from '../state/games/action';
 // import { asyncGetAllRanksByGame } from '../state/ranks/action';
 import { asyncGetAllServersByGame } from '../state/servers/action';
-import { asyncGetAllAccount } from '../state/accounts/action';
 import { asyncGetServicesPerGame } from '../state/services/action';
 
 import styles from './styles/Navbar.module.css';
@@ -79,7 +78,6 @@ function TabBar() {
     useEffect(() => {
         dispatch(AsyncCheckLogin());
         dispatch(asyncGetAllGames());
-        dispatch(asyncGetAllAccount());
         dispatch(asyncGetServicesPerGame('valorant'));
         dispatch(asyncGetAllServersByGame('valorant'));
     }, []);

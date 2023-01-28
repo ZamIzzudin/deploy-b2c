@@ -72,7 +72,7 @@ function DetailBooster() {
                 <div className="mt-3 centered">
                     {orderTake.length !== 0 ? (
                         <Row className="fullwidth">
-                            {orderTake?.map((order) => (
+                            {orderTake?.data?.map((order) => (
                                 <Col className="col-md-4 col-12 mb-3" key={order?.boost_id}>
                                     <div className="centered w-95-res card flex-down">
                                         <div className="fullwidth flex-right">
