@@ -48,9 +48,19 @@ export default function AdminOrder({ orders }) {
     }
 
     function getCredentialAccount(data) {
-        const credentialAccount = decrypt(data?.notes);
-        console.log(JSON.parse(credentialAccount));
-        setCredentials(JSON.parse(credentialAccount));
+        if (typeOrder === 'boost') {
+            const credentialAccount = decrypt(data.notes);
+            setCredentials(JSON.parse(credentialAccount));
+        } else {
+            const credentialAccount = {
+                username: decrypt(data.detail.account_credential.account_username),
+                password: decrypt(data.detail.account_credential.account_password),
+                email: decrypt(data.detail.account_credential.account_email),
+                email_password: decrypt(data.detail.account_credential.account_email_password),
+            };
+
+            setCredentials(credentialAccount);
+        }
     }
 
     function seeAttachment(data) {
@@ -114,11 +124,9 @@ export default function AdminOrder({ orders }) {
                                 {order.status === 'Finished' && typeOrder === 'boost' && (
                                     <button className="capsule button-border mx-2" onClick={() => { setAttachModal(true); seeAttachment(order); }}>Attachment</button>
                                 )}
-                                {typeOrder === 'boost' ? (
-                                    <button onClick={() => { setDetailModal(true); setSelectedOrder(order); getCredentialAccount(order); }} className="capsule button-org">Details</button>
-                                ) : (
-                                    <button onClick={() => { setDetailModal(true); setSelectedOrder(order); }} className="capsule button-org">Details</button>
-                                )}
+
+                                <button onClick={() => { setDetailModal(true); setSelectedOrder(order); getCredentialAccount(order); }} className="capsule button-org">Details</button>
+
                             </td>
                         </tr>
                     ))}
@@ -251,27 +259,27 @@ export default function AdminOrder({ orders }) {
                     <span>
                         Name :
                         {' '}
-                        {selectedOrder?.address.full_name}
+                        {selectedOrder?.order_address.full_name}
                     </span>
                     <span>
                         Country :
                         {' '}
-                        {selectedOrder?.address.country}
+                        {selectedOrder?.order_address.country}
                     </span>
                     <span>
                         City :
                         {' '}
-                        {selectedOrder?.address.city}
+                        {selectedOrder?.order_address.city}
                     </span>
                     <span>
                         Billing Address :
                         {' '}
-                        {selectedOrder?.address.billing_address}
+                        {selectedOrder?.order_address.billing_address}
                     </span>
                     <span>
                         Zip Code :
                         {' '}
-                        {selectedOrder?.address.zip_code}
+                        {selectedOrder?.order_address.zip_code}
                     </span>
                 </Row>
                 <hr />
@@ -289,11 +297,25 @@ export default function AdminOrder({ orders }) {
                             {' '}
                             {credentials.password}
                         </span>
+                        {typeOrder !== 'boost' && (
+                            <>
+                                <span>
+                                    Email :
+                                    {' '}
+                                    {credentials.email}
+                                </span>
+                                <span>
+                                    Email Passwordd :
+                                    {' '}
+                                    {credentials.email_password}
+                                </span>
+                            </>
+                        )}
                     </Row>
                 )}
             </DetailModal>
 
-            {/* Detail Modal */}
+            {/* Attachment Modal */}
             <DetailModal
                 sizing="lg"
                 show={ShowAttachModal}

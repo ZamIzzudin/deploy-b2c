@@ -725,6 +725,12 @@ td:first-child {
   font-size: .9em;
 }
 
+.set1 {
+  text-transform: capitalize;
+  font-family: var(--secFont);
+  font-size: 1.5em;
+}
+
 .set2 {
   text-transform: capitalize;
   font-family: var(--secFont);
@@ -765,10 +771,6 @@ td:first-child {
     transition: fill-opacity 0.5s ease-in-out;
     width: 90vw;
     height: 130px;
-  }
-
-  .mobile-detail {
-    background-color: salmon;
   }
 
   .w-50-res {

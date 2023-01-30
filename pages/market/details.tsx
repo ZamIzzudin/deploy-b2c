@@ -14,7 +14,6 @@ import Image from 'next/image';
 import Head from 'next/head';
 
 import { Container, Row, Col } from 'react-bootstrap';
-import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { SDetailAccount } from '../../component/Skeleton-Loading';
 import { ImageGalery } from '../../component';

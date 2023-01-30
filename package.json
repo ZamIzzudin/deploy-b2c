@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@ethersproject/providers": "^5.7.2",
-    "@livechat/widget-react": "^1.2.1",
     "@reduxjs/toolkit": "^1.9.0",
     "@splidejs/react-splide": "^0.7.7",
     "@tawk.to/tawk-messenger-react": "^2.0.1",

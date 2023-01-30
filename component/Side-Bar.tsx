@@ -49,10 +49,6 @@ function SideBar(props: any) {
                             <i className="fa-solid fa-cart-shopping" />
                             <span className={styles.mobile}>Order</span>
                         </button>
-                        <button className={`${styles['list-item']} ${active === 'boost' ? (styles.active) : ('')}`} onClick={() => setComponent('boost')}>
-                            <i className="fa-solid fa-bolt" />
-                            <span className={styles.mobile}>Boost</span>
-                        </button>
                         <button className={`${styles['list-item']} ${active === 'market' ? (styles.active) : ('')}`} onClick={() => setComponent('market')}>
                             <i className="fa-solid fa-square-poll-horizontal" />
                             <span className={styles.mobile}>Market</span>

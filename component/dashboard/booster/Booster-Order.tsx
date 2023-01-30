@@ -118,9 +118,6 @@ export default function BoosterOrder({ orders }) {
                                     <button onClick={() => { setCredentialsModal(true); getCredentials(order); }} className="capsule button mx-2">Credential</button>
                                 )}
 
-                                {order.status === 'Finished' && (
-                                    <button className="capsule button mx-2">Attachment</button>
-                                )}
                                 <button onClick={() => { setDetailModal(true); setSelectedOrder(order); }} className="capsule button-org">Details</button>
                             </td>
                         </tr>

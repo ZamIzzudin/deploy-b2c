@@ -105,12 +105,21 @@ export function ApexIncludeRank({
     }
 
     function getRank() {
-        const setupRank = { ...selectedRank, name: `${selectedRank.name.toLowerCase()}_${selectedDivision}` };
-        sendData(setupRank);
+        if (selectedRank.name.toLowerCase() === 'master') {
+            const setupRank = { ...selectedRank, name: `${selectedRank.name.toLowerCase()}_${selectedDivision}` };
+            sendData(setupRank);
+        } else {
+            const setupRank = { ...selectedRank, name: `${selectedRank.name.toLowerCase()}_${selectedDivision}` };
+            sendData(setupRank);
+        }
     }
 
     useEffect(() => {
-        getRank();
+        const delayDebounceFn = setTimeout(() => {
+            getRank();
+        }, 1000);
+
+        return () => clearTimeout(delayDebounceFn);
     }, [selectedDivision, selectedRank]);
 
     useEffect(() => {
@@ -126,12 +135,23 @@ export function ApexIncludeRank({
                         <Image className={`${styles['rank-list']} ${selectedRank.name === rank.name ? (styles.active) : ('')} p-1`} key={rank.name} src={rank.badge} width={60} height={60} onClick={() => { setSelectedRank(rank); setSelectedDivision(1); }} />
                     ))}
                 </Col>
-                <Col className={`${styles['division-container']} col-md-6 col-12`}>
-                    <div className={`${styles['division-list']} ${selectedDivision === 1 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(1)}>I</div>
-                    <div className={`${styles['division-list']} ${selectedDivision === 2 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(2)}>II</div>
-                    <div className={`${styles['division-list']} ${selectedDivision === 3 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(3)}>III</div>
-                    <div className={`${styles['division-list']} ${selectedDivision === 4 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(4)}>IV</div>
-                </Col>
+                {selectedRank.name.toLowerCase() === 'master' ? (
+                    <Col className="centered-down col-md-6 col-12">
+                        <span className="set1">
+                            {selectedDivision}
+                            K
+                        </span>
+                        <input className="fullwidth range-input mt-3" type="range" min={1} max={30} value={selectedDivision} onChange={(e) => setSelectedDivision(+e.target.value)} />
+                    </Col>
+                ) : (
+                    <Col className={`${styles['division-container']} col-md-6 col-12`}>
+                        <div className={`${styles['division-list']} ${selectedDivision === 4 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(4)}>IV</div>
+                        <div className={`${styles['division-list']} ${selectedDivision === 3 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(3)}>III</div>
+                        <div className={`${styles['division-list']} ${selectedDivision === 2 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(2)}>II</div>
+                        <div className={`${styles['division-list']} ${selectedDivision === 1 ? (styles.active) : ('')}`} onClick={() => setSelectedDivision(1)}>I</div>
+                    </Col>
+                )}
+
             </Row>
         </div>
     );

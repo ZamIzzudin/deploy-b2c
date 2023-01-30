@@ -11,14 +11,28 @@ export function DoubleIncludeRank({ details }) {
             <Row className="flex-horizon fullwidth">
                 <Col className="centered-down gap-2 pad-0">
                     <Image src={badges[0]?.badge || '/kosong.png'} width={65} height={65} />
-                    <span className="set2">{badges[0]?.name?.replace('_', ' ')}</span>
+                    {badges[0]?.name.includes('master') ? (
+                        <span className="set2">
+                            {badges[0]?.name?.replace('_', ' ')}
+                            K
+                        </span>
+                    ) : (
+                        <span className="set2">{badges[0]?.name?.replace('_', ' ')}</span>
+                    )}
                 </Col>
                 <Col className="centered h-100 pad-0">
                     <Image src="/arrow.png" width={40} height={20} />
                 </Col>
                 <Col className="centered-down gap-2 pad-0">
                     <Image src={badges[1]?.badge || '/kosong.png'} width={65} height={65} />
-                    <span className="set2">{badges[1]?.name?.replace('_', ' ')}</span>
+                    {badges[1]?.name.includes('master') ? (
+                        <span className="set2">
+                            {badges[1]?.name?.replace('_', ' ')}
+                            K
+                        </span>
+                    ) : (
+                        <span className="set2">{badges[1]?.name?.replace('_', ' ')}</span>
+                    )}
                 </Col>
             </Row>
         </Col>

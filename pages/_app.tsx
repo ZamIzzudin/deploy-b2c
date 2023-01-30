@@ -12,30 +12,46 @@
 import '../styles/globals.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import type { AppProps } from 'next/app';
-import { useState, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Script from 'next/script';
-import { LiveChatWidget } from '@livechat/widget-react';
 
 import { Provider } from 'react-redux';
+import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
 
 import { store } from '../state';
 
 import TabBar from '../component/Navbar';
 import Footer from '../component/Footer';
 
+declare const window: any;
+
 function MyApp({ Component, pageProps }: AppProps) {
-  // const [showLC, setShowLC] = useState(true);
+  const tawkMessengerRef = useRef<any>();
+  const { pathname } = useRouter();
 
-  // const onLoad = () => {
-  //   if (window.innerWidth < 800 && window.location.href.slice(-9) === 'dashboard') {
-  //     setShowLC(false);
-  //   }
-  // };
+  function hideTawk() {
+    tawkMessengerRef.current.hideWidget();
+  }
 
-  // useEffect(() => {
-  //   onLoad();
-  // }, []);
+  function showTawk() {
+    tawkMessengerRef.current.showWidget();
+  }
+
+  const onLoad = () => {
+    if (pathname === '/dashboard') {
+      hideTawk();
+    } else {
+      showTawk();
+    }
+  };
+
+  useEffect(() => {
+    if (window.Tawk_API.showWidget !== undefined) {
+      onLoad();
+    }
+  }, [pathname]);
 
   return (
     <>
@@ -49,12 +65,15 @@ function MyApp({ Component, pageProps }: AppProps) {
 
         <Component {...pageProps} />
         <Footer />
-      </Provider>
 
-      {/* <LiveChatWidget
-        license={process.env.LC_WIDGET_ID}
-        visibility="minimized"
-      /> */}
+        <TawkMessengerReact
+          propertyId={process.env.TAWK_WIDGET_ID}
+          widgetId={process.env.TAWK_PROP_ID}
+          onLoad={onLoad}
+          ref={tawkMessengerRef}
+        />
+
+      </Provider>
     </>
   );
 }

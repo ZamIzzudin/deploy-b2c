@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-use-before-define */
@@ -10,7 +11,9 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-no-useless-fragment */
-import { Row, Col, Form } from 'react-bootstrap';
+import {
+    Row, Col, Form, Pagination,
+} from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 
 import axios from 'axios';
@@ -40,6 +43,9 @@ function DetailOther() {
     const [users, setUsers] = useState<any>([]);
     const [reviewsShown, setReviewShown] = useState<any>([]);
     const [reviewsAll, setReviewAll] = useState<any>([]);
+
+    const [paginationPage, setPaginationPage] = useState(1);
+    const pagination: any = [];
 
     async function getUsers() {
         const url = `${process.env.API}/admin/users?role=user`;
@@ -139,6 +145,14 @@ function DetailOther() {
         getUsers();
         getReviews();
     }, []);
+
+    for (let i = 1; i <= reviewsAll?.last_page; i++) {
+        pagination.push(
+            <Pagination.Item className="pagination-items mx-1" key={i} active={i === paginationPage} onClick={() => setPaginationPage(i)}>
+                {i}
+            </Pagination.Item>,
+        );
+    }
 
     return (
         <>
@@ -248,7 +262,7 @@ function DetailOther() {
                     >
                         <h1>Show Review</h1>
                         <div className={styles['list-container']}>
-                            {reviewsAll?.map((review) => (
+                            {reviewsAll?.data?.map((review) => (
                                 <div className={styles['FAQ-card']} key={review.id}>
                                     <span>{review.review_title}</span>
                                     <div className={styles['button-container']}>
@@ -260,6 +274,25 @@ function DetailOther() {
                                 </div>
                             ))}
                         </div>
+
+                        {/* Pagination */}
+                        <Row className="mt-4 mb-3">
+                            {reviewsAll?.last_page && (
+                                <Col>
+                                    <Pagination className={styles['pagination-container']}>
+                                        {paginationPage > 1 && (
+                                            <Pagination.Prev className="mx-1" onClick={() => setPaginationPage(paginationPage - 1)} />
+                                        )}
+
+                                        {pagination}
+
+                                        {paginationPage !== reviewsAll.last_page && (
+                                            <Pagination.Next className="mx-1" onClick={() => setPaginationPage(paginationPage + 1)} />
+                                        )}
+                                    </Pagination>
+                                </Col>
+                            )}
+                        </Row>
                     </DetailModal>
                 </Row>
             ) : (

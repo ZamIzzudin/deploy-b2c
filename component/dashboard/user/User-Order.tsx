@@ -23,7 +23,7 @@ export default function UserOrder({ orders }) {
     const dispatch = useAppDispatch();
 
     const [selectedOrder, setSelectedOrder] = useState<any>();
-    const [typeOrder, setTypeOrder] = useState('boost');
+    const [typeOrder, setTypeOrder] = useState('Boost');
 
     const [ShowDetailModal, setDetailModal] = useState(false);
     const [ShowCredentialModal, setCredentialModal] = useState(false);
@@ -48,7 +48,7 @@ export default function UserOrder({ orders }) {
     }
 
     function getOrderByType(page) {
-        if (typeOrder === 'boost') {
+        if (typeOrder === 'Boost') {
             dispatch(asyncUserGetBoostOrder(page));
         } else {
             dispatch(asyncUserGetAccountOrder(page));
@@ -58,11 +58,14 @@ export default function UserOrder({ orders }) {
     async function sendReview(e) {
         e.preventDefault();
         const data = {
+            reviewable_id: selectedOrder?.detail.boost_id || selectedOrder?.detail.account_id,
+            reviewable_type: typeOrder,
             review_title: titleReview,
             review_body: bodyReview,
             rating: rateReview,
             is_shown: false,
         };
+
         dispatch(asyncUserMakeReview(data));
         clearForm();
     }
@@ -109,8 +112,8 @@ export default function UserOrder({ orders }) {
                 <Form.Group className="width150px">
                     <Form.Label>Order Type</Form.Label>
                     <Form.Select className="form-layout" onChange={(e) => setTypeOrder(e.target.value)}>
-                        <option value="boost">Boost</option>
-                        <option value="account">Account</option>
+                        <option value="Boost">Boost</option>
+                        <option value="Account">Account</option>
                     </Form.Select>
                 </Form.Group>
             </Col>
@@ -134,13 +137,13 @@ export default function UserOrder({ orders }) {
                             <td>
                                 {order.status === 'Finished' && (
                                     <>
-                                        {typeOrder === 'boost' ? (
+                                        {typeOrder === 'Boost' ? (
                                             <button onClick={() => { setAttachModal(true); seeAttachment(order); }} className="capsule button">Attachment</button>
 
                                         ) : (
                                             <button onClick={() => { setCredentialModal(true); getCredentials(order); }} className="capsule button mx-1">Credential</button>
                                         )}
-                                        <button onClick={() => setReviewModal(true)} className="capsule button-org-border mx-1">Review</button>
+                                        <button onClick={() => { setReviewModal(true); setSelectedOrder(order); }} className="capsule button-org-border mx-1">Review</button>
                                     </>
                                 )}
                                 <button onClick={() => { setDetailModal(true); setSelectedOrder(order); }} className="capsule button-org">Details</button>
