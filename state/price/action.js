@@ -58,7 +58,11 @@ function asyncCalculatePrice(game, service) {
 
                     const count = data[1] - data2[1];
 
-                    orderDetail.boost_detail[boost.title.toLowerCase().split(' ').join('_')] = `${count}_K`;
+                    if (count === 0) {
+                        orderDetail.boost_detail[boost.title.toLowerCase().split(' ').join('_')] = 'master';
+                    } else {
+                        orderDetail.boost_detail[boost.title.toLowerCase().split(' ').join('_')] = `${count}_K`;
+                    }
                 } else {
                     orderDetail.boost_detail[boost.title.toLowerCase().split(' ').join('_')] = boost[boost.title]?.name || boost[boost.title];
                 }

@@ -34,7 +34,10 @@
 .division-list {
     padding: 10px 20px;
     margin-bottom: 10px;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     border-radius: 5px;
     background-color: var(--insideCard);
     transition: .3s;

@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react';
 import { useAppSelector } from '../../hooks';
 
 import {
-    IncludeRank, NumberGame, Points, ListForm, ServerSelect, ApexIncludeRank, NestedListForm,
+    IncludeRank, NumberGame, Points, ListForm, ServerSelect, ApexIncludeRank, NestedListForm, NewApexIncludeRank,
 } from './Form-Boost-Type';
 
 import styles from '../styles/FormBoost.module.css';
@@ -33,11 +33,14 @@ function FormBoost(props: any) {
 
     return (
         <div className={styles['form-container']}>
+            {titleService === 'Apex Rank Boost' && (
+                <NewApexIncludeRank serviceName={titleService} />
+            )}
             {/* Solo Form */}
             {typeForm?.map((f) => {
-                if (f.type === 'apexIncludeRank') {
-                    return (<ApexIncludeRank key={f.title} title={f.title} serviceName={titleService} />);
-                }
+                // if (f.type === 'apexIncludeRank') {
+                //     return (<ApexIncludeRank key={f.title} title={f.title} serviceName={titleService} />);
+                // }
                 if (f.type === 'includeRank') {
                     return (<IncludeRank key={f.title} title={f.title} serviceName={titleService} />);
                 } if (f.type === 'gameNumber') {

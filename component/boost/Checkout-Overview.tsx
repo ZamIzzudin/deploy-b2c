@@ -11,7 +11,7 @@ export function DoubleIncludeRank({ details }) {
             <Row className="flex-horizon fullwidth">
                 <Col className="centered-down gap-2 pad-0">
                     <Image src={badges[0]?.badge || '/kosong.png'} width={65} height={65} />
-                    {badges[0]?.name.includes('master') ? (
+                    {badges[0]?.name?.includes('master') ? (
                         <span className="set2">
                             {badges[0]?.name?.replace('_', ' ')}
                             K
@@ -25,7 +25,7 @@ export function DoubleIncludeRank({ details }) {
                 </Col>
                 <Col className="centered-down gap-2 pad-0">
                     <Image src={badges[1]?.badge || '/kosong.png'} width={65} height={65} />
-                    {badges[1]?.name.includes('master') ? (
+                    {badges[1]?.name?.includes('master') ? (
                         <span className="set2">
                             {badges[1]?.name?.replace('_', ' ')}
                             K
