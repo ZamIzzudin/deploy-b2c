@@ -73,7 +73,7 @@ function Payment() {
             zip_code: zipCode,
             address: Address,
             payment_method: paymentMethod,
-            payment_id: data?.id || data?.hash,
+            payment_id: data?.purchase_units[0]?.payments?.captures[0]?.id || data?.hash,
         };
 
         if (checkoutDetail.type !== 'Valorant Account') {
