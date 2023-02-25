@@ -133,7 +133,7 @@ export default function UserOrder({ orders }) {
             zip_code: address.order_address.zip_code,
             address: 'x',
             payment_method: address.payment,
-            payment_id: data?.purchase_units[0]?.payments?.captures[0]?.id || data?.hash,
+            payment_id: data?.hash || data?.purchase_units[0]?.payments?.captures[0]?.id,
         };
 
         await doPayment(form, address);
@@ -146,7 +146,7 @@ export default function UserOrder({ orders }) {
             const signer = provider.getSigner();
             await signer.sendTransaction({
                 to: process.env.CRYPTO_WALLET_ADDRESS,
-                value: ethers.utils.parseEther(data.totalPrice),
+                value: ethers.utils.parseEther(data.totalPrice).toString(),
             })
                 .then((res) => {
                     paymentForm(res, data);
