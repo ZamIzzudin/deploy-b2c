@@ -284,21 +284,18 @@ function Payment() {
                                         <span className={styles['sub-mini-text']}>Further information will be requested after payment.</span>
                                         {accForm ? (
                                             <div className=" centered mt-4 px-5">
-                                                {paymentMethod !== 'Paypal' && scriptLoaded ? (
-                                                    <div>
-                                                        <PayPalButton
-                                                            style={{
-                                                                color: 'blue', layout: 'horizontal', tagline: false, shape: 'pill', height: 40
-                                                            }}
-                                                            amount={checkoutDetail?.total_price}
-                                                            onSuccess={(data) => paymentForm(data)}
-                                                        />
-                                                    </div>
-                                                ) : (
-                                                    <div>
-                                                        <button className="button capsule mb-2" type="submit">Pay Now</button>
-                                                    </div>
-                                                )}
+                                                <div className={`${paymentMethod !== 'Paypal' && scriptLoaded ? ('hide') : ('')}`}>
+                                                    <PayPalButton
+                                                        style={{
+                                                            color: 'blue', layout: 'horizontal', tagline: false, shape: 'pill', height: 40
+                                                        }}
+                                                        amount={checkoutDetail?.total_price}
+                                                        onSuccess={(data) => paymentForm(data)}
+                                                    />
+                                                </div>
+                                                <div className={`${paymentMethod !== 'Metamask' && ('hide')}`}>
+                                                    <button className="button capsule mb-2" type="submit">Pay Now</button>
+                                                </div>
                                             </div>
                                         ) : (
                                             <div className=" centered mt-4 px-5">
