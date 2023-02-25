@@ -112,6 +112,26 @@ function asyncMakeAccountOrder(form, accountId) {
     };
 }
 
+function doPaymentBoost(id, form) {
+    return async (dispatch) => {
+        try {
+            await api.checkoutBoostOrder(id, form);
+        } catch (err) {
+            dispatch(handleShowErrorPage());
+        }
+    };
+}
+
+function doPaymentAccount(id, form) {
+    return async (dispatch) => {
+        try {
+            await api.checkoutAccountOrder(form, id);
+        } catch (err) {
+            dispatch(handleShowErrorPage());
+        }
+    };
+}
+
 export {
-    ActionType, setCheckoutAccount, setCheckoutBoosting, checkCheckoutDetail, asyncMakeBoostOrder, asyncMakeAccountOrder,
+    ActionType, setCheckoutAccount, setCheckoutBoosting, checkCheckoutDetail, asyncMakeBoostOrder, asyncMakeAccountOrder, doPaymentBoost, doPaymentAccount,
 };

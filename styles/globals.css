@@ -743,6 +743,15 @@ td:first-child {
   font-size: 1.1em;
 }
 
+.bubble-text {
+  background-color: var(--yellow);
+  color: var(--white);
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-family: var(--secFont);
+  font-size: .8em;
+}
+
 @media only screen and (max-width: 1000px) {
   .title {
     font-size: 2.5em;

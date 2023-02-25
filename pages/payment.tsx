@@ -282,7 +282,7 @@ function Payment() {
                                             </span>
                                         </div>
                                         <span className={styles['sub-mini-text']}>Further information will be requested after payment.</span>
-                                        {accForm && (
+                                        {accForm ? (
                                             <div className=" centered mt-4 px-5">
                                                 <div className={`${paymentMethod !== 'Paypal' && scriptLoaded ? ('hide') : (null)}`}>
                                                     <PayPalButton
@@ -295,6 +295,12 @@ function Payment() {
                                                 </div>
                                                 <div className={`${paymentMethod !== 'Metamask' && ('hide')}`}>
                                                     <button className="button capsule mb-2" type="submit">Pay Now</button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className=" centered mt-4 px-5">
+                                                <div>
+                                                    <button className="button capsule mb-2" type="button">Pay Now</button>
                                                 </div>
                                             </div>
                                         )}

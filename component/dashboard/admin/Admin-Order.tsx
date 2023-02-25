@@ -259,27 +259,27 @@ export default function AdminOrder({ orders }) {
                     <span>
                         Name :
                         {' '}
-                        {selectedOrder?.order_address.full_name}
+                        {selectedOrder?.order_address?.full_name}
                     </span>
                     <span>
                         Country :
                         {' '}
-                        {selectedOrder?.order_address.country}
+                        {selectedOrder?.order_address?.country}
                     </span>
                     <span>
                         City :
                         {' '}
-                        {selectedOrder?.order_address.city}
+                        {selectedOrder?.order_address?.city}
                     </span>
                     <span>
                         Billing Address :
                         {' '}
-                        {selectedOrder?.order_address.billing_address}
+                        {selectedOrder?.order_address?.billing_address}
                     </span>
                     <span>
                         Zip Code :
                         {' '}
-                        {selectedOrder?.order_address.zip_code}
+                        {selectedOrder?.order_address?.zip_code}
                     </span>
                 </Row>
                 <hr />

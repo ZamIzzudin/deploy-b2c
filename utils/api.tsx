@@ -20,6 +20,14 @@ const api = (() => {
         return response.data;
     }
 
+    async function Refresh() {
+        const url = `${BASE_URL}/v1/auth/refresh`;
+
+        const response = await axios.get(url);
+
+        return response.data;
+    }
+
     async function Register(data) {
         const url = `${BASE_URL}/v1/auth/register`;
 
@@ -154,7 +162,7 @@ const api = (() => {
 
     async function checkoutBoostOrder(orderId, form) {
         const url = `${process.env.API}/boost/checkout/${orderId}`;
-        await axios.post(url, form).then((res) => res);
+        await axios.post(url, form).then((res) => console.log(res));
     }
 
     async function makeBoostOrder(form, serviceRequire, serviceName) {
@@ -243,6 +251,7 @@ const api = (() => {
         Login,
         GoogleLogin,
         Register,
+        Refresh,
         getAllGames,
         getAdminAllAccountsMarket,
         getAllAccountsMarketByFilter,
@@ -257,6 +266,7 @@ const api = (() => {
         adminGetAccount,
         adminChangeStatusAccountOrder,
         makeBoostOrder,
+        checkoutBoostOrder,
         checkoutAccountOrder,
         userMakeReview,
         boosterSeeAvailableOrder,

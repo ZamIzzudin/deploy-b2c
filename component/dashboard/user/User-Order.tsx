@@ -10,12 +10,15 @@ import {
 } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { ethers } from 'ethers';
+import { PayPalButton } from 'react-paypal-button-v2';
 import { useAppDispatch } from '../../../hooks';
 import DetailModal from '../../Detail-Modal';
 import ImageGalery from '../../ImageGalery';
 import { decrypt } from '../../../utils/crypto';
 
 import { asyncUserGetBoostOrder, asyncUserGetAccountOrder, asyncUserMakeReview } from '../../../state/orderList/action';
+import { doPaymentBoost, doPaymentAccount } from '../../../state/checkoutDetail/action';
 
 import styles from '../../styles/DetailPage.module.css';
 
@@ -36,6 +39,11 @@ export default function UserOrder({ orders }) {
 
     const [credentials, setCredentials] = useState<any>();
     const [attachments, setAttachments] = useState<any>([]);
+
+    // Paypal script load
+    const [scriptLoaded, setScriptLoaded] = useState<any>(false);
+    // Metamask
+    const [ethereum, setEthereum] = useState<any>();
 
     const [paginationPage, setPaginationPage] = useState(1);
     const pagination: any = [];
@@ -94,6 +102,67 @@ export default function UserOrder({ orders }) {
         });
     }
 
+    // Setup Payment Gateaway
+    const setupPaypal = () => {
+        const script = document.createElement('script');
+        script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.CLIENT_ID}`;
+        script.type = 'text/javascript';
+        script.async = true;
+        script.onload = () => setScriptLoaded(true);
+        document.body.appendChild(script);
+    };
+
+    function setupETH(window: any) {
+        setEthereum(window.ethereum);
+    }
+
+    async function doPayment(form, data) {
+        if (typeOrder === 'Boost') {
+            dispatch(doPaymentBoost(data?.detail.boost_id, form));
+        } else {
+            dispatch(doPaymentAccount(data?.detail.account_order_id, form));
+        }
+    }
+
+    async function paymentForm(data, address) {
+        const form = {
+            full_name: address.order_address.full_name,
+            country: address.order_address.country,
+            billing_address: address.order_address.billing_address,
+            city: address.order_address.city,
+            zip_code: address.order_address.zip_code,
+            address: 'x',
+            payment_method: address.payment,
+            payment_id: data?.purchase_units[0]?.payments?.captures[0]?.id || data?.hash,
+        };
+
+        await doPayment(form, address);
+    }
+
+    async function payMetamask(data) {
+        if (ethereum !== undefined) {
+            await ethereum.send('eth_requestAccounts');
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            await signer.sendTransaction({
+                to: process.env.CRYPTO_WALLET_ADDRESS,
+                value: ethers.utils.parseEther(data.totalPrice),
+            })
+                .then((res) => {
+                    paymentForm(res, data);
+                }).catch((err) => {
+                    alert('Payment Cancelled');
+                });
+        } else {
+            alert('You have to install Metamask first');
+        }
+    }
+
+    useEffect(() => {
+        setupPaypal();
+        setupETH(window);
+    }, []);
+
     useEffect(() => {
         getOrderByType(paginationPage);
     }, [typeOrder, paginationPage]);
@@ -144,6 +213,22 @@ export default function UserOrder({ orders }) {
                                             <button onClick={() => { setCredentialModal(true); getCredentials(order); }} className="capsule button mx-1">Credential</button>
                                         )}
                                         <button onClick={() => { setReviewModal(true); setSelectedOrder(order); }} className="capsule button-org-border mx-1">Review</button>
+                                    </>
+                                )}
+                                {order.status === 'Unpaid' && (
+                                    <>
+                                        <div className={`${order.status !== 'Paypal' && scriptLoaded ? ('hide') : (null)}`}>
+                                            <PayPalButton
+                                                style={{
+                                                    color: 'blue', layout: 'horizontal', tagline: false, shape: 'pill', height: 40,
+                                                }}
+                                                amount={order?.total_price}
+                                                onSuccess={(data) => paymentForm(data, order)}
+                                            />
+                                        </div>
+                                        <div className={`${order.status !== 'Metamask' && ('hide')}`}>
+                                            <button className="button capsule mb-2" type="button" onClick={() => payMetamask(order)}>Pay Now</button>
+                                        </div>
                                     </>
                                 )}
                                 <button onClick={() => { setDetailModal(true); setSelectedOrder(order); }} className="capsule button-org">Details</button>

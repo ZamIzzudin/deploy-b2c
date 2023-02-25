@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/jsx-no-useless-fragment */
@@ -22,7 +23,7 @@ import { useRouter } from 'next/router';
 import { LoginModal } from '.';
 import { useAppSelector, useAppDispatch } from '../hooks';
 
-import { AsyncLogout, AsyncCheckLogin } from '../state/auth/action';
+import { AsyncLogout, AsyncCheckLogin, AsyncRefresh } from '../state/auth/action';
 import { asyncGetAllGames } from '../state/games/action';
 // import { asyncGetAllRanksByGame } from '../state/ranks/action';
 import { asyncGetAllServersByGame } from '../state/servers/action';
@@ -50,9 +51,22 @@ function TabBar() {
         router.push('/');
     };
 
-    // Hide Modal
+    // Refresh Token Cycle
     useEffect(() => {
         showModal(false);
+        // do refresh token where token is'nt undefined
+        if (auth.user.emailVerified) {
+            try {
+                // Do in 8 minutes
+                const interval = setInterval(() => {
+                    dispatch(AsyncRefresh());
+                }, 80000);
+
+                return () => clearInterval(interval);
+            } catch (err) {
+                dispatch(AsyncLogout());
+            }
+        }
     }, [auth]);
 
     useEffect(() => {
@@ -113,7 +127,7 @@ function TabBar() {
                                     <button onClick={() => setShowDropdown(!showDropdown)} className={`${styles['navbar-dropdown-button']} ${showDropdown && (styles.actived)}`}>
                                         Hi,
                                         {' '}
-                                        {auth.role[0]}
+                                        {auth?.role[0] || 'User'}
                                     </button>
                                     {showDropdown && (
                                         <div className={styles['navbar-dropdown-list']}>

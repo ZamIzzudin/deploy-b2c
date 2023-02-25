@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable dot-notation */
 /* eslint-disable no-use-before-define */
 /* eslint-disable import/extensions */
@@ -94,6 +95,26 @@ function AsyncGoogleLogin(provider) {
     };
 }
 
+function AsyncRefresh() {
+    return async (dispatch) => {
+        try {
+            const response = await api.Refresh();
+            const role = [response?.user.role];
+
+            const dataAuth = {
+                token: response.refresh_token,
+                role,
+            };
+
+            saveDataLogin({ emailVerified: response.status }, response.refresh_token, role);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${response.refresh_token}`;
+            dispatch(LoginAction(dataAuth));
+        } catch (err) {
+            console.log(err);
+        }
+    };
+}
+
 function AsyncCheckLogin() {
     return async (dispatch) => {
         try {
@@ -159,5 +180,5 @@ function saveDataLogin(data, token, role) {
 }
 
 export {
-    ActionType, AsyncLogin, AsyncCheckLogin, AsyncGoogleLogin, AsyncRegister, AsyncLogout,
+    ActionType, AsyncLogin, AsyncCheckLogin, AsyncGoogleLogin, AsyncRegister, AsyncLogout, AsyncRefresh,
 };

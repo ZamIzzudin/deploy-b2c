@@ -48,7 +48,13 @@ export default function OptionalAddons(props) {
     return (
         <div className="flex-row mb-2">
             <div className="space-between flex-down fullwidth">
-                <span className="set2">{data.name}</span>
+                <span className="set2">
+                    {data.name}
+                    <span className="bubble-text mx-2">
+                        {data.percentage_price * 100}
+                        %
+                    </span>
+                </span>
             </div>
             <div className="space-between flex-down">
                 <input type="checkbox" checked={checked} className="checkbox" onChange={() => sendAddOns()} />
