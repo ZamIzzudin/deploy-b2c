@@ -72,7 +72,6 @@ function Checkout(props: any) {
             }
             tempRequire.push(require);
         });
-        console.log(tempRequire);
         data.require = tempRequire;
         dispatch(setCheckoutBoosting((data)));
     }

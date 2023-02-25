@@ -73,7 +73,7 @@ function Payment() {
             zip_code: zipCode,
             address: Address,
             payment_method: paymentMethod,
-            payment_id: data?.purchase_units[0]?.payments?.captures[0]?.id || data?.hash,
+            payment_id: data?.hash || data?.purchase_units[0]?.payments?.captures[0]?.id,
         };
 
         if (checkoutDetail.type !== 'Valorant Account') {
@@ -141,7 +141,7 @@ function Payment() {
             const signer = provider.getSigner();
             await signer.sendTransaction({
                 to: process.env.CRYPTO_WALLET_ADDRESS,
-                value: ethers.utils.parseEther(totalPrice),
+                value: ethers.utils.parseEther(totalPrice).toString(),
             })
                 .then((res) => {
                     paymentForm(res);
@@ -284,18 +284,21 @@ function Payment() {
                                         <span className={styles['sub-mini-text']}>Further information will be requested after payment.</span>
                                         {accForm ? (
                                             <div className=" centered mt-4 px-5">
-                                                <div className={`${paymentMethod !== 'Paypal' && scriptLoaded ? ('hide') : (null)}`}>
-                                                    <PayPalButton
-                                                        style={{
-                                                            color: 'blue', layout: 'horizontal', tagline: false, shape: 'pill', height: 40
-                                                        }}
-                                                        amount={checkoutDetail?.total_price}
-                                                        onSuccess={(data) => paymentForm(data)}
-                                                    />
-                                                </div>
-                                                <div className={`${paymentMethod !== 'Metamask' && ('hide')}`}>
-                                                    <button className="button capsule mb-2" type="submit">Pay Now</button>
-                                                </div>
+                                                {paymentMethod !== 'Paypal' && scriptLoaded ? (
+                                                    <div>
+                                                        <PayPalButton
+                                                            style={{
+                                                                color: 'blue', layout: 'horizontal', tagline: false, shape: 'pill', height: 40
+                                                            }}
+                                                            amount={checkoutDetail?.total_price}
+                                                            onSuccess={(data) => paymentForm(data)}
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <div>
+                                                        <button className="button capsule mb-2" type="submit">Pay Now</button>
+                                                    </div>
+                                                )}
                                             </div>
                                         ) : (
                                             <div className=" centered mt-4 px-5">
