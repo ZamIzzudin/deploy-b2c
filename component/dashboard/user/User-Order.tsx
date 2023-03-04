@@ -217,7 +217,7 @@ export default function UserOrder({ orders }) {
                                 )}
                                 {order.status === 'Unpaid' && (
                                     <>
-                                        <div className={`${order.status !== 'Paypal' && scriptLoaded ? ('hide') : (null)}`}>
+                                        <div className={`${order.payment !== 'Paypal' && scriptLoaded ? ('hide') : (null)}`}>
                                             <PayPalButton
                                                 style={{
                                                     color: 'blue', layout: 'horizontal', tagline: false, shape: 'pill', height: 40,
@@ -226,8 +226,8 @@ export default function UserOrder({ orders }) {
                                                 onSuccess={(data) => paymentForm(data, order)}
                                             />
                                         </div>
-                                        <div className={`${order.status !== 'Metamask' && ('hide')}`}>
-                                            <button className="button capsule mb-2" type="button" onClick={() => payMetamask(order)}>Pay Now</button>
+                                        <div className={`${order.payment !== 'Metamask' && ('hide')}`}>
+                                            <button className="button capsule mb-2" type="button" onClick={() => payMetamask(order)}>Metamask Payment</button>
                                         </div>
                                     </>
                                 )}

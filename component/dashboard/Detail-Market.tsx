@@ -42,13 +42,14 @@ function DetailMarket() {
     const [modal, showModal] = useState(false);
     const [modal2, showModal2] = useState(false);
     const [modal3, showModal3] = useState(false);
+    const [modal4, showModal4] = useState(false);
 
     const [filterRank, setFilterRank] = useState('All');
     const [filterServer, setFilterServer] = useState<any>('All');
     const [filterSort, setFilterSort] = useState('asc');
 
     const [newHighestRank, setNewHighestRank] = useState<any>(1);
-    const [newAccountPrice, setNewAccountPrice] = useState('');
+    const [newAccountPrice, setNewAccountPrice] = useState('0');
     const [newAccountServer, setNewAccountServer] = useState<any>(1);
     const [newCurrentRank, setNewCurrentRank] = useState<any>(1);
     const [newAccountDesc, setNewAccountDesc] = useState('');
@@ -72,6 +73,7 @@ function DetailMarket() {
     const pagination: any = [];
 
     const fileForm = useRef<any>();
+    const [error, setError] = useState('');
 
     useEffect(() => {
         dispatch(asyncAdminGetAllAccountByFilter());
@@ -94,12 +96,11 @@ function DetailMarket() {
 
     function clearData() {
         setNewHighestRank(1);
-        setNewAccountPrice('');
+        setNewAccountPrice('0');
         setNewAccountServer(1);
         setNewCurrentRank(1);
         setNewAccountDesc('');
         setNewScreenShoot([]);
-        setNewCurrentRank([]);
         setShowScreenShoot([]);
         setNewSkins([]);
         setNewAgents([]);
@@ -111,70 +112,82 @@ function DetailMarket() {
 
     // CRUD
     function newAccount() {
-        const formData = new FormData();
+        const validation = validateForm('create');
+        console.log(newAgents);
+        if (validation === null) {
+            const formData = new FormData();
 
-        formData.append('current_rank_id', newCurrentRank);
-        formData.append('highest_rank_id', newHighestRank);
-        formData.append('server_id', newAccountServer);
-        formData.append('price', newAccountPrice);
-        formData.append('agent_list', newAgents);
-        formData.append('skin_list', newSkins);
-        formData.append('description', newAccountDesc);
-        formData.append('in_stocks', '1');
+            formData.append('current_rank_id', newCurrentRank);
+            formData.append('highest_rank_id', newHighestRank);
+            formData.append('server_id', newAccountServer);
+            formData.append('price', newAccountPrice);
+            formData.append('agent_list', newAgents);
+            formData.append('skin_list', newSkins);
+            formData.append('description', newAccountDesc);
+            formData.append('in_stocks', '1');
 
-        if (newScreenshoot?.length > 0) {
-            newScreenshoot.forEach((SS) => {
-                formData.append('screenshots[]', SS);
-            });
+            if (newScreenshoot?.length > 0) {
+                newScreenshoot.forEach((SS) => {
+                    formData.append('screenshots[]', SS);
+                });
+            } else {
+                formData.append('screenshots[]', ' ');
+            }
+
+            formData.append('account_username', encrypt(accountUsername));
+            formData.append('account_password', encrypt(accountPass));
+            formData.append('account_email', encrypt(accountEmail));
+            formData.append('account_email_password', encrypt(accountEmailPass));
+
+            try {
+                dispatch(makeAccountOnMarket(formData));
+                clearData();
+                showModal3(false);
+            } catch (err) {
+                console.log(err);
+            }
         } else {
-            formData.append('screenshots[]', ' ');
-        }
-
-        formData.append('account_username', encrypt(accountUsername));
-        formData.append('account_password', encrypt(accountPass));
-        formData.append('account_email', encrypt(accountEmail));
-        formData.append('account_email_password', encrypt(accountEmailPass));
-
-        try {
-            dispatch(makeAccountOnMarket(formData));
-            clearData();
-            showModal3(false);
-        } catch (err) {
-            console.log(err);
+            showModal4(true);
+            setError(validation);
         }
     }
 
     function updateAccount(id) {
-        console.log(id);
-        const formData = new FormData();
+        const validation = validateForm('update');
+        if (validation === null) {
+            const formData = new FormData();
 
-        formData.append('current_rank_id', newCurrentRank);
-        formData.append('highest_rank_id', newHighestRank);
-        formData.append('server_id', newAccountServer);
-        formData.append('price', newAccountPrice);
-        formData.append('agent_list', newAgents);
-        formData.append('skin_list', newSkins);
-        formData.append('description', newAccountDesc);
+            formData.append('current_rank_id', newCurrentRank);
+            formData.append('highest_rank_id', newHighestRank);
+            formData.append('server_id', newAccountServer);
+            formData.append('price', newAccountPrice);
+            formData.append('agent_list', newAgents);
+            formData.append('skin_list', newSkins);
+            formData.append('description', newAccountDesc);
 
-        if (newScreenshoot?.length > 0) {
-            newScreenshoot.forEach((SS) => {
-                formData.append('screenshots[]', SS);
-            });
+            if (newScreenshoot?.length > 0) {
+                newScreenshoot.forEach((SS) => {
+                    formData.append('screenshots[]', SS);
+                });
+            } else {
+                formData.append('screenshots[]', ' ');
+            }
+
+            formData.append('account_username', encrypt(accountUsername));
+            formData.append('account_password', encrypt(accountPass));
+            formData.append('account_email', encrypt(accountEmail));
+            formData.append('account_email_password', encrypt(accountEmailPass));
+
+            try {
+                dispatch(editAccountOnMarket(formData, id));
+                clearData();
+                showModal(false);
+            } catch (err) {
+                console.log(err);
+            }
         } else {
-            formData.append('screenshots[]', ' ');
-        }
-
-        formData.append('account_username', encrypt(accountUsername));
-        formData.append('account_password', encrypt(accountPass));
-        formData.append('account_email', encrypt(accountEmail));
-        formData.append('account_email_password', encrypt(accountEmailPass));
-
-        try {
-            dispatch(editAccountOnMarket(formData, id));
-            clearData();
-            showModal(false);
-        } catch (err) {
-            console.log(err);
+            showModal4(true);
+            setError(validation);
         }
     }
 
@@ -265,6 +278,39 @@ function DetailMarket() {
         setShowScreenShoot(showSS);
     }
 
+    function validateForm(status) {
+        if (newAccountPrice === '0' || newAccountPrice === '') {
+            return 'Price cannot be 0';
+        }
+        if (status === 'create') {
+            if (newScreenshoot.length === 0) {
+                return 'Screenshoot cannot be empty';
+            }
+        }
+        if (newAccountDesc === '') {
+            return 'Description cannot be empty';
+        }
+        if (newSkins.length === 0) {
+            return 'Skin List cannot be empty (you can fill with "none")';
+        }
+        if (newAgents.length === 0) {
+            return 'Agent List cannot be empty';
+        }
+        if (accountEmail === '') {
+            return 'Credential email cannot be empty';
+        }
+        if (accountEmailPass === '') {
+            return 'Credential email password cannot be empty';
+        }
+        if (accountUsername === '') {
+            return 'Credential username account cannot be empty';
+        }
+        if (accountPass === '') {
+            return 'Credential password account cannot be empty';
+        }
+        return null;
+    }
+
     for (let i = 1; i <= accounts.last_page; i++) {
         pagination.push(
             <Pagination.Item className="pagination-items mx-1" key={i} active={i === paginationPage} onClick={() => setPaginationPage(i)}>
@@ -345,6 +391,7 @@ function DetailMarket() {
                     <DetailModal
                         show={modal}
                         onHide={() => showModal(false)}
+                        sizing="lg"
                     >
                         <h3 className="sec-font">Edit Account</h3>
                         <Form.Group className=" fullwidth">
@@ -523,6 +570,7 @@ function DetailMarket() {
                     <DetailModal
                         show={modal3}
                         onHide={() => showModal3(false)}
+                        sizing="lg"
                     >
                         <h3 className="sec-font">Add New Account</h3>
                         <Form.Group className="fullwidth">
@@ -545,7 +593,7 @@ function DetailMarket() {
                             <Row className="gap-3">
                                 <Col className="flex-down">
                                     <Form.Label>Highest Rank</Form.Label>
-                                    <Form.Select className="form-layout mb-4" value={newHighestRank} onChange={(e) => setNewHighestRank(e.target.value)}>
+                                    <Form.Select className="form-layout mb-4" defaultValue={newHighestRank} onChange={(e) => setNewHighestRank(e.target.value)}>
                                         {ranks.map((rank) => (
                                             <option value={rank.id} key={rank.id}>{rank.name}</option>
                                         ))}
@@ -553,7 +601,7 @@ function DetailMarket() {
                                 </Col>
                                 <Col className="flex-down">
                                     <Form.Label>Current Rank</Form.Label>
-                                    <Form.Select className="form-layout mb-4" value={newCurrentRank} onChange={(e) => setNewCurrentRank(e.target.value)}>
+                                    <Form.Select className="form-layout mb-4" defaultValue={newCurrentRank} onChange={(e) => setNewCurrentRank(e.target.value)}>
                                         {ranks.map((rank) => (
                                             <option value={rank.id} key={rank.id}>{rank.name}</option>
                                         ))}
@@ -678,6 +726,17 @@ function DetailMarket() {
                                 </Col>
                             </Row>
                         </Form.Group>
+                    </DetailModal>
+
+                    {/* Error Modal */}
+                    <DetailModal
+                        show={modal4}
+                        onHide={() => showModal4(false)}
+                    >
+                        <div className="centered flex-down">
+                            <Image src="/Jett-Sticker.png" width="300" height="300" />
+                            <p className="sec-font text-org text-center">{error}</p>
+                        </div>
                     </DetailModal>
                 </div>
             )}

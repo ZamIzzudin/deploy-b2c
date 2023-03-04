@@ -206,7 +206,7 @@ const api = (() => {
     async function makeAccount(data) {
         const url = `${BASE_URL}/accounts`;
 
-        await axios.post(url, data).then((res) => res).catch((err) => console.log(err));
+        await axios.post(url, data).then((res) => res).catch((err) => err);
     }
 
     async function editAccount(data, id) {

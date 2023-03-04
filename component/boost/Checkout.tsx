@@ -118,7 +118,7 @@ function Checkout(props: any) {
             <Row className="mt-5 mb-4 fullwidth">
                 <div className="fullwidth">
                     {addOns?.map((item) => (
-                        <OptionalAddons key={item.name} data={item} getAddOns={setAddOns} />
+                        <OptionalAddons key={item.name} data={item} game={game} getAddOns={setAddOns} />
                     ))}
                 </div>
             </Row>
@@ -137,9 +137,15 @@ function Checkout(props: any) {
 
             <Row className="mb-2 mt-3">
                 <Col>
-                    <Link href="/payment">
-                        <button type="button" className="button capsule" onClick={() => getDataCheckout()}>Pay Now</button>
-                    </Link>
+                    {price === 0 || price === '--' ? (
+                        <div>
+                            <button type="button" className="button capsule btn-disable">Pay Now</button>
+                        </div>
+                    ) : (
+                        <Link href="/payment">
+                            <button type="button" className="button capsule" onClick={() => getDataCheckout()}>Pay Now</button>
+                        </Link>
+                    )}
                 </Col>
             </Row>
         </div>

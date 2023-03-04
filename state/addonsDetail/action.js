@@ -34,17 +34,11 @@ function setupAddOnsDetailAction() {
 function setAddOnsDetail(addons) {
     return (dispatch, getState) => {
         const { addonsDetail } = getState();
-        let newAddons = false;
-
-        if (addonsDetail.length === 0) {
-            newAddons = true;
-        }
+        let newAddons = true;
 
         addonsDetail.forEach((item) => {
             if (item.name.includes(addons.name)) {
                 newAddons = false;
-            } else {
-                newAddons = true;
             }
         });
 

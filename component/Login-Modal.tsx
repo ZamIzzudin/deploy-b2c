@@ -11,9 +11,9 @@
 import {
     Modal, Row, Col, Form, InputGroup,
 } from 'react-bootstrap';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { useAppDispatch } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import { googleProvider } from '../config/socialAuth';
 
 import { AsyncLogin, AsyncGoogleLogin, AsyncRegister } from '../state/auth/action';
@@ -21,6 +21,7 @@ import { AsyncLogin, AsyncGoogleLogin, AsyncRegister } from '../state/auth/actio
 import styles from './styles/LoginModal.module.css';
 
 export default function LoginModal(props: any) {
+    const { error }: any = useAppSelector((states) => states);
     const dispatch = useAppDispatch();
 
     const [selectOption, setSelectionOption] = useState('login');
@@ -74,6 +75,10 @@ export default function LoginModal(props: any) {
         setErrorMsg(false);
     }
 
+    useEffect(() => {
+        setErrorMsg(error.message);
+    }, [error]);
+
     return (
         <Modal
             {...props}
@@ -94,7 +99,7 @@ export default function LoginModal(props: any) {
                                 Login with Account
                             </span>
                             {errorMsg && (
-                                <span className="mb-3 error-message">Your Email or Password Wrong</span>
+                                <span className="mb-3 error-message">Cannot Login</span>
                             )}
                             <Form onSubmit={(e) => handleLoginAccount(e)}>
                                 <Form.Group className="fullwidth">

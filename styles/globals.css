@@ -752,6 +752,15 @@ td:first-child {
   font-size: .8em;
 }
 
+.btn-disable {
+  background-color: var(--grey50);
+  border: 2px solid var(--grey50);
+}
+
+.btn-disable:hover {
+  color: var(--grey50);
+}
+
 @media only screen and (max-width: 1000px) {
   .title {
     font-size: 2.5em;

@@ -61,7 +61,7 @@ function Home() {
     animate();
   }, []);
 
-  if (error) {
+  if (error.page) {
     return (
       <ErrorPage />
     );

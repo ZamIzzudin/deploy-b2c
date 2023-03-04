@@ -300,7 +300,7 @@ function Payment() {
                                         ) : (
                                             <div className=" centered mt-4 px-5">
                                                 <div>
-                                                    <button className="button capsule mb-2" type="button">Pay Now</button>
+                                                    <button className="button capsule btn-disable mb-2" type="button">Pay Now</button>
                                                 </div>
                                             </div>
                                         )}
@@ -346,10 +346,16 @@ function Payment() {
                                         <Col className="centered h-100 m-0">
                                             <h5 className="subtitle-sec">Total Amount :</h5>
                                         </Col>
-                                        <Col>
-                                            <h5 className={styles['service-price']}>
-                                                {`$ ${totalPrice}`}
-                                            </h5>
+                                        <Col className="centered h-100 m-0 col-7">
+                                            {paymentMethod === 'Paypal' ? (
+                                                <h5 className={styles['service-price']}>
+                                                    {`$ ${totalPrice}`}
+                                                </h5>
+                                            ) : (
+                                                <h5 className={styles['service-price']}>
+                                                    {`ETH ${totalPrice}`}
+                                                </h5>
+                                            )}
                                         </Col>
                                     </Row>
                                 </div>

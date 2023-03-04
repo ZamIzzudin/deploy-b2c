@@ -5,6 +5,7 @@
 /* eslint-disable import/no-unresolved */
 import axios from 'axios';
 import api from '../../utils/api';
+import { handleShowErrorMessage } from '../errorHandle/action';
 import socialMediaAuth, { socialMediaLogout } from '../../login-auth/auth';
 
 const ActionType = {
@@ -69,7 +70,7 @@ function AsyncLogin(data) {
             axios.defaults.headers.common['Authorization'] = `Bearer ${response.token}`;
             dispatch(LoginAction(response));
         } catch (err) {
-            console.log(err);
+            dispatch(handleShowErrorMessage());
         }
     };
 }
