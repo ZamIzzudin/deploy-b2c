@@ -18,8 +18,8 @@ function AccountCard(props: any) {
 
     const dataAccount = {
         ...data,
-        agent_list: data.agent_list.split(' '),
-        skin_list: data.skin_list.split(' '),
+        agent_list: data.agent_list.split(','),
+        skin_list: data.skin_list.split(','),
     };
 
     function seeDetails() {

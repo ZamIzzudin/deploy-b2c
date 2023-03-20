@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 /* eslint-disable no-plusplus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -20,6 +21,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAppSelector, useAppDispatch } from '../../hooks';
+import Breadcrump from '../Breadcrump';
 import DetailModal from '../Detail-Modal';
 
 import {
@@ -35,24 +37,51 @@ function DetailOther() {
     const [addFaqModal, showAddFaqModal] = useState(false);
     const [addReviewModal, showAddReviewModal] = useState(false);
     const [editFaqModal, showEditFaqModal] = useState(false);
+    const [manageRole, showManageRole] = useState(false);
 
     const [newQuestion, setNewQuestion] = useState<any>();
     const [newAnswer, setNewAnswer] = useState<any>();
     const [selectedFaqID, setSelectedFaqID] = useState<any>();
+    const [selectedUser, setSelectedUser] = useState<any>();
 
     const [users, setUsers] = useState<any>([]);
+    const [searchUser, setSearchUser] = useState<any>('');
     const [reviewsShown, setReviewShown] = useState<any>([]);
     const [reviewsAll, setReviewAll] = useState<any>([]);
+
+    const [policy, setPolicy] = useState<any>([]);
+    const [addpolicy, setAddPolicy] = useState<any>(false);
+    const [policyText, setPolicyText] = useState<any>('');
+    const [policyTitle, setPolicyTitle] = useState<any>('');
+    const [selectedPolicy, setSelectedPolicy] = useState<any>({});
+
+    const [isActive, setActive] = useState<any>('faq');
 
     const [paginationPage, setPaginationPage] = useState(1);
     const pagination: any = [];
 
+    function setActiveBreadCrump(page) {
+        setActive(page);
+    }
+
     async function getUsers() {
-        const url = `${process.env.API}/admin/users?role=user`;
+        const url = `${process.env.API}/admin/users`;
 
         await axios.get(url)
-            .then((res) => setUsers(res.data.data))
+            .then((res) => setUsers(res.data.data.data))
             .catch((err) => console.log(err));
+    }
+
+    async function filterUser() {
+        if (searchUser === '') {
+            getUsers();
+        } else {
+            const url = `${process.env.API}/admin/users?name=${searchUser}`;
+
+            await axios.get(url)
+                .then((res) => { setUsers(res.data.data); setSearchUser(''); })
+                .catch((err) => console.log(err));
+        }
     }
 
     // Function to get spesfic data about FAQ
@@ -74,14 +103,14 @@ function DetailOther() {
         showAddFaqModal(false);
     }
 
-    async function addNewBooster(id) {
+    async function addNewBooster(id, role) {
         const url = `${process.env.API}/admin/set-role/${id}`;
 
         const data = {
-            role: 'booster',
+            role,
         };
 
-        await axios.put(url, data).then(() => getUsers()).catch((err) => console.log(err));
+        await axios.put(url, data).then(() => { getUsers(); showManageRole(false); }).catch((err) => console.log(err));
     }
 
     // Function to edit FAQ data
@@ -139,11 +168,48 @@ function DetailOther() {
             .catch((err) => console.log(err));
     }
 
+    async function getPolicy() {
+        const url = `${process.env.API}/configs`;
+
+        await axios.get(url)
+            .then((res) => { setPolicy(res.data.data.data); setSelectedPolicy(res.data.data.data[0]); })
+            .catch((err) => console.log(err));
+    }
+
+    async function createPolicy() {
+        const url = `${process.env.API}/configs`;
+
+        const data = {
+            config_code: Math.random(),
+            config_value: policyText,
+            config_type: 'Policy',
+            config_description: policyTitle,
+        };
+
+        await axios.post(url, data)
+            .then((res) => { getPolicy(); setSelectedPolicy(null); })
+            .catch((err) => console.log(err));
+    }
+
+    async function updatePolicy(data) {
+        const url = `${process.env.API}/configs/${data.id}`;
+
+        const payload = {
+            config_code: data.config_code,
+            config_value: policyText,
+        };
+
+        await axios.put(url, payload)
+            .then((res) => { getPolicy(); setSelectedPolicy(null); })
+            .catch((err) => console.log(err));
+    }
+
     // Get data when load the page
     useEffect(() => {
         dispatch(asyncGetAllFAQ());
         getUsers();
         getReviews();
+        getPolicy();
     }, []);
 
     for (let i = 1; i <= reviewsAll?.last_page; i++) {
@@ -157,10 +223,11 @@ function DetailOther() {
     return (
         <>
             {auth?.role[0] === 'admin' ? (
-                <Row className="centered-start mt-4">
-                    <Col className=" col-md-6 px-3 mb-4">
+                <Row className="centered-start">
+                    <Breadcrump isActive={isActive} setActive={setActiveBreadCrump} />
+                    <Col className={isActive === 'faq' ? (styles.show) : (styles.hide)}>
                         <div className="card fullwidth">
-                            <h3 className="sec-font">Manage FAQ</h3>
+                            <h3 className="sec-font mb-4">List FAQ</h3>
                             {/* Looping All FAQ that exist */}
                             <div className={styles['list-container']}>
                                 {faq?.map((item) => (
@@ -185,27 +252,9 @@ function DetailOther() {
                             </div>
                         </div>
                     </Col>
-                    <Col className=" col-md-6 px-3 mb-4">
+                    <Col className={isActive === 'review' ? (styles.show) : (styles.hide)}>
                         <div className="card fullwidth">
-                            <h3 className="sec-font">Manage Booster Account</h3>
-                            <div className={styles['list-container']}>
-                                {users?.map((user) => (
-                                    <div className={styles['FAQ-card']} key={user.id}>
-                                        <span>{user.email}</span>
-                                        <div className={styles['button-container']}>
-                                            {/* Delete FAQ Button */}
-                                            <button className={styles['delete-btn']} onClick={() => addNewBooster(user.user_id)}>
-                                                <i className="fa-solid fa-pen" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </Col>
-                    <Col className=" col-md-6 px-3 mb-4">
-                        <div className="card fullwidth">
-                            <h3 className="sec-font">Manage Review</h3>
+                            <h3 className="sec-font mb-4">Showed Review</h3>
                             <div className={styles['list-container']}>
                                 {reviewsShown?.map((review) => (
                                     <div className={styles['FAQ-card']} key={review.id}>
@@ -221,6 +270,52 @@ function DetailOther() {
                             </div>
                             <div>
                                 <button className="button capsule" onClick={() => showAddReviewModal(true)}>Add</button>
+                            </div>
+                        </div>
+                    </Col>
+                    <Col className={isActive === 'policy' ? (styles.show) : (styles.hide)}>
+                        <div className="card fullwidth">
+                            <h3 className="sec-font mb-4">Policy</h3>
+                            <div className={styles['policy-container']}>
+                                {policy.map((unit) => (
+                                    <button className="button" onClick={() => { setAddPolicy(false); setPolicyText(unit.config_value); setSelectedPolicy(unit); }}>{unit.config_description}</button>
+                                ))}
+                                <button className="button button-org" onClick={() => { setAddPolicy(true); setPolicyText(''); setPolicyTitle(''); setSelectedPolicy(null); }}>+ Add</button>
+                            </div>
+                            {addpolicy && (
+                                <Form.Control placeholder="Title" className="form-layout mt-4" value={policyTitle} onChange={(e) => setPolicyTitle(e.target.value)} />
+                            )}
+                            <textarea placeholder="Value" className="form-layout mt-3" value={policyText} onChange={(e) => setPolicyText(e.target.value)} />
+                            <div>
+                                {addpolicy ? (
+                                    <button className="button capsule mt-3" onClick={() => createPolicy()}>Add</button>
+                                ) : (
+                                    <button className="button capsule mt-3" onClick={() => updatePolicy(selectedPolicy)}>Update</button>
+                                )}
+                            </div>
+                        </div>
+                    </Col>
+                    <Col className={isActive === 'role' ? (styles.show) : (styles.hide)}>
+                        <div className="card fullwidth">
+                            <h3 className="sec-font mb-4">Manage Account Roles</h3>
+                            <div className={styles['search-container']}>
+                                <Form.Control placeholder="Search User" className="form-layout" value={searchUser} onChange={(e) => setSearchUser(e.target.value)} />
+                                <button className="button capsule mx-3" onClick={() => filterUser()}>Search</button>
+                            </div>
+
+                            <div className={styles['list-container']}>
+                                {users?.map((user) => (
+                                    <div className={styles['FAQ-card']} key={user.id}>
+                                        <span>{user.email}</span>
+                                        <div className={styles['button-container']}>
+                                            <div className={styles['role-tag']}>{user.role[0]}</div>
+                                            {/* Delete FAQ Button */}
+                                            <button className={styles['delete-btn']} onClick={() => { showManageRole(true); setSelectedUser(user); }}>
+                                                <i className="fa-solid fa-pen" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </Col>
@@ -293,6 +388,18 @@ function DetailOther() {
                                 </Col>
                             )}
                         </Row>
+                    </DetailModal>
+
+                    {/* Manage Role */}
+                    <DetailModal
+                        show={manageRole}
+                        onHide={() => showManageRole(false)}
+                    >
+                        <span className={styles['text-center']}>Change Role Account</span>
+                        <div className={styles['role-container']}>
+                            <button onClick={() => addNewBooster(selectedUser.user_id, 'booster')} className="button capsule button-org">Booster</button>
+                            <button onClick={() => addNewBooster(selectedUser.user_id, 'user')} className="button capsule button-org">User</button>
+                        </div>
                     </DetailModal>
                 </Row>
             ) : (

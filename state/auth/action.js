@@ -91,7 +91,7 @@ function AsyncGoogleLogin(provider) {
             axios.defaults.headers.common['Authorization'] = `Bearer ${response.token}`;
             dispatch(LoginAction(response));
         } catch (err) {
-            console.log(err);
+            dispatch(handleShowErrorMessage());
         }
     };
 }
@@ -142,7 +142,7 @@ function AsyncRegister(data) {
             axios.defaults.headers.common['Authorization'] = `Bearer ${response.token}`;
             dispatch(RegisterAction(response));
         } catch (err) {
-            console.log(err);
+            dispatch(handleShowErrorMessage());
         }
     };
 }

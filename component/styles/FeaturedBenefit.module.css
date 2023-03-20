@@ -64,6 +64,7 @@
 
 .benefit-card {
     padding: 20px;
+    text-align: center;
 }
 
 .benefit-card-title {
@@ -78,7 +79,6 @@
     font-size: 1.1em;
     font-weight: 400;
     opacity: .8;
-    text-align: justify;
 }
 
 @media only screen and (max-width: 1000px) {

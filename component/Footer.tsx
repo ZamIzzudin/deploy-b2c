@@ -18,7 +18,6 @@ function Footer() {
                             <ul className={styles['footer-list']}>
                                 <li>Terms of Use</li>
                                 <li>Privacy Policy</li>
-                                <li>DMCA Notice</li>
                             </ul>
                         </div>
                     </Col>

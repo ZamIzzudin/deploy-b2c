@@ -84,7 +84,7 @@ function Jumbotron() {
                     <button type="button" className="button capsule"><Link href="/market">Market</Link></button>
                 </div>
             </div>
-            <video className={styles.video} width="100%" height="100%" loop muted poster="/valorant-episode-3-lobby-screen-thumb.jpg">
+            <video className={styles.video} width="100%" height="100%" autoPlay loop muted poster="/valorant-episode-3-lobby-screen-thumb.jpg">
                 <source src="valorant-episode-3-lobby-screen-desktop-wallpaperwaifu.com.mp4" type="video/mp4" />
             </video>
         </header>

@@ -1,0 +1,19 @@
+.breadcrump {
+    padding: 0;
+}
+
+.breadcrump button {
+    font-family: var(--secFont);
+    background-color: transparent;
+    border: none;
+    padding: 15px 30px;
+    transition: .3s;
+}
+
+.breadcrump .active {
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    background-color: var(--card);
+    border: none;
+    padding: 15px 50px;
+}

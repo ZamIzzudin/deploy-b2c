@@ -111,14 +111,13 @@ export default function BoosterOrder({ orders }) {
                             <td>{order.service}</td>
                             <td>{order.status}</td>
                             <td>
-                                {order.status !== 'Finished' && (
+                                {(order.status !== 'Finished' && order.status !== 'Reviewed') && (
                                     <button onClick={() => { setAttachModal(true); setSelectedOrder(order); }} className="capsule button-org-border">Finish</button>
                                 )}
                                 {order.status === 'On Progress' && (
-                                    <button onClick={() => { setCredentialsModal(true); getCredentials(order); }} className="capsule button mx-2">Credential</button>
+                                    <button onClick={() => { setCredentialsModal(true); getCredentials(order); }} className="capsule button">Credential</button>
                                 )}
-
-                                <button onClick={() => { setDetailModal(true); setSelectedOrder(order); }} className="capsule button-org">Details</button>
+                                <button onClick={() => { setDetailModal(true); setSelectedOrder(order); }} className="capsule button-org mx-2">Details</button>
                             </td>
                         </tr>
                     ))}
@@ -146,64 +145,67 @@ export default function BoosterOrder({ orders }) {
 
             {/* Detail Modal */}
             <DetailModal
+                sizing="lg"
                 show={ShowDetailModal}
                 onHide={() => setDetailModal(false)}
             >
                 <h1>Details</h1>
-                {/* General Detail */}
-                <Row>
-                    <h5 className="text-org">General</h5>
-                    <span>
-                        Status :
-                        {' '}
-                        {selectedOrder?.status}
-                    </span>
-                    <span>
-                        Order ID :
-                        {' '}
-                        {selectedOrder?.boost_id}
-                    </span>
-                    <span>
-                        Order Date :
-                        {' '}
-                        {selectedOrder?.order_date}
-                    </span>
-                    <span>
-                        Total Price :
-                        {' $'}
-                        {selectedOrder?.total_price}
-                    </span>
-                </Row>
                 <hr />
-                {/* Boost Detail */}
                 <Row>
-                    <h5 className="text-org">Spesification</h5>
-                    <span>
-                        Game :
-                        {' '}
-                        {selectedOrder?.game}
-                    </span>
-                    <span>
-                        Service :
-                        {' '}
-                        {selectedOrder?.service}
-                    </span>
-                    {
-                        selectedOrder?.detail.boost_detail?.map((item) => (
-                            <span className={styles['booster-detail-list']}>
-                                {`${Object.keys(item).toString().replace('_', ' ')} : 
+                    {/* General Detail */}
+                    <Col className="flex-down flex-start col-12 col-md-6">
+                        <h4 className="text-org">General</h4>
+                        <span>
+                            Status :
+                            {' '}
+                            {selectedOrder?.status}
+                        </span>
+                        <span>
+                            Order ID :
+                            {' '}
+                            {selectedOrder?.boost_id}
+                        </span>
+                        <span>
+                            Order Date :
+                            {' '}
+                            {selectedOrder?.order_date}
+                        </span>
+                        <span>
+                            Total Price :
+                            {' $'}
+                            {selectedOrder?.total_price}
+                        </span>
+                    </Col>
+                    {/* Boost Detail */}
+                    <Col className="flex-down flex-start col-12 col-md-6">
+                        <h4 className="text-org">Spesification</h4>
+                        <span>
+                            Game :
+                            {' '}
+                            {selectedOrder?.game}
+                        </span>
+                        <span>
+                            Service :
+                            {' '}
+                            {selectedOrder?.service}
+                        </span>
+                        {
+                            selectedOrder?.detail.boost_detail?.map((item) => (
+                                <span className={styles['booster-detail-list']}>
+                                    {`${Object.keys(item).toString().replace('_', ' ')} :
                                 ${item[Object.keys(item).toString()].start
-                                        ? (`${item[Object.keys(item).toString()].start} - ${item[Object.keys(item).toString()].to}`)
-                                        : (item[Object.keys(item).toString()])}`}
-                            </span>
-                        ))
-                    }
+                                            ? (`${item[Object.keys(item).toString()].start} - ${item[Object.keys(item).toString()].to}`)
+                                            : (item[Object.keys(item).toString()])}`}
+                                </span>
+                            ))
+                        }
+                    </Col>
                 </Row>
                 <hr />
                 {/* Add Ons */}
                 {selectedOrder?.detail.add_ons[0].name !== 'None' && (
                     <Row>
-                        <h5 className="text-org">Add Ons</h5>
+                        <h4 className="text-org">Add Ons</h4>
                         <span>Add Ons : </span>
                         <ul className="px-5">
                             {selectedOrder?.detail.add_ons?.map((list) => (
@@ -254,7 +256,7 @@ export default function BoosterOrder({ orders }) {
                             </div>
                         ))}
                         <input type="file" onChange={(e) => { addScreenshoot(e); }} accept="image/png, image/jpg, image/jpeg" hidden ref={fileForm} />
-                        <button className="button-org-border capsule" onClick={() => fileForm.current?.click()}>
+                        <button className="button-org-border capsule my-3" onClick={() => fileForm.current?.click()}>
                             Choose File
                         </button>
                     </Col>

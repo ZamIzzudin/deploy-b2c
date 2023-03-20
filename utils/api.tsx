@@ -113,7 +113,7 @@ const api = (() => {
     }
 
     async function userGetAccountOrder(page) {
-        const url = `${BASE_URL}/profile/detail?page${page}`;
+        const url = `${BASE_URL}/profile/detail?page=${page}`;
 
         const orders = await axios.get(url);
 
@@ -121,7 +121,7 @@ const api = (() => {
     }
 
     async function userGetBoostOrder(page) {
-        const url = `${BASE_URL}/profile/detail/boost?page${page}`;
+        const url = `${BASE_URL}/profile/detail/boost?page=${page}`;
 
         const orders = await axios.get(url);
 
@@ -129,7 +129,7 @@ const api = (() => {
     }
 
     async function boosterGetBoost(page) {
-        const url = `${BASE_URL}/booster/detail?page${page}`;
+        const url = `${BASE_URL}/booster/detail?page=${page}`;
 
         const orders = await axios.get(url);
 
@@ -137,7 +137,7 @@ const api = (() => {
     }
 
     async function adminGetBoost(page) {
-        const url = `${BASE_URL}/admin/boosts?page${page}`;
+        const url = `${BASE_URL}/admin/boosts?page=${page}`;
 
         const orders = await axios.get(url);
 
@@ -145,15 +145,23 @@ const api = (() => {
     }
 
     async function adminGetAccount(page) {
-        const url = `${BASE_URL}/admin/account-orders?page${page}`;
+        const url = `${BASE_URL}/admin/account-orders?page=${page}`;
 
         const orders = await axios.get(url);
 
         return orders.data.data;
     }
 
-    async function adminChangeStatusAccountOrder(id) {
-        const url = `${BASE_URL}/admin/account-orders/${id}?status=finished`;
+    async function adminChangeStatusBoostOrder(id, status) {
+        const url = `${BASE_URL}/admin/boost/${id}?status=${status}`;
+
+        const response = await axios.post(url, {});
+
+        return response;
+    }
+
+    async function adminChangeStatusAccountOrder(id, status) {
+        const url = `${BASE_URL}/admin/account-orders/${id}?status=${status}`;
 
         const response = await axios.put(url, {});
 
@@ -197,6 +205,22 @@ const api = (() => {
 
     async function boosterTakeOrder(id) {
         const url = `${BASE_URL}/booster/boost/${id}?status=on-progress`;
+
+        await axios.post(url, {})
+            .then((res) => res.data.data)
+            .catch((err) => console.log(err));
+    }
+
+    async function userChangeBoostOrderStatus(id) {
+        const url = `${BASE_URL}/profile/detail/boost/${id}?status=paid`;
+
+        await axios.post(url, {})
+            .then((res) => res.data.data)
+            .catch((err) => console.log(err));
+    }
+
+    async function userChangeAccountOrderStatus(id) {
+        const url = `${BASE_URL}/profile/detail/account/${id}?status=paid`;
 
         await axios.post(url, {})
             .then((res) => res.data.data)
@@ -264,6 +288,7 @@ const api = (() => {
         boosterGetBoost,
         adminGetBoost,
         adminGetAccount,
+        adminChangeStatusBoostOrder,
         adminChangeStatusAccountOrder,
         makeBoostOrder,
         checkoutBoostOrder,
@@ -271,6 +296,8 @@ const api = (() => {
         userMakeReview,
         boosterSeeAvailableOrder,
         boosterTakeOrder,
+        userChangeBoostOrderStatus,
+        userChangeAccountOrderStatus,
         makeAccount,
         editAccount,
         deleteAccount,

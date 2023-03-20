@@ -113,7 +113,6 @@ function DetailMarket() {
     // CRUD
     function newAccount() {
         const validation = validateForm('create');
-        console.log(newAgents);
         if (validation === null) {
             const formData = new FormData();
 
@@ -430,7 +429,7 @@ function DetailMarket() {
                             <Row>
                                 <Col className="flex-down">
                                     <Form.Label>Description</Form.Label>
-                                    <Form.Control className="form-layout mb-4" value={newAccountDesc} onChange={(e) => setNewAccountDesc(e.target.value)} />
+                                    <textarea className="form-layout mb-4" value={newAccountDesc} onChange={(e) => setNewAccountDesc(e.target.value)} />
                                 </Col>
                             </Row>
                             <Row>
@@ -542,7 +541,7 @@ function DetailMarket() {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col className="flex-horizon-centered-right">
+                                <Col className="flex-horizon-centered-right mt-3">
                                     <div>
                                         <button onClick={() => updateAccount(newId)} className="button capsule">Update</button>
                                     </div>
@@ -612,7 +611,7 @@ function DetailMarket() {
                             <Row>
                                 <Col className="flex-down">
                                     <Form.Label>Description</Form.Label>
-                                    <Form.Control className="form-layout mb-4" onChange={(e) => setNewAccountDesc(e.target.value)} />
+                                    <textarea className="form-layout mb-4" onChange={(e) => setNewAccountDesc(e.target.value)} />
                                 </Col>
                             </Row>
                             {/* Detail Skin List */}

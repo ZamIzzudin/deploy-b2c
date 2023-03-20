@@ -48,7 +48,9 @@ function FAQ() {
                 </div>
             )}
             <div>
-                <button type="button" className="button capsule mt-4" onClick={() => setExpandFAQ(!expandFAQ)}>Show More</button>
+                <button type="button" className="button capsule mt-4" onClick={() => setExpandFAQ(!expandFAQ)}>
+                    {expandFAQ ? ('Show Less') : ('Show More')}
+                </button>
             </div>
         </div>
     );

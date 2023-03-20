@@ -63,7 +63,7 @@ function AccountDetails() {
             {accountDetail?.price > 0 ? (
                 <Row className="mt-4 px-4">
                     {accountDetail?.agent_list.length > 0 && (
-                        <Col className="col-6 col-md-4 mb-3 pad-right-1-res">
+                        <Col className="col-12 col-md-4 mb-3">
                             <div className="w-95-res center-start card">
                                 <h2 className={styles['detail-account-title']}>Agent</h2>
                                 {accountDetail.agent_list.length > 5 ? (
@@ -88,7 +88,7 @@ function AccountDetails() {
                         </Col>
                     )}
                     {accountDetail?.skin_list.length > 0 && (
-                        <Col className="col-6 col-md-4 mb-3 pad-left-1-res">
+                        <Col className="col-12 col-md-4 mb-3">
                             <div className="w-95-res center-start card">
                                 <h2 className={styles['detail-account-title']}>Skin</h2>
                                 {accountDetail.skin_list.length > 5 ? (

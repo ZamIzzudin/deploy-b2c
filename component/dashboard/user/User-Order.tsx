@@ -18,7 +18,7 @@ import ImageGalery from '../../ImageGalery';
 import { decrypt } from '../../../utils/crypto';
 
 import { asyncUserGetBoostOrder, asyncUserGetAccountOrder, asyncUserMakeReview } from '../../../state/orderList/action';
-import { doPaymentBoost, doPaymentAccount } from '../../../state/checkoutDetail/action';
+import { userChangeStatusBoost, userChangeStatusAccount } from '../../../state/checkoutDetail/action';
 
 import styles from '../../styles/DetailPage.module.css';
 
@@ -32,6 +32,7 @@ export default function UserOrder({ orders }) {
     const [ShowCredentialModal, setCredentialModal] = useState(false);
     const [ShowAttachModal, setAttachModal] = useState(false);
     const [ShowReviewModal, setReviewModal] = useState(false);
+    const [ViewReviewModal, setViewReviewModal] = useState(false);
 
     const [titleReview, setTitleReview] = useState('');
     const [bodyReview, setBodyReview] = useState('');
@@ -74,7 +75,7 @@ export default function UserOrder({ orders }) {
             is_shown: false,
         };
 
-        dispatch(asyncUserMakeReview(data));
+        dispatch(asyncUserMakeReview(data, typeOrder));
         clearForm();
     }
 
@@ -118,9 +119,9 @@ export default function UserOrder({ orders }) {
 
     async function doPayment(form, data) {
         if (typeOrder === 'Boost') {
-            dispatch(doPaymentBoost(data?.detail.boost_id, form));
+            dispatch(userChangeStatusBoost(data?.detail.boost_id, form));
         } else {
-            dispatch(doPaymentAccount(data?.detail.account_order_id, form));
+            dispatch(userChangeStatusAccount(data?.detail.account_order_id, form));
         }
     }
 
@@ -231,6 +232,9 @@ export default function UserOrder({ orders }) {
                                         </div>
                                     </>
                                 )}
+                                {order.status === 'Reviewed' && (
+                                    <button onClick={() => { setViewReviewModal(true); setSelectedOrder(order); }} className="capsule button-org-border mx-1">Review</button>
+                                )}
                                 <button onClick={() => { setDetailModal(true); setSelectedOrder(order); }} className="capsule button-org">Details</button>
                             </td>
                         </tr>
@@ -259,91 +263,96 @@ export default function UserOrder({ orders }) {
 
             {/* Detail Modal */}
             <DetailModal
+                sizing="lg"
                 show={ShowDetailModal}
                 onHide={() => setDetailModal(false)}
             >
                 <h1>Details</h1>
-                {/* General Detail */}
-                <Row>
-                    <h5 className="text-org">General</h5>
-                    <span>
-                        Status :
-                        {' '}
-                        {selectedOrder?.status}
-                    </span>
-                    <span>
-                        Order ID :
-                        {' '}
-                        {selectedOrder?.detail.boost_id || selectedOrder?.detail.account_order_id}
-                    </span>
-                    <span>
-                        Order Date :
-                        {' '}
-                        {selectedOrder?.order_date}
-                    </span>
-                    {selectedOrder?.total_price !== undefined && (
-                        <span>
-                            Total Price :
-                            {' $'}
-                            {selectedOrder?.total_price}
-                        </span>
-                    )}
-                    <span>
-                        Payment Method :
-                        {' '}
-                        {selectedOrder?.payment}
-                    </span>
-                </Row>
                 <hr />
-                {/* Boost Detail */}
-                <h5 className="text-org">Order Spesification</h5>
-                {selectedOrder?.detail.boost_detail !== undefined ? (
-                    <Row>
-                        <span>
-                            Game :
-                            {' '}
-                            {selectedOrder?.game}
-                        </span>
-                        <span>
-                            Service :
-                            {' '}
-                            {selectedOrder?.service}
-                        </span>
-                        {selectedOrder?.detail.boost_detail?.map((item) => (
-                            <span className={styles['booster-detail-list']}>
-                                {`${Object.keys(item).toString().replace('_', ' ')} : ${item[Object.keys(item).toString()].start ? (`${item[Object.keys(item).toString()].start} - ${item[Object.keys(item).toString()].to}`) : (item[Object.keys(item).toString()])}`}
-                            </span>
-                        ))}
-                    </Row>
-                ) : (
-                    <Row>
-                        <span>
-                            Game :
-                            {' '}
-                            {selectedOrder?.game}
-                        </span>
-                        <span>
-                            Service :
-                            {' '}
-                            {selectedOrder?.service}
-                        </span>
-                        {
-                            selectedOrder?.detail.account_detail?.map((item) => (
-                                <span className={styles['booster-detail-list']}>
-                                    {`${Object.keys(item).toString().replace('_', ' ')} : ${item[Object.keys(item).toString()].start ? (`${item[Object.keys(item).toString()].start} - ${item[Object.keys(item).toString()].to}`) : (item[Object.keys(item).toString()])}`}
-                                </span>
-                            ))
-                        }
-                    </Row>
-                )}
 
+                <Row>
+                    {/* General Detail */}
+                    <Col className="flex-down col-12 col-md-6">
+                        <h4 className="text-org">General</h4>
+                        <span>
+                            Status :
+                            {' '}
+                            {selectedOrder?.status}
+                        </span>
+                        <span>
+                            Order ID :
+                            {' '}
+                            {selectedOrder?.detail.boost_id || selectedOrder?.detail.account_order_id}
+                        </span>
+                        <span>
+                            Order Date :
+                            {' '}
+                            {selectedOrder?.order_date}
+                        </span>
+                        {selectedOrder?.total_price !== undefined && (
+                            <span>
+                                Total Price :
+                                {' $'}
+                                {selectedOrder?.total_price}
+                            </span>
+                        )}
+                        <span>
+                            Payment Method :
+                            {' '}
+                            {selectedOrder?.payment}
+                        </span>
+                    </Col>
+                    {/* Boost Detail */}
+                    <Col className="flex-down flex-start col-12 col-md-6">
+                        <h4 className="text-org">Order Spesification</h4>
+                        {selectedOrder?.detail.boost_detail !== undefined ? (
+                            <Row>
+                                <span>
+                                    Game :
+                                    {' '}
+                                    {selectedOrder?.game}
+                                </span>
+                                <span>
+                                    Service :
+                                    {' '}
+                                    {selectedOrder?.service}
+                                </span>
+                                {selectedOrder?.detail?.boost_detail?.map((item) => (
+                                    <span className={styles['booster-detail-list']}>
+                                        {`${Object.keys(item).toString().replace('_', ' ')} : ${item[Object.keys(item).toString()].start ? (`${item[Object.keys(item).toString()].start} - ${item[Object.keys(item).toString()].to}`) : (item[Object.keys(item).toString()])}`}
+                                    </span>
+                                ))}
+                            </Row>
+                        ) : (
+                            <Row>
+                                <span>
+                                    Game :
+                                    {' '}
+                                    {selectedOrder?.game}
+                                </span>
+                                <span>
+                                    Service :
+                                    {' '}
+                                    {selectedOrder?.service}
+                                </span>
+                                {
+                                    selectedOrder?.detail.account_detail?.map((item) => (
+                                        <span className={styles['booster-detail-list']}>
+                                            {`${Object.keys(item).toString().replace('_', ' ')} : ${item[Object.keys(item).toString()].start ? (`${item[Object.keys(item).toString()].start} - ${item[Object.keys(item).toString()].to}`) : (item[Object.keys(item).toString()])}`}
+                                        </span>
+                                    ))
+                                }
+                            </Row>
+                        )}
+                    </Col>
+                </Row>
                 <hr />
                 {/* Add Ons */}
                 {selectedOrder?.detail?.add_ons !== undefined && (
                     <Row>
                         {selectedOrder?.detail?.add_ons[0].name !== 'None' && (
                             <>
-                                <h5 className="text-org">Add Ons</h5>
+                                <h4 className="text-org">Add Ons</h4>
                                 <span>Add Ons : </span>
                                 <ul className="px-5">
                                     {selectedOrder?.detail?.add_ons?.map((list) => (
@@ -354,11 +363,11 @@ export default function UserOrder({ orders }) {
                         )}
                     </Row>
                 )}
-
+                <hr />
                 {/* Address */}
                 {selectedOrder?.order_address !== undefined && (
                     <Row>
-                        <h5 className="text-org">My Address</h5>
+                        <h4 className="text-org">My Address</h4>
                         <span>
                             Name :
                             {' '}
@@ -386,7 +395,6 @@ export default function UserOrder({ orders }) {
                         </span>
                     </Row>
                 )}
-
             </DetailModal>
             {/* Credential Modal */}
             <DetailModal
@@ -436,22 +444,25 @@ export default function UserOrder({ orders }) {
             >
                 <h1>Review</h1>
                 <Form className="mt-3" onSubmit={(e) => sendReview(e)}>
-                    <Form.Group>
-                        <Form.Label>What do you think about us?</Form.Label>
-                        <Form.Control value={titleReview} onChange={(e) => setTitleReview(e.target.value)} className="form-layout mb-2" />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Can you tell us about your experiance?</Form.Label>
-                        <Form.Control value={bodyReview} onChange={(e) => setBodyReview(e.target.value)} className="form-layout mb-4" />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>
-                            Your rate :
-                            {' '}
-                            {rateReview}
-                        </Form.Label>
-                        <input value={rateReview} onChange={(e) => setRateReview(e.target.value)} className="form-layout mb-w-90 range-input mt-3" type="range" max={5} min={0} />
-                    </Form.Group>
+                    <Row>
+                        <Col className="col-12 flex-down centered">
+                            <span className="review-num">
+                                {rateReview}
+                            </span>
+                            <input value={rateReview} onChange={(e) => setRateReview(e.target.value)} className="form-layout mb-w-90 range-input mt-3" type="range" max={5} min={0} />
+                        </Col>
+                        <Col className="col-12 flex-down mt-5">
+                            <Form.Group>
+                                <h5 className="text-org">Title :</h5>
+                                <Form.Control value={titleReview} onChange={(e) => setTitleReview(e.target.value)} className="form-layout mb-2" />
+                            </Form.Group>
+                            <Form.Group>
+                                <h5 className="text-org">Review :</h5>
+                                <Form.Control value={bodyReview} onChange={(e) => setBodyReview(e.target.value)} className="form-layout mb-4" />
+                            </Form.Group>
+                            <Form.Group />
+                        </Col>
+                    </Row>
                     <Row>
                         <Col className="mt-3">
                             <button className="button capsule" type="submit">
@@ -460,6 +471,28 @@ export default function UserOrder({ orders }) {
                         </Col>
                     </Row>
                 </Form>
+            </DetailModal>
+            {/* Show Modal */}
+            <DetailModal
+                show={ViewReviewModal}
+                onHide={() => setViewReviewModal(false)}
+            >
+                <h1>Review</h1>
+                <Row className="mt-3">
+                    <Col className="col-12 col-md-3">
+                        <span className="review-num">
+                            {selectedOrder?.review?.rating}
+                        </span>
+                    </Col>
+                    <Col className="col-12 col-md-9">
+                        <Row className="w-100">
+                            <h5 className="text-org">Title :</h5>
+                            <span>{selectedOrder?.review?.review_title}</span>
+                            <h5 className="text-org mt-3">Review :</h5>
+                            <span>{selectedOrder?.review?.review_body}</span>
+                        </Row>
+                    </Col>
+                </Row>
             </DetailModal>
         </div>
 

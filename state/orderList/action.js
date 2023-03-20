@@ -92,11 +92,15 @@ function asyncAdminGetAccountOrder(page = 1) {
     };
 }
 
-function asyncUserMakeReview(data) {
-    return async () => {
+function asyncUserMakeReview(data, type) {
+    return async (dispatch) => {
         try {
-            const review = await api.userMakeReview(data);
-            console.log(review);
+            await api.userMakeReview(data);
+            if (type === 'Boost') {
+                dispatch(asyncUserGetBoostOrder());
+            } else {
+                dispatch(asyncUserGetAccountOrder());
+            }
         } catch (err) {
             console.log(err.message);
         }

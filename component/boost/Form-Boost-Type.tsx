@@ -91,18 +91,13 @@ export function IncludeRank({
 }
 
 export function NewApexIncludeRank({
-    serviceName,
+    serviceName, flagging,
 }) {
     const { ranks } = useAppSelector((states) => states);
 
-    const [type, setType] = useState('package');
-
-    const [selectedRank, setSelectedRank] = useState<any>(ranks[0]);
-    const [currentDivision, setCurrentDivision] = useState<any>(4);
-    const [desiredDivision, setDesiredDivision] = useState<any>(4);
+    const [currentDivision, setCurrentDivision] = useState<any>('IV');
 
     const [currentRank, setCurrentRank] = useState<any>(ranks[0]);
-    const [desiredRank, setDesiredRank] = useState<any>(ranks[0]);
 
     const dispatch = useAppDispatch();
 
@@ -111,138 +106,40 @@ export function NewApexIncludeRank({
     }
 
     function getRank(rank, division, title) {
-        if (rank.name.toLowerCase() === 'master') {
-            const setupRank = { ...rank, name: `${rank.name.toLowerCase()}_${division}` };
-            sendData(setupRank, title);
-        } else {
-            const setupRank = { ...rank, name: `${rank.name.toLowerCase()}_${division}` };
-            sendData(setupRank, title);
-        }
+        const setupRank = { ...rank, name: `${rank.name} ${division}` };
+        sendData(setupRank, title);
     }
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            getRank(selectedRank, desiredDivision, 'Desired Rank');
-            getRank(selectedRank, currentDivision, 'Current Rank');
-        }, 800);
+            getRank(currentRank, currentDivision, flagging);
+        }, 600);
 
         return () => clearTimeout(delayDebounceFn);
-    }, [currentDivision, desiredDivision, selectedRank]);
+    }, [currentRank, currentDivision]);
 
     useEffect(() => {
-        getRank(currentRank, 4, 'Current Rank');
-        if (desiredRank.name === 'Master') {
-            getRank(desiredRank, 0, 'Desired Rank');
-        } else {
-            getRank(desiredRank, 4, 'Desired Rank');
-        }
-    }, [currentRank, desiredRank]);
-
-    useEffect(() => {
-        setSelectedRank(ranks[0]);
         setCurrentRank(ranks[0]);
-        setDesiredRank(ranks[0]);
-        setCurrentDivision(4);
-        setDesiredDivision(4);
-    }, [ranks, serviceName, type]);
+        setCurrentDivision('IV');
+        getRank(ranks[0], 'IV', flagging);
+    }, [ranks, serviceName]);
 
     return (
         <div className={styles.container}>
-            <h1 className={styles['title-form']}>Select Ranks</h1>
-            <Form.Select className="form-layout mt-3" value={type} onChange={(e) => setType(e.target.value)}>
-                <option value="package">Package</option>
-                <option value="per-division">Per Division</option>
-            </Form.Select>
-            {type === 'package' ? (
-                <Row className={styles['rank-division-container']}>
-                    <Col className="col-md-6 col-12 p-2 flex-down mt-3">
-                        <span className="set2">Current Rank</span>
-                        <div className={`${styles['rank-container']}`}>
-                            {ranks.map((rank) => (
-                                <span className={`${styles['rank-list']} ${currentRank.name === rank.name ? (styles.active) : ('')} p-1`} key={rank.name} onClick={() => setCurrentRank(rank)}>
-                                    <Image src={rank.badge} width={50} height={50} />
-                                </span>
-                            ))}
-                        </div>
-                    </Col>
-                    <Col className="col-md-6 col-12 p-2 flex-down mt-3">
-                        <span className="set2">Desired Rank</span>
-                        <div className={`${styles['rank-container']}`}>
-                            {ranks.map((rank) => (
-                                <span className={`${styles['rank-list']} ${desiredRank.name === rank.name ? (styles.active) : ('')} p-1`} key={rank.name} onClick={() => setDesiredRank(rank)}>
-                                    <Image src={rank.badge} width={50} height={50} />
-                                </span>
-                            ))}
-                        </div>
-                    </Col>
-                </Row>
-            ) : (
-                <Row className={styles['rank-division-container']}>
-                    <Col className="col-md-12 col-12 pt-2">
-                        <div className={`${styles['rank-container']} gap-3`}>
-                            {ranks.map((rank) => (
-                                <span className={`${styles['rank-list']} ${selectedRank.name === rank.name ? (styles.active) : ('')} p-1`} key={rank.name} onClick={() => setSelectedRank(rank)}>
-                                    <Image src={rank.badge} width={50} height={50} />
-                                </span>
-                            ))}
-                        </div>
-                    </Col>
-                    <Col className="col-md-6 col-12 flex-down mt-3">
-                        <span className="set2">Current Division</span>
-                        {selectedRank.name === 'Master' ? (
-                            <div className={`${styles['rank-container']} gap-3`}>
-                                <span className="set3">
-                                    {currentDivision}
-                                    K
-                                </span>
-                                <input className="fullwidth range-input" type="range" min={1} max={30} value={currentDivision} onChange={(e) => setCurrentDivision(+e.target.value)} />
-                            </div>
-                        ) : (
-                            <div className={`${styles['rank-container']} gap-3`}>
-                                <span className={`${styles['rank-list']} ${currentDivision === 4 ? (styles.active) : ('')}`} onClick={() => setCurrentDivision(4)}>
-                                    IV
-                                </span>
-                                <span className={`${styles['rank-list']} ${currentDivision === 3 ? (styles.active) : ('')}`} onClick={() => setCurrentDivision(3)}>
-                                    III
-                                </span>
-                                <span className={`${styles['rank-list']} ${currentDivision === 2 ? (styles.active) : ('')}`} onClick={() => setCurrentDivision(2)}>
-                                    II
-                                </span>
-                                <span className={`${styles['rank-list']} ${currentDivision === 1 ? (styles.active) : ('')}`} onClick={() => setCurrentDivision(1)}>
-                                    I
-                                </span>
-                            </div>
-                        )}
-                    </Col>
-                    <Col className="col-md-6 col-12 flex-down mt-3">
-                        <span className="set2">Desired Division</span>
-                        {selectedRank.name === 'Master' ? (
-                            <div className={`${styles['rank-container']} gap-3`}>
-                                <span className="set3">
-                                    {desiredDivision}
-                                    K
-                                </span>
-                                <input className="fullwidth range-input" type="range" min={1} max={30} value={desiredDivision} onChange={(e) => setDesiredDivision(+e.target.value)} />
-                            </div>
-                        ) : (
-                            <div className={`${styles['rank-container']} gap-3`}>
-                                <span className={`${styles['rank-list']} ${desiredDivision === 4 ? (styles.active) : ('')}`} onClick={() => setDesiredDivision(4)}>
-                                    IV
-                                </span>
-                                <span className={`${styles['rank-list']} ${desiredDivision === 3 ? (styles.active) : ('')}`} onClick={() => setDesiredDivision(3)}>
-                                    III
-                                </span>
-                                <span className={`${styles['rank-list']} ${desiredDivision === 2 ? (styles.active) : ('')}`} onClick={() => setDesiredDivision(2)}>
-                                    II
-                                </span>
-                                <span className={`${styles['rank-list']} ${desiredDivision === 1 ? (styles.active) : ('')}`} onClick={() => setDesiredDivision(1)}>
-                                    I
-                                </span>
-                            </div>
-                        )}
-                    </Col>
-                </Row>
-            )}
+            <h1 className={styles['title-form']}>{flagging}</h1>
+            <Row className={styles['rank-division-container']}>
+                <Col className={`${styles['rank-container']} col-md-6 gap-2 col-12`}>
+                    {ranks.map((rank) => (
+                        <Image className={`${styles['rank-list']} ${currentRank.id === rank.id ? (styles.active) : ('')} p-1`} key={rank.name} src={rank.badge} width={60} height={60} onClick={() => { setCurrentRank(rank); setCurrentDivision('IV'); }} />
+                    ))}
+                </Col>
+                <Col className={`${styles['division-container']} col-md-6 col-12`}>
+                    <div className={`${styles['division-list']} ${currentDivision === 'IV' ? (styles.active) : ('')}`} onClick={() => setCurrentDivision('IV')}>IV</div>
+                    <div className={`${styles['division-list']} ${currentDivision === 'III' ? (styles.active) : ('')}`} onClick={() => setCurrentDivision('III')}>III</div>
+                    <div className={`${styles['division-list']} ${currentDivision === 'II' ? (styles.active) : ('')}`} onClick={() => setCurrentDivision('II')}>II</div>
+                    <div className={`${styles['division-list']} ${currentDivision === 'I' ? (styles.active) : ('')}`} onClick={() => setCurrentDivision('I')}>I</div>
+                </Col>
+            </Row>
         </div>
     );
 }

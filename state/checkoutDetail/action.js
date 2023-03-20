@@ -48,7 +48,6 @@ function checkCheckoutDetailAction(checkoutDetail) {
 function setCheckoutAccount(accountDetail) {
     return (dispatch) => {
         try {
-            console.info(accountDetail);
             const checkoutAccountDetail = {
                 account_id: accountDetail.id,
                 total_price: accountDetail.price,
@@ -132,6 +131,26 @@ function doPaymentAccount(id, form) {
     };
 }
 
+function userChangeStatusBoost(id, form) {
+    return async (dispatch) => {
+        try {
+            await api.userChangeBoostOrderStatus(id);
+        } catch (err) {
+            dispatch(handleShowErrorPage());
+        }
+    };
+}
+
+function userChangeStatusAccount(id, form) {
+    return async (dispatch) => {
+        try {
+            await api.userChangeAccountOrderStatus(id);
+        } catch (err) {
+            dispatch(handleShowErrorPage());
+        }
+    };
+}
+
 export {
-    ActionType, setCheckoutAccount, setCheckoutBoosting, checkCheckoutDetail, asyncMakeBoostOrder, asyncMakeAccountOrder, doPaymentBoost, doPaymentAccount,
+    ActionType, setCheckoutAccount, setCheckoutBoosting, checkCheckoutDetail, asyncMakeBoostOrder, asyncMakeAccountOrder, doPaymentBoost, doPaymentAccount, userChangeStatusBoost, userChangeStatusAccount,
 };

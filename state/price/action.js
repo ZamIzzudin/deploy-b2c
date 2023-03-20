@@ -42,36 +42,9 @@ function asyncCalculatePrice(game, service) {
             boost_detail: {},
         };
 
-        if (service === 'Apex Rank Boost') {
-            boostDetail.forEach((boost, index) => {
-                if (boost.title === 'Current Rank' && boost[boost.title]?.name.includes('master')) {
-                    orderDetail.boost_detail[boost.title.toLowerCase().split(' ').join('_')] = 'master';
-                } else if (boost.title === 'Desired Rank' && boost[boost.title]?.name.includes('master')) {
-                    const data = boost[boost.title]?.name.split('_');
-                    let data2;
-
-                    if (boostDetail[index - 1]['Current Rank']?.name.includes('master')) {
-                        data2 = boostDetail[index - 1]['Current Rank']?.name.split('_');
-                    } else {
-                        data2 = [0, 0];
-                    }
-
-                    const count = data[1] - data2[1];
-
-                    if (count === 0) {
-                        orderDetail.boost_detail[boost.title.toLowerCase().split(' ').join('_')] = 'master';
-                    } else {
-                        orderDetail.boost_detail[boost.title.toLowerCase().split(' ').join('_')] = `${count}_K`;
-                    }
-                } else {
-                    orderDetail.boost_detail[boost.title.toLowerCase().split(' ').join('_')] = boost[boost.title]?.name || boost[boost.title];
-                }
-            });
-        } else {
-            boostDetail.forEach((boost) => {
-                orderDetail.boost_detail[boost.title.toLowerCase().split(' ').join('_')] = boost[boost.title]?.name || boost[boost.title];
-            });
-        }
+        boostDetail.forEach((boost) => {
+            orderDetail.boost_detail[boost.title.toLowerCase().split(' ').join('_')] = boost[boost.title]?.name || boost[boost.title];
+        });
 
         try {
             if (service !== undefined) {

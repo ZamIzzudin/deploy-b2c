@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from '../hooks';
 import { googleProvider } from '../config/socialAuth';
 
 import { AsyncLogin, AsyncGoogleLogin, AsyncRegister } from '../state/auth/action';
+import { handleHideError } from '../state/errorHandle/action';
 
 import styles from './styles/LoginModal.module.css';
 
@@ -34,6 +35,7 @@ export default function LoginModal(props: any) {
     const [showRePass, setShowRePass] = useState(false);
 
     const [errorMsg, setErrorMsg] = useState(false);
+    const [errorPass, setErrorPass] = useState(false);
 
     async function handleLogin(provider: any) {
         dispatch(AsyncGoogleLogin(provider));
@@ -61,7 +63,7 @@ export default function LoginModal(props: any) {
         if (password === rePassword) {
             dispatch(AsyncRegister(auth));
         } else {
-            setErrorMsg(true);
+            setErrorPass(true);
         }
     }
 
@@ -78,6 +80,11 @@ export default function LoginModal(props: any) {
     useEffect(() => {
         setErrorMsg(error.message);
     }, [error]);
+
+    useEffect(() => {
+        dispatch(handleHideError());
+        clearState();
+    }, [selectOption]);
 
     return (
         <Modal
@@ -123,11 +130,14 @@ export default function LoginModal(props: any) {
                     ) : (
                         <Col className={`${styles['form-container']} col-12 col-md-8 col-sm-12 flex-down`}>
                             <span className="mb-3">Create new Account</span>
+                            {errorMsg && (
+                                <span className="mb-3 error-message">Email Has Been Taken</span>
+                            )}
                             <Form onSubmit={(e) => handleRegisterAccount(e)}>
                                 <Form.Group className="fullwidth">
                                     <Form.Control required className="form-layout mb-3" placeholder="Email" type="email" onChange={(e) => setEmail(e.target.value)} />
                                     <Form.Control required className="form-layout mb-3" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
-                                    {errorMsg && (
+                                    {errorPass && (
                                         <span className="mb-3 error-message">Your Password Doesn`t Match</span>
                                     )}
                                     <InputGroup>

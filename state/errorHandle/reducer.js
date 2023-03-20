@@ -8,6 +8,8 @@ export default function errorReducer(error = { page: false, message: false }, ac
             return error = { page: true, message: false };
         case (ActionType.MSG_ERROR):
             return error = { page: false, message: true };
+        case (ActionType.NOT_ERROR):
+            return error = { page: false, message: false };
         default:
             return error;
     }

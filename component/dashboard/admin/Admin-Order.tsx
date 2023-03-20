@@ -6,7 +6,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import {
-    Col, Form, Table, Row, Pagination,
+    Col, Form, Table, Row, Pagination, FormSelect,
 } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -15,17 +15,19 @@ import DetailModal from '../../Detail-Modal';
 import ImageGalery from '../../ImageGalery';
 import { decrypt } from '../../../utils/crypto';
 
-import { giveCredential } from '../../../state/flow/admin-action';
+import { giveCredential, changeAllAccountBoost, changeAllAccountStatus } from '../../../state/flow/admin-action';
 import { asyncAdminGetBoostOrder, asyncAdminGetAccountOrder } from '../../../state/orderList/action';
 
 import styles from '../../styles/DetailPage.module.css';
 
 export default function AdminOrder({ orders }) {
     const [selectedOrder, setSelectedOrder] = useState<any>();
+    const [status, setStatus] = useState<any>('unpaid');
     const [typeOrder, setTypeOrder] = useState('boost');
 
     const [ShowDetailModal, setDetailModal] = useState(false);
     const [ShowAttachModal, setAttachModal] = useState(false);
+    const [ShowReviewModal, setReviewModal] = useState(false);
 
     const [credentials, setCredentials] = useState<any>();
     const [attachments, setAttachments] = useState<any>([]);
@@ -77,9 +79,27 @@ export default function AdminOrder({ orders }) {
         });
     }
 
+    function changeStatus(sts) {
+        setStatus(sts);
+        const newStatus = sts.toLowerCase().replace(' ', '-');
+        if (typeOrder === 'boost') {
+            const id = selectedOrder.boost_id;
+            dispatch(changeAllAccountBoost(id, newStatus));
+            setDetailModal(false);
+        } else {
+            const id = selectedOrder.detail.account_order_id;
+            dispatch(changeAllAccountStatus(id, newStatus));
+            setDetailModal(false);
+        }
+    }
+
     useEffect(() => {
         getOrderByType(paginationPage);
     }, [typeOrder, paginationPage]);
+
+    useEffect(() => {
+        setStatus(selectedOrder?.status);
+    }, [selectedOrder]);
 
     for (let i = 1; i <= orders?.last_page; i++) {
         pagination.push(
@@ -124,6 +144,9 @@ export default function AdminOrder({ orders }) {
                                 {order.status === 'Finished' && typeOrder === 'boost' && (
                                     <button className="capsule button-border mx-2" onClick={() => { setAttachModal(true); seeAttachment(order); }}>Attachment</button>
                                 )}
+                                {order.status === 'Reviewed' && (
+                                    <button className="capsule button-border mx-2" onClick={() => { setReviewModal(true); setSelectedOrder(order); }}>Review</button>
+                                )}
 
                                 <button onClick={() => { setDetailModal(true); setSelectedOrder(order); getCredentialAccount(order); }} className="capsule button-org">Details</button>
 
@@ -154,87 +177,95 @@ export default function AdminOrder({ orders }) {
 
             {/* Detail Modal */}
             <DetailModal
+                sizing="lg"
                 show={ShowDetailModal}
                 onHide={() => setDetailModal(false)}
             >
                 <h1>Details</h1>
-                {/* General Detail */}
-                <Row>
-                    <h5 className="text-org">General</h5>
-                    <span>
-                        Status :
-                        {' '}
-                        {selectedOrder?.status}
-                    </span>
-                    <span>
-                        Order ID :
-                        {' '}
-                        {selectedOrder?.boost_id || selectedOrder?.detail.account_order_id}
-                    </span>
-                    <span>
-                        Order Date :
-                        {' '}
-                        {selectedOrder?.order_date}
-                    </span>
-                    <span>
-                        Customer Username :
-                        {' '}
-                        {selectedOrder?.user_name}
-                    </span>
-                    <span>
-                        Booster Username :
-                        {' '}
-                        {selectedOrder?.booster_name}
-                    </span>
-                    <span>
-                        Total Price :
-                        {' $'}
-                        {selectedOrder?.total_price}
-                    </span>
-                </Row>
                 <hr />
-                {/* Boost Detail */}
                 <Row>
-                    <h5 className="text-org">Spesification</h5>
-                    {selectedOrder?.detail.boost_detail !== undefined ? (
-                        <Row>
-                            <span>
-                                Game :
-                                {' '}
-                                {selectedOrder?.game}
-                            </span>
-                            <span>
-                                Service :
-                                {' '}
-                                {selectedOrder?.service}
-                            </span>
-                            {selectedOrder?.detail.boost_detail?.map((item) => (
-                                <span className={styles['booster-detail-list']}>
-                                    {`${Object.keys(item).toString().replace('_', ' ')} : ${item[Object.keys(item).toString()].start ? (`${item[Object.keys(item).toString()].start} - ${item[Object.keys(item).toString()].to}`) : (item[Object.keys(item).toString()])}`}
+                    {/* General Detail */}
+                    <Col className="flex-down col-12 col-md-6">
+                        <h4 className="text-org">General</h4>
+                        <span>
+                            Status :
+                            {' '}
+                            {selectedOrder?.status}
+                        </span>
+                        <span>
+                            Order ID :
+                            {' '}
+                            {selectedOrder?.boost_id || selectedOrder?.detail.account_order_id}
+                        </span>
+                        <span>
+                            Order Date :
+                            {' '}
+                            {selectedOrder?.order_date}
+                        </span>
+                        <span>
+                            Customer Username :
+                            {' '}
+                            {selectedOrder?.user_name}
+                        </span>
+                        <span>
+                            Booster Username :
+                            {' '}
+                            {selectedOrder?.booster_name}
+                        </span>
+                        <span>
+                            Payment Method :
+                            {' '}
+                            {selectedOrder?.address.payment_method}
+                        </span>
+                        <span>
+                            Total Price :
+                            {' $'}
+                            {selectedOrder?.total_price}
+                        </span>
+                    </Col>
+                    {/* Boost Detail */}
+                    <Col className="flex-down flex-start col-12 col-md-6">
+                        <h4 className="text-org">Spesification</h4>
+                        {selectedOrder?.detail.boost_detail !== undefined ? (
+                            <Row>
+                                <span>
+                                    Game :
+                                    {' '}
+                                    {selectedOrder?.game}
                                 </span>
-                            ))}
-                        </Row>
-                    ) : (
-                        <Row>
-                            <span>
-                                Game :
-                                {' '}
-                                {selectedOrder?.game}
-                            </span>
-                            <span>
-                                Service :
-                                {' '}
-                                {selectedOrder?.service}
-                            </span>
-                            {
-                                selectedOrder?.detail.account_detail?.map((item) => (
+                                <span>
+                                    Service :
+                                    {' '}
+                                    {selectedOrder?.service}
+                                </span>
+                                {selectedOrder?.detail.boost_detail?.map((item) => (
                                     <span className={styles['booster-detail-list']}>
                                         {`${Object.keys(item).toString().replace('_', ' ')} : ${item[Object.keys(item).toString()].start ? (`${item[Object.keys(item).toString()].start} - ${item[Object.keys(item).toString()].to}`) : (item[Object.keys(item).toString()])}`}
                                     </span>
-                                ))
-                            }
-                        </Row>
-                    )}
+                                ))}
+                            </Row>
+                        ) : (
+                            <Row>
+                                <span>
+                                    Game :
+                                    {' '}
+                                    {selectedOrder?.game}
+                                </span>
+                                <span>
+                                    Service :
+                                    {' '}
+                                    {selectedOrder?.service}
+                                </span>
+                                {
+                                    selectedOrder?.detail.account_detail?.map((item) => (
+                                        <span className={styles['booster-detail-list']}>
+                                            {`${Object.keys(item).toString().replace('_', ' ')} : ${item[Object.keys(item).toString()].start ? (`${item[Object.keys(item).toString()].start} - ${item[Object.keys(item).toString()].to}`) : (item[Object.keys(item).toString()])}`}
+                                        </span>
+                                    ))
+                                }
+                            </Row>
+                        )}
+                    </Col>
                 </Row>
                 <hr />
                 {/* Add Ons */}
@@ -242,7 +273,7 @@ export default function AdminOrder({ orders }) {
                     <Row>
                         {selectedOrder?.detail?.add_ons[0].name !== 'None' && (
                             <>
-                                <h5 className="text-org">Add Ons</h5>
+                                <h4 className="text-org">Add Ons</h4>
                                 <span>Add Ons : </span>
                                 <ul className="px-5">
                                     {selectedOrder?.detail?.add_ons?.map((list) => (
@@ -255,38 +286,38 @@ export default function AdminOrder({ orders }) {
                     </Row>
                 )}
                 <Row>
-                    <h5 className="text-org">Customer Address</h5>
+                    <h4 className="text-org">Customer Address</h4>
                     <span>
                         Name :
                         {' '}
-                        {selectedOrder?.order_address?.full_name}
+                        {selectedOrder?.address?.full_name}
                     </span>
                     <span>
                         Country :
                         {' '}
-                        {selectedOrder?.order_address?.country}
+                        {selectedOrder?.address?.country}
                     </span>
                     <span>
                         City :
                         {' '}
-                        {selectedOrder?.order_address?.city}
+                        {selectedOrder?.address?.city}
                     </span>
                     <span>
                         Billing Address :
                         {' '}
-                        {selectedOrder?.order_address?.billing_address}
+                        {selectedOrder?.address?.billing_address}
                     </span>
                     <span>
                         Zip Code :
                         {' '}
-                        {selectedOrder?.order_address?.zip_code}
+                        {selectedOrder?.address?.zip_code}
                     </span>
                 </Row>
                 <hr />
                 {/* Credential */}
                 {credentials?.username !== undefined && (
                     <Row>
-                        <h5 className="text-org">Credentials</h5>
+                        <h4 className="text-org">Credentials</h4>
                         <span>
                             Username :
                             {' '}
@@ -313,6 +344,20 @@ export default function AdminOrder({ orders }) {
                         )}
                     </Row>
                 )}
+                <hr />
+                {selectedOrder?.status !== 'Reviewed' && (
+                    <Row className="my-4">
+                        <h4 className="text-org">Change Status</h4>
+                        <FormSelect className="form-layout" value={status} onChange={(e) => changeStatus(e.target.value)}>
+                            <option value="Unpaid">Unpaid</option>
+                            <option value="Paid">Paid</option>
+                            <option value="Pending">Pending</option>
+                            <option value="On Progress">On Progress</option>
+                            <option value="Finished">Finished</option>
+                            <option value="Reviewed">Reviewed</option>
+                        </FormSelect>
+                    </Row>
+                )}
             </DetailModal>
 
             {/* Attachment Modal */}
@@ -325,6 +370,31 @@ export default function AdminOrder({ orders }) {
                 <Row>
                     <ImageGalery images={attachments} />
                 </Row>
+            </DetailModal>
+
+            {/* Review Modal */}
+            <DetailModal
+                show={ShowReviewModal}
+                onHide={() => setReviewModal(false)}
+            >
+                <h1>Review</h1>
+                <Form className="mt-3">
+                    <Form.Group>
+                        <Form.Label>What do you think about us?</Form.Label>
+                        <h5>{selectedOrder?.review?.review_title}</h5>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Can you tell us about your experiance?</Form.Label>
+                        <h5>{selectedOrder?.review?.review_body}</h5>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>
+                            Your rate :
+                            {' '}
+                            {selectedOrder?.review?.rating}
+                        </Form.Label>
+                    </Form.Group>
+                </Form>
             </DetailModal>
         </div>
 

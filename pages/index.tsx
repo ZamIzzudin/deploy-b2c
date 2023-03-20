@@ -80,7 +80,7 @@ function Home() {
           <h2 className={`${styles['content-subtitle']} text-end`}>What we can handle</h2>
         </Row>
         <Row ref={Row2} className="my-5 centered">
-          <Row className="w-50-res">
+          <Row className="w-70-res">
             {games.map((game) => (
               <GameCard data={game} key={game.id} />
             ))}

@@ -1,6 +1,7 @@
 const ActionType = {
     IS_ERROR: 'IS_ERROR',
     MSG_ERROR: 'MSG_ERROR',
+    NOT_ERROR: 'NOT_ERROR',
 };
 
 // Action
@@ -13,6 +14,12 @@ function showErrorPageAction() {
 function showErrorMessageAction() {
     return {
         type: ActionType.MSG_ERROR,
+    };
+}
+
+function hideErrorMessageAction() {
+    return {
+        type: ActionType.NOT_ERROR,
     };
 }
 
@@ -29,4 +36,12 @@ function handleShowErrorMessage() {
     };
 }
 
-export { ActionType, handleShowErrorPage, handleShowErrorMessage };
+function handleHideError() {
+    return (dispatch) => {
+        dispatch(hideErrorMessageAction());
+    };
+}
+
+export {
+    ActionType, handleShowErrorPage, handleShowErrorMessage, handleHideError,
+};

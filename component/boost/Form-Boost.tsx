@@ -34,7 +34,11 @@ function FormBoost(props: any) {
     return (
         <div className={styles['form-container']}>
             {titleService === 'Apex Rank Boost' && (
-                <NewApexIncludeRank serviceName={titleService} />
+                <>
+                    <NewApexIncludeRank serviceName={titleService} flagging="Current Rank" />
+                    <NewApexIncludeRank serviceName={titleService} flagging="Desired Rank" />
+
+                </>
             )}
             {/* Solo Form */}
             {typeForm?.map((f) => {

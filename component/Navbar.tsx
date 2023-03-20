@@ -24,6 +24,8 @@ import { LoginModal } from '.';
 import { useAppSelector, useAppDispatch } from '../hooks';
 
 import { AsyncLogout, AsyncCheckLogin, AsyncRefresh } from '../state/auth/action';
+import { handleHideError } from '../state/errorHandle/action';
+
 import { asyncGetAllGames } from '../state/games/action';
 // import { asyncGetAllRanksByGame } from '../state/ranks/action';
 import { asyncGetAllServersByGame } from '../state/servers/action';
@@ -34,6 +36,7 @@ import styles from './styles/Navbar.module.css';
 function TabBar() {
     const { auth } = useAppSelector((states) => states);
     const dispatch = useAppDispatch();
+    const [path, setPath] = useState('/');
     const router = useRouter();
 
     const [scrollY, setScrollY] = useState(0);
@@ -70,6 +73,10 @@ function TabBar() {
     }, [auth]);
 
     useEffect(() => {
+        dispatch(handleHideError());
+    }, [modal]);
+
+    useEffect(() => {
         const handleScroll = () => {
             setScrollY(window.scrollY);
         };
@@ -90,6 +97,10 @@ function TabBar() {
     }, []);
 
     useEffect(() => {
+        setPath(router.asPath);
+    }, [router.asPath]);
+
+    useEffect(() => {
         dispatch(AsyncCheckLogin());
         dispatch(asyncGetAllGames());
         dispatch(asyncGetServicesPerGame('valorant'));
@@ -99,16 +110,24 @@ function TabBar() {
     return (
         <nav className={`${styles.navbar} ${scrollY > 150 && (styles['scroll-dekstop'])}`}>
             <div className={styles['navbar-logo']}>
-                <Image src="/logo.png" width="125" height="45" />
+                <Link href="/" scroll>
+                    <Image src="/logo.png" width="125" height="45" />
+                </Link>
             </div>
             <div className={`${styles['navbar-collapse']} ${sideBar && (styles['show-side-bar'])}`}>
                 <button className={styles['close-toogle']} onClick={() => setSideBar(false)}>
                     <i className="fa-solid fa-xmark" />
                 </button>
                 <div className={styles['navbar-list']} onClick={() => setSideBar(false)}>
-                    <Link href="/" scroll>Home</Link>
-                    <Link href="/boost" scroll>Boost</Link>
-                    <Link href="/market" scroll>Market</Link>
+                    <span className={path === '/' ? (styles['active-nav']) : ('')}>
+                        <Link href="/" scroll>Home</Link>
+                    </span>
+                    <span className={path === '/boost' ? (styles['active-nav']) : ('')}>
+                        <Link href="/boost" scroll>Boost</Link>
+                    </span>
+                    <span className={path === '/market' ? (styles['active-nav']) : ('')}>
+                        <Link href="/market" scroll>Market</Link>
+                    </span>
                 </div>
                 <div className={styles['navbar-button']} onClick={() => setSideBar(false)}>
                     {auth.user.emailVerified ? (
