@@ -12,14 +12,19 @@ function Testimonial() {
     const [w, setW] = useState(1);
 
     const [testimonials, setTestimonials] = useState([{
-        id: 0, user_id: 0, rating: 5, review_body: '', review_title: '', updated_at: '',
+        id: 0,
+        username: '',
+        rating: 5,
+        review_body: '',
+        review_title: '',
+        created_at: '',
     }]);
 
     async function getTestimonial() {
-        const url = `${process.env.API}/reviews`;
+        const url = `${process.env.API}/review/all`;
 
         await axios.get(url).then((res) => {
-            setTestimonials(res.data.shown_reviews);
+            setTestimonials(res.data.reviews);
         }).catch((err) => console.log(err));
     }
 
@@ -52,35 +57,51 @@ function Testimonial() {
             <SplideTrack>
                 {testimonials?.map((testimonial) => (
                     <SplideSlide key={`testimonial${testimonial.id}`}>
-                        <div className={`${styles['testi-card']} no-shadow card`}>
+                        <div className={`${styles['testi-card']} no-shadow card p-3`}>
                             <h3 className={styles['review-user']}>
-                                {testimonial.user_id}
+                                {testimonial.username}
                             </h3>
                             <h4 className={styles.review}>{testimonial.review_title}</h4>
                             <h5 className={styles['review-detail']}>{testimonial.review_body}</h5>
                             <div className={styles['review-star']}>
-                                {testimonial.rating}
-                                <i className="fa-solid fa-star fa-1x" />
+                                {testimonial.rating === 5 && (
+                                    <>
+                                        <i className="fa-solid fa-star fa-1x" />
+                                        <i className="fa-solid fa-star fa-1x" />
+                                        <i className="fa-solid fa-star fa-1x" />
+                                        <i className="fa-solid fa-star fa-1x" />
+                                        <i className="fa-solid fa-star fa-1x" />
+                                    </>
+                                )}
+                                {testimonial.rating === 4 && (
+                                    <>
+                                        <i className="fa-solid fa-star fa-1x" />
+                                        <i className="fa-solid fa-star fa-1x" />
+                                        <i className="fa-solid fa-star fa-1x" />
+                                        <i className="fa-solid fa-star fa-1x" />
+                                    </>
+                                )}
+                                {testimonial.rating === 3 && (
+                                    <>
+                                        <i className="fa-solid fa-star fa-1x" />
+                                        <i className="fa-solid fa-star fa-1x" />
+                                        <i className="fa-solid fa-star fa-1x" />
+                                    </>
+                                )}
+                                {testimonial.rating === 2 && (
+                                    <>
+                                        <i className="fa-solid fa-star fa-1x" />
+                                        <i className="fa-solid fa-star fa-1x" />
+                                    </>
+                                )}
+                                {testimonial.rating === 1 && (
+                                    <i className="fa-solid fa-star fa-1x" />
+                                )}
                             </div>
-                            <span className={styles['review-date']}>{testimonial.updated_at.slice(0, 10)}</span>
+                            <span className={styles['review-date']}>{testimonial.created_at.slice(0, 10)}</span>
                         </div>
                     </SplideSlide>
                 ))}
-                {/* <SplideSlide>
-                    <div className={`${styles['testi-card']} card`}>
-                        <h3 className={styles['review-user']}>Username</h3>
-                        <h4 className={styles.review}>Good Service</h4>
-                        <h5 className={styles['review-detail']}>Good service and very affordable price</h5>
-                        <div className={styles['review-star']}>
-                            <i className="fa-solid fa-star fa-1x" />
-                            <i className="fa-solid fa-star fa-1x" />
-                            <i className="fa-solid fa-star fa-1x" />
-                            <i className="fa-solid fa-star fa-1x" />
-                            <i className="fa-solid fa-star-half fa-1x" />
-                        </div>
-                        <span className={styles['review-date']}>12 januari 2022</span>
-                    </div>
-                </SplideSlide> */}
             </SplideTrack>
             <div className="splide__arrows">
                 <button className="splide__arrow splide__arrow--prev">{'<'}</button>

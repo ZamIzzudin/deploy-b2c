@@ -785,6 +785,26 @@ textarea:focus {
   font-size: 5em !important;
 }
 
+.legal-aggreement {
+  margin: auto;
+  width: 90%;
+}
+
+.legal-aggreement p,
+.legal-aggreement h1 {
+  font-family: var(--secFont) !important;
+  text-align: justify;
+  height: fit-content;
+}
+
+.ck-content {
+  background-color: var(--form) !important;
+  min-height: 300px;
+  min-height: 301px;
+  overflow: scroll;
+  border: none !important;
+}
+
 @media only screen and (max-width: 1000px) {
   .title {
     font-size: 2.5em;
@@ -827,5 +847,11 @@ textarea:focus {
   .w-95-res {
     padding: 12px 0 !important;
     width: 100%;
+  }
+
+  .legal-aggreement p,
+  .legal-aggreement h1 {
+    max-width: 90%;
+    margin: auto;
   }
 }

@@ -26,6 +26,7 @@ export default function BoosterOrder({ orders }) {
     const [ShowDetailModal, setDetailModal] = useState(false);
     const [ShowCredentialsModal, setCredentialsModal] = useState(false);
     const [ShowAttachModal, setAttachModal] = useState(false);
+    const [ShowReviewModal, setReviewModal] = useState(false);
 
     const [credentials, setCredentials] = useState<any>();
 
@@ -113,6 +114,9 @@ export default function BoosterOrder({ orders }) {
                             <td>
                                 {(order.status !== 'Finished' && order.status !== 'Reviewed') && (
                                     <button onClick={() => { setAttachModal(true); setSelectedOrder(order); }} className="capsule button-org-border">Finish</button>
+                                )}
+                                {(order.status === 'Reviewed') && (
+                                    <button onClick={() => { setReviewModal(true); setSelectedOrder(order); }} className="capsule button-border">Review</button>
                                 )}
                                 {order.status === 'On Progress' && (
                                     <button onClick={() => { setCredentialsModal(true); getCredentials(order); }} className="capsule button">Credential</button>
@@ -263,6 +267,29 @@ export default function BoosterOrder({ orders }) {
                 </Row>
                 <Row>
                     <button onClick={() => finishOrder(selectedOrder?.boost_id)} className="button capsule">Finish Order</button>
+                </Row>
+            </DetailModal>
+
+            {/* Review Modal */}
+            <DetailModal
+                show={ShowReviewModal}
+                onHide={() => setReviewModal(false)}
+            >
+                <h1>Review</h1>
+                <Row className="mt-3">
+                    <Col className="col-12 col-md-3">
+                        <span className="review-num">
+                            {selectedOrder?.review?.rating}
+                        </span>
+                    </Col>
+                    <Col className="col-12 col-md-9">
+                        <Row className="w-100">
+                            <h5 className="text-org">Title :</h5>
+                            <span>{selectedOrder?.review?.review_title}</span>
+                            <h5 className="text-org mt-3">Review :</h5>
+                            <span>{selectedOrder?.review?.review_body}</span>
+                        </Row>
+                    </Col>
                 </Row>
             </DetailModal>
         </div>

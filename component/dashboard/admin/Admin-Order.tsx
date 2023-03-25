@@ -378,23 +378,21 @@ export default function AdminOrder({ orders }) {
                 onHide={() => setReviewModal(false)}
             >
                 <h1>Review</h1>
-                <Form className="mt-3">
-                    <Form.Group>
-                        <Form.Label>What do you think about us?</Form.Label>
-                        <h5>{selectedOrder?.review?.review_title}</h5>
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Can you tell us about your experiance?</Form.Label>
-                        <h5>{selectedOrder?.review?.review_body}</h5>
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>
-                            Your rate :
-                            {' '}
+                <Row className="mt-3">
+                    <Col className="col-12 col-md-3">
+                        <span className="review-num">
                             {selectedOrder?.review?.rating}
-                        </Form.Label>
-                    </Form.Group>
-                </Form>
+                        </span>
+                    </Col>
+                    <Col className="col-12 col-md-9">
+                        <Row className="w-100">
+                            <h5 className="text-org">Title :</h5>
+                            <span>{selectedOrder?.review?.review_title}</span>
+                            <h5 className="text-org mt-3">Review :</h5>
+                            <span>{selectedOrder?.review?.review_body}</span>
+                        </Row>
+                    </Col>
+                </Row>
             </DetailModal>
         </div>
 

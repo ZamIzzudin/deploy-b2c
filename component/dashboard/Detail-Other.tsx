@@ -20,6 +20,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import Image from 'next/image';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 import Breadcrump from '../Breadcrump';
 import DetailModal from '../Detail-Modal';
@@ -137,12 +139,12 @@ function DetailOther() {
         setSelectedFaqID(null);
     }
 
-    async function getReviews() {
-        const url = `${process.env.API}/reviews`;
+    async function getReviews(page) {
+        const url = `${process.env.API}/reviews?page=${page}`;
 
         await axios.get(url)
             .then((res) => {
-                setReviewShown(res.data.shown_reviews);
+                setReviewShown(res.data.shown_reviews.data);
                 setReviewAll(res.data.all_review);
             })
             .catch((err) => console.log(err));
@@ -152,9 +154,10 @@ function DetailOther() {
         const url = `${process.env.API}/reviews/${id}`;
 
         const status = { is_shown: true };
+        setPaginationPage(1);
 
         await axios.put(url, status)
-            .then((res) => { getReviews(); showAddReviewModal(false); })
+            .then((res) => { getReviews(1); showAddReviewModal(false); })
             .catch((err) => console.log(err));
     }
 
@@ -162,9 +165,10 @@ function DetailOther() {
         const url = `${process.env.API}/reviews/${id}`;
 
         const status = { is_shown: false };
+        setPaginationPage(1);
 
         await axios.put(url, status)
-            .then((res) => getReviews())
+            .then((res) => getReviews(1))
             .catch((err) => console.log(err));
     }
 
@@ -187,7 +191,7 @@ function DetailOther() {
         };
 
         await axios.post(url, data)
-            .then((res) => { getPolicy(); setSelectedPolicy(null); })
+            .then((res) => { getPolicy(); setSelectedPolicy(null); setPolicyText(''); setPolicyTitle(''); })
             .catch((err) => console.log(err));
     }
 
@@ -200,7 +204,7 @@ function DetailOther() {
         };
 
         await axios.put(url, payload)
-            .then((res) => { getPolicy(); setSelectedPolicy(null); })
+            .then((res) => { getPolicy(); setSelectedPolicy(null); setPolicyText(''); setPolicyTitle(''); })
             .catch((err) => console.log(err));
     }
 
@@ -208,11 +212,20 @@ function DetailOther() {
     useEffect(() => {
         dispatch(asyncGetAllFAQ());
         getUsers();
-        getReviews();
+        getReviews(1);
         getPolicy();
     }, []);
 
-    for (let i = 1; i <= reviewsAll?.last_page; i++) {
+    useEffect(() => {
+        getReviews(paginationPage);
+    }, [paginationPage]);
+
+    const handleEditorDataChange = (event, editor) => {
+        const data = editor.getData();
+        setPolicyText(data);
+    };
+
+    for (let i = 1; i <= reviewsAll.last_page; i++) {
         pagination.push(
             <Pagination.Item className="pagination-items mx-1" key={i} active={i === paginationPage} onClick={() => setPaginationPage(i)}>
                 {i}
@@ -262,7 +275,7 @@ function DetailOther() {
                                         <div className={styles['button-container']}>
                                             {/* Delete FAQ Button */}
                                             <button className={styles['delete-btn']} onClick={() => hideReviews(review.id)}>
-                                                <i className="fa-solid fa-trash-can" />
+                                                Hide
                                             </button>
                                         </div>
                                     </div>
@@ -276,16 +289,20 @@ function DetailOther() {
                     <Col className={isActive === 'policy' ? (styles.show) : (styles.hide)}>
                         <div className="card fullwidth">
                             <h3 className="sec-font mb-4">Policy</h3>
-                            <div className={styles['policy-container']}>
+                            <div className={`${styles['policy-container']} mb-3`}>
                                 {policy.map((unit) => (
                                     <button className="button" onClick={() => { setAddPolicy(false); setPolicyText(unit.config_value); setSelectedPolicy(unit); }}>{unit.config_description}</button>
                                 ))}
                                 <button className="button button-org" onClick={() => { setAddPolicy(true); setPolicyText(''); setPolicyTitle(''); setSelectedPolicy(null); }}>+ Add</button>
                             </div>
                             {addpolicy && (
-                                <Form.Control placeholder="Title" className="form-layout mt-4" value={policyTitle} onChange={(e) => setPolicyTitle(e.target.value)} />
+                                <Form.Control placeholder="Title" className="form-layout mb-3" value={policyTitle} onChange={(e) => setPolicyTitle(e.target.value)} />
                             )}
-                            <textarea placeholder="Value" className="form-layout mt-3" value={policyText} onChange={(e) => setPolicyText(e.target.value)} />
+                            <CKEditor
+                                editor={ClassicEditor}
+                                data={policyText}
+                                onChange={handleEditorDataChange}
+                            />
                             <div>
                                 {addpolicy ? (
                                     <button className="button capsule mt-3" onClick={() => createPolicy()}>Add</button>
@@ -353,7 +370,7 @@ function DetailOther() {
                     {/* Add Shown Review Modal */}
                     <DetailModal
                         show={addReviewModal}
-                        onHide={() => showAddReviewModal(false)}
+                        onHide={() => { showAddReviewModal(false); setPaginationPage(1); }}
                     >
                         <h1>Show Review</h1>
                         <div className={styles['list-container']}>
@@ -363,7 +380,8 @@ function DetailOther() {
                                     <div className={styles['button-container']}>
                                         {/* Delete FAQ Button */}
                                         <button className={styles['delete-btn']} onClick={() => showReviews(review.id)}>
-                                            <i className="fa-solid fa-pen" />
+                                            {/* <i className="fa-solid fa-pen" /> */}
+                                            Show
                                         </button>
                                     </div>
                                 </div>

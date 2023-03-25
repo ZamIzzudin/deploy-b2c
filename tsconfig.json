@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es2015",
+    "target": "ES2021",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext",
-      "ES2015"
+      "ES2015",
+      "ES2021"
     ],
     "allowJs": true,
     "skipLibCheck": true,

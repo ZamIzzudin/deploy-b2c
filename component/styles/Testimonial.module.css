@@ -19,13 +19,17 @@
 }
 
 .review-detail {
+    overflow: hidden;
+    min-height: 55px;
+    max-height: 55px;
+    text-align: justify;
     font-size: .9em;
     font-weight: 300;
 }
 
 .review-star {
     text-align: center;
-    margin: 10px;
+    margin: 5px;
 }
 
 .review-star i {
@@ -34,8 +38,8 @@
 }
 
 .review-date {
-    font-size: .7em;
+    font-size: .8em;
     font-weight: 300;
     opacity: .8;
-    margin: 10px 0;
+    margin: 5px 0;
 }

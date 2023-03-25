@@ -278,7 +278,7 @@ function Payment() {
                                             <span className={`${styles['mini-text']} mx-2`}>
                                                 I confirm that all the entered information is accurate and I agree to your
                                                 {' '}
-                                                <b>Terms of Use.</b>
+                                                <a href="/legal/terms-of-use" target="_blank">Terms of Use.</a>
                                             </span>
                                         </div>
                                         <span className={styles['sub-mini-text']}>Further information will be requested after payment.</span>

@@ -13,6 +13,7 @@
 
 .brand-overview {
     display: flex;
+    cursor: pointer;
 }
 
 .brand-logo {
@@ -56,8 +57,9 @@
     text-align: center;
 }
 
-.footer-list li {
-    font-weight: 400;
+.footer-list li a {
+    font-weight: 400 !important;
+    font-size: .9em !important;
 }
 
 .footer-copyright {

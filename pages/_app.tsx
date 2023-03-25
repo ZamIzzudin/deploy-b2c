@@ -32,11 +32,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter();
 
   function hideTawk() {
-    tawkMessengerRef.current.hideWidget();
+    tawkMessengerRef?.current?.hideWidget();
   }
 
   function showTawk() {
-    tawkMessengerRef.current.showWidget();
+    tawkMessengerRef?.current?.showWidget();
   }
 
   const onLoad = () => {

@@ -99,6 +99,9 @@ export function NewApexIncludeRank({
 
     const [currentRank, setCurrentRank] = useState<any>(ranks[0]);
 
+    const [rankpoints, setRankPoints] = useState('15K');
+    const [rawRange, setRawRange] = useState<any>(0);
+
     const dispatch = useAppDispatch();
 
     function sendData(data, title) {
@@ -110,18 +113,34 @@ export function NewApexIncludeRank({
         sendData(setupRank, title);
     }
 
-    useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
-            getRank(currentRank, currentDivision, flagging);
-        }, 600);
+    function rangeLogic(range) {
+        let numRange = range;
+        if (numRange < 0) {
+            numRange = 0;
+            setRawRange(0);
+        }
+        const upper = numRange / 2 + 15;
+        getRank(currentRank, `${upper}K`, flagging);
+        setRankPoints(`${upper}K`);
+    }
 
-        return () => clearTimeout(delayDebounceFn);
-    }, [currentRank, currentDivision]);
+    useEffect(() => {
+        if (currentRank.name === 'Master') {
+            const delayDebounceFn = setTimeout(() => {
+                rangeLogic(rawRange);
+            }, 400);
+
+            return () => clearTimeout(delayDebounceFn);
+        }
+        getRank(currentRank, currentDivision, flagging);
+    }, [currentRank, currentDivision, rawRange]);
 
     useEffect(() => {
         setCurrentRank(ranks[0]);
         setCurrentDivision('IV');
         getRank(ranks[0], 'IV', flagging);
+        setRankPoints('15K');
+        setRawRange(0);
     }, [ranks, serviceName]);
 
     return (
@@ -133,12 +152,29 @@ export function NewApexIncludeRank({
                         <Image className={`${styles['rank-list']} ${currentRank.id === rank.id ? (styles.active) : ('')} p-1`} key={rank.name} src={rank.badge} width={60} height={60} onClick={() => { setCurrentRank(rank); setCurrentDivision('IV'); }} />
                     ))}
                 </Col>
-                <Col className={`${styles['division-container']} col-md-6 col-12`}>
-                    <div className={`${styles['division-list']} ${currentDivision === 'IV' ? (styles.active) : ('')}`} onClick={() => setCurrentDivision('IV')}>IV</div>
-                    <div className={`${styles['division-list']} ${currentDivision === 'III' ? (styles.active) : ('')}`} onClick={() => setCurrentDivision('III')}>III</div>
-                    <div className={`${styles['division-list']} ${currentDivision === 'II' ? (styles.active) : ('')}`} onClick={() => setCurrentDivision('II')}>II</div>
-                    <div className={`${styles['division-list']} ${currentDivision === 'I' ? (styles.active) : ('')}`} onClick={() => setCurrentDivision('I')}>I</div>
-                </Col>
+                {currentRank.name === 'Master' ? (
+                    <Col className="col-md-6 col-12">
+                        <Form.Group className="fullwidth py-4 centered-down">
+                            <span className="capitalized set3">
+                                Rank Points
+                                {' '}
+                            </span>
+                            <div className="centered my-3 gap-4">
+                                <button type="button" className={styles['point-button']} onClick={() => setRawRange(parseInt(rawRange, 10) - 1)}>-</button>
+                                <span className="content-text"><b className="sec-font">{rankpoints}</b></span>
+                                <button className={styles['point-button']} onClick={() => setRawRange(parseInt(rawRange, 10) + 1)}>+</button>
+                            </div>
+                            <input className="w-90 range-input mt-3" type="range" min={0} max={10} value={rawRange} onChange={(e) => setRawRange(e.target.value)} />
+                        </Form.Group>
+                    </Col>
+                ) : (
+                    <Col className={`${styles['division-container']} col-md-6 col-12`}>
+                        <div className={`${styles['division-list']} ${currentDivision === 'IV' ? (styles.active) : ('')}`} onClick={() => setCurrentDivision('IV')}>IV</div>
+                        <div className={`${styles['division-list']} ${currentDivision === 'III' ? (styles.active) : ('')}`} onClick={() => setCurrentDivision('III')}>III</div>
+                        <div className={`${styles['division-list']} ${currentDivision === 'II' ? (styles.active) : ('')}`} onClick={() => setCurrentDivision('II')}>II</div>
+                        <div className={`${styles['division-list']} ${currentDivision === 'I' ? (styles.active) : ('')}`} onClick={() => setCurrentDivision('I')}>I</div>
+                    </Col>
+                )}
             </Row>
         </div>
     );
@@ -245,7 +281,7 @@ export function Points({
                             {' '}
                             {unit}
                         </span>
-                        <div className="centered my-2">
+                        <div className="centered my-3 gap-3">
                             <button className={styles['point-button']} onClick={() => rangeLogic(parseInt(min, 10) - 1, 'min')}>-</button>
                             <span className="content-text"><b className="sec-font">{min}</b></span>
                             <button className={styles['point-button']} onClick={() => rangeLogic(parseInt(min, 10) + 1, 'min')}>+</button>
@@ -260,7 +296,7 @@ export function Points({
                             {' '}
                             {unit}
                         </span>
-                        <div className="centered my-2">
+                        <div className="centered my-3 gap-3">
                             <button type="button" className={styles['point-button']} onClick={() => rangeLogic(parseInt(max, 10) - 1, 'max')}>-</button>
                             <span className="content-text"><b className="sec-font">{max}</b></span>
                             <button className={styles['point-button']} onClick={() => rangeLogic(parseInt(max, 10) + 1, 'max')}>+</button>
@@ -291,7 +327,7 @@ export function ListForm({
         <Col className="flex-down fullwidth">
             <Form.Label className="set2">{title}</Form.Label>
             <Form.Select className="form-layout mb-4" onChange={(e) => sendData(e.target.value)}>
-                {items.map((item) => <option key={item} value={item}>{item}</option>)}
+                {items.map((item) => <option key={item} value={item}>{item.replaceAll('_', ' ')}</option>)}
             </Form.Select>
         </Col>
     );
@@ -308,7 +344,7 @@ export function NestedListForm({
     const [selectedItem, setSelectedItem] = useState<any>(itemsByKey[0]);
 
     function sendData() {
-        const data = `${selectedKey.replace(/ /g, '_')}/${selectedItem}`;
+        const data = `${selectedKey.replaceAll(/ /g, '_')}/${selectedItem}`;
         dispatch(editBoostDetail(data, unit));
     }
 
@@ -330,7 +366,7 @@ export function NestedListForm({
         <Col className="flex-down fullwidth">
             <Form.Label className="set2">{title}</Form.Label>
             <Form.Select className="form-layout mb-4" onChange={(e) => { setSelectedKey(e.target.value); setItemsByKey(items[e.target.value]); }}>
-                {keysItems.map((key) => <option key={key} value={key}>{key}</option>)}
+                {keysItems.map((key) => <option key={key} value={key}>{key.replace('_', ' ')}</option>)}
             </Form.Select>
             <Form.Select className="form-layout mb-4" onChange={(e) => setSelectedItem(e.target.value)}>
                 {itemsByKey.map((item) => <option key={item} value={item}>{item}</option>)}

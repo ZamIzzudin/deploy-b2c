@@ -271,6 +271,22 @@ const api = (() => {
         await axios.delete(url).then((res) => res).catch((err) => console.log(err));
     }
 
+    async function getConfig(name) {
+        const url = `${process.env.API}/configs`;
+
+        const data: any = await axios.get(url);
+
+        const setup = data.data.data.data?.filter((each) => each.config_description.toLowerCase().replaceAll(' ', '-') === name);
+
+        if (setup.length === 0) {
+            return {
+                config_description: 'None',
+                config_value: 'No Content',
+            };
+        }
+        return setup[0];
+    }
+
     return {
         Login,
         GoogleLogin,
@@ -305,6 +321,7 @@ const api = (() => {
         makeFAQ,
         editFAQ,
         deleteFAQ,
+        getConfig,
     };
 })();
 

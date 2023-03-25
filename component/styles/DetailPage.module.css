@@ -166,12 +166,9 @@
 }
 
 .delete-btn:hover {
+    color: var(--yellow);
     background-color: transparent;
     border: 2px solid var(--yellow);
-}
-
-.delete-btn:hover i {
-    color: var(--yellow);
 }
 
 .edit-btn:hover {
