@@ -32,13 +32,16 @@ function setupBoostiDetail(requireOrder) {
         const boost_detail = requireOrder?.map((item) => {
             if (item.type === 'ListForm' || item.type === 'NestedListForm') {
                 const typeForm = { title: `${item.unit}` };
+                typeForm[item.unit] = undefined;
                 return typeForm;
             }
             if (item.type === 'points') {
                 const typeForm = { title: `${item.unit}` };
+                typeForm[item.unit] = undefined;
                 return typeForm;
             }
             const typeForm = { title: item.title };
+            typeForm[item.title] = undefined;
             return typeForm;
         });
 

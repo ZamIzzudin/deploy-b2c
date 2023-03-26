@@ -28,6 +28,7 @@ function resetPriceAction() {
 // Middleware
 function asyncCalculatePrice(game, service) {
     return async (dispatch, getState) => {
+        let is_valid = true;
         const slugGameName = game.name?.toLowerCase().replace(/ /g, '-');
         let slugServiceName = service?.toLowerCase().replace(/ /g, '-');
 
@@ -39,15 +40,23 @@ function asyncCalculatePrice(game, service) {
 
         const orderDetail = {
             add_ons: addonsDetail.length > 0 ? addonsDetail : [{ name: 'none', percentage_price: 0 }],
-            boost_detail: {},
+            boost_detail: boostDetail.length > 0 ? {} : null,
         };
 
         boostDetail.forEach((boost) => {
-            orderDetail.boost_detail[boost.title.toLowerCase().split(' ').join('_')] = boost[boost.title]?.name || boost[boost.title];
+            if (boost[boost.title] === undefined) {
+                if (boost.title === 'platform') {
+                    orderDetail.boost_detail[boost.title.toLowerCase().split(' ').join('_')] = 'PC';
+                } else {
+                    is_valid = false;
+                }
+            } else {
+                orderDetail.boost_detail[boost.title.toLowerCase().split(' ').join('_')] = boost[boost.title]?.name || boost[boost.title];
+            }
         });
 
         try {
-            if (service !== undefined) {
+            if (service !== undefined && orderDetail.boost_detail !== null && is_valid) {
                 const { total_price } = await (await api.calculatePrice(slugGameName, slugServiceName, orderDetail)).data;
                 dispatch(calculatePriceAction(total_price));
             }

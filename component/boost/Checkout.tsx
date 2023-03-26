@@ -26,6 +26,7 @@ function Checkout(props: any) {
     const dispatch = useAppDispatch();
 
     const [overviewDetails, setOverviewDetails] = useState<any>([]);
+    const [tempDetail, setTempDetail] = useState({ game: '', type: '' });
 
     function setupOverview() {
         const overviews = form?.map((overview) => overview.type);
@@ -77,7 +78,18 @@ function Checkout(props: any) {
     }
 
     function getPrice() {
-        dispatch(asyncCalculatePrice(game, orderType));
+        if (tempDetail.game !== game.name && tempDetail.type === orderType) {
+            setTempDetail({
+                game: game.name,
+                type: orderType,
+            });
+        } else {
+            dispatch(asyncCalculatePrice(game, orderType));
+            setTempDetail({
+                game: game.name,
+                type: orderType,
+            });
+        }
     }
 
     useEffect(() => {
@@ -86,7 +98,6 @@ function Checkout(props: any) {
 
     useEffect(() => {
         setupOverview();
-        getPrice();
     }, [orderType]);
 
     return (

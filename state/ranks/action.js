@@ -24,7 +24,11 @@ function asyncGetAllRanksByGame(game) {
         const slugGameName = game.replace(/[^a-zA-Z0-9,\-.?! ]/g, '-').replace(/\s/g, '-').toLowerCase();
         try {
             const { ranks } = await (await api.getServicesPerGame(slugGameName)).data;
-            dispatch(getAllRanksByGameAction(ranks));
+            if (ranks !== undefined) {
+                dispatch(getAllRanksByGameAction(ranks));
+            } else {
+                dispatch(getAllRanksByGameAction([]));
+            }
         } catch (err) {
             dispatch(handleShowErrorPage());
         }

@@ -199,7 +199,7 @@ export function NumberGame({
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             sendData(num);
-        }, 1000);
+        }, 600);
 
         return () => clearTimeout(delayDebounceFn);
     }, [num]);
@@ -255,7 +255,7 @@ export function Points({
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             sendData();
-        }, 1000);
+        }, 600);
 
         return () => clearTimeout(delayDebounceFn);
     }, [max, min]);

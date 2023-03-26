@@ -37,7 +37,6 @@ function FormBoost(props: any) {
                 <>
                     <NewApexIncludeRank serviceName={titleService} flagging="Current Rank" />
                     <NewApexIncludeRank serviceName={titleService} flagging="Desired Rank" />
-
                 </>
             )}
             {/* Solo Form */}

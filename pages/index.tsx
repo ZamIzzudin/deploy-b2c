@@ -7,7 +7,7 @@
 import { Row, Col } from 'react-bootstrap';
 import { useEffect, useRef } from 'react';
 import Head from 'next/head';
-import { useAppSelector } from '../hooks';
+import { useAppSelector, useAppDispatch } from '../hooks';
 
 import ErrorPage from '../component/ErrorPage';
 import Jumbotron from '../component/home/Jumbotron';
@@ -17,10 +17,15 @@ import FAQ from '../component/home/FAQ';
 import Step from '../component/home/Step';
 import { GameCard } from '../component';
 
+import { asyncGetAllGames } from '../state/games/action';
+import { asyncGetAllServersByGame } from '../state/servers/action';
+import { asyncGetServicesPerGame } from '../state/services/action';
+
 import styles from '../styles/Home.module.css';
 
 function Home() {
   const { games, error }: any = useAppSelector((states) => states);
+  const dispatch = useAppDispatch();
 
   const Row1 = useRef(null);
   const Row2 = useRef(null);
@@ -59,6 +64,9 @@ function Home() {
 
   useEffect(() => {
     animate();
+    dispatch(asyncGetAllGames());
+    dispatch(asyncGetServicesPerGame('valorant'));
+    dispatch(asyncGetAllServersByGame('valorant'));
   }, []);
 
   if (error.page) {

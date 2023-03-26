@@ -24,6 +24,7 @@ import { asyncGetAllRanksByGame } from '../state/ranks/action';
 import { asyncGetAllServersByGame } from '../state/servers/action';
 import { setupBoostiDetail } from '../state/boostDetail/action';
 import { setupAddOnsDetail } from '../state/addonsDetail/action';
+import { asyncGetAllGames } from '../state/games/action';
 
 import styles from '../styles/Boost.module.css';
 
@@ -54,6 +55,7 @@ function Order() {
     }
 
     useEffect(() => {
+        dispatch(asyncGetAllGames());
         dispatch(asyncGetAllRanksByGame(gameOrder.name));
         dispatch(setupAddOnsDetail());
         getServices({ name: 'Valorant' });
