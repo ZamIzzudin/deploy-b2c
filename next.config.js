@@ -1,4 +1,7 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable no-param-reassign */
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   reactStrictMode: false,
   images: {

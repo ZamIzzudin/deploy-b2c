@@ -20,8 +20,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import Image from 'next/image';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import dynamic from 'next/dynamic';
+import { Editor as CKEditorComponentType } from '@ckeditor/ckeditor5-react';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 import Breadcrump from '../Breadcrump';
 import DetailModal from '../Detail-Modal';
@@ -31,6 +31,9 @@ import {
 } from '../../state/faq/action';
 
 import styles from '../styles/DetailPage.module.css';
+
+const Editor = dynamic<CKEditorComponentType<any>>(() => import('@ckeditor/ckeditor5-react').then((mod) => mod.Editor), { ssr: false });
+const DynamicClassicEditor = dynamic(() => import('@ckeditor/ckeditor5-build-classic'), { ssr: false });
 
 function DetailOther() {
     const { auth, faq } = useAppSelector((states) => states);
@@ -298,8 +301,8 @@ function DetailOther() {
                             {addpolicy && (
                                 <Form.Control placeholder="Title" className="form-layout mb-3" value={policyTitle} onChange={(e) => setPolicyTitle(e.target.value)} />
                             )}
-                            <CKEditor
-                                editor={ClassicEditor}
+                            <Editor
+                                editor={DynamicClassicEditor}
                                 data={policyText}
                                 onChange={handleEditorDataChange}
                             />

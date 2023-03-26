@@ -11,6 +11,7 @@
 
 import '../styles/globals.css';
 import 'bootstrap/dist/css/bootstrap.css';
+
 import type { AppProps } from 'next/app';
 import { useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
