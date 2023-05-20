@@ -6,22 +6,25 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
+import axios from 'axios';
 import { useAppSelector } from '../../hooks';
 import DetailModal from '../Detail-Modal';
 
 export default function OptionalAddons(props) {
+    const API = process.env.VALO_API;
+
     const { data, getAddOns, game } = props;
 
     const { addonsDetail } = useAppSelector((states) => states);
 
     const [modal, showModal] = useState(false);
+    const [agents, setAgents] = useState<any>([]);
     const [agent, setAgent] = useState<any>('Astra');
     const [agent2, setAgent2] = useState<any>('Astra');
     const [legend, setLegend] = useState<any>('Ash');
     const [legend2, setLegend2] = useState<any>('Ash');
     const [checked, setChecked] = useState<any>(false);
 
-    const agents = ['Astra', 'Breach', 'Brimstone', 'Chamber', 'Cypher', 'Fade', 'Harbor', 'Jett', 'Kay/O', 'Killjoy', 'Neon', 'Omen', 'Phoniex', 'Reyna', 'Raze', 'Sage', 'Skye', 'Sova', 'Viper', 'Yoru'];
     const legends = ['Ash', 'Bangalore', 'Bloodhound', 'Catalyst', 'Caustic', 'Crypto', 'Fuse', 'Gibraltar', 'Horizon', 'Lifeline', 'Loba', 'Mad Maggie', 'Mirage', 'Newcastle', 'Octane', 'Pathfinder', 'Rampart', 'Revenant', 'Seer', 'Valkyrie', 'Vantage', 'Wattson', 'Wraith'];
 
     function sendAddOns() {
@@ -51,10 +54,18 @@ export default function OptionalAddons(props) {
         setLegend2('Ash');
     }
 
+    async function getAgents() {
+        const url = `${API}/v1/agents?isPlayableCharacter=true`;
+        const response = await axios.get(url);
+
+        setAgents(response.data.data);
+    }
+
     useEffect(() => {
         if (addonsDetail.length === 0) {
             setChecked(false);
         }
+        getAgents();
     }, [addonsDetail]);
 
     return (
@@ -79,13 +90,13 @@ export default function OptionalAddons(props) {
                 <span>First Option</span>
                 {game.name === 'Valorant' ? (
                     <Form.Select className="form-layout mb-4" value={agent} onChange={(e) => setAgent(e.target.value)}>
-                        {agents.map((agnt, index) => (
-                            <option key={`agent${index}`} value={agnt}>{agnt}</option>
+                        {agents?.map((agnt, index) => (
+                            <option key={`agent${index}`} value={agnt.displayName}>{agnt.displayName}</option>
                         ))}
                     </Form.Select>
                 ) : (
                     <Form.Select className="form-layout mb-4" value={legend} onChange={(e) => setLegend(e.target.value)}>
-                        {legends.map((lgnd, index) => (
+                        {legends?.map((lgnd, index) => (
                             <option key={`legend${index}`} value={lgnd}>{lgnd}</option>
                         ))}
                     </Form.Select>
@@ -94,7 +105,7 @@ export default function OptionalAddons(props) {
                 {game.name === 'Valorant' ? (
                     <Form.Select className="form-layout mb-4" value={agent2} onChange={(e) => setAgent2(e.target.value)}>
                         {agents.map((agnt, index) => (
-                            <option key={`agent${index}`} value={agnt}>{agnt}</option>
+                            <option key={`agent${index}`} value={agnt.displayName}>{agnt.displayName}</option>
                         ))}
                     </Form.Select>
                 ) : (

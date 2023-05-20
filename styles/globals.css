@@ -112,6 +112,15 @@ b {
   color: var(--primColor);
 }
 
+.button:hover>a i {
+  background: transparent;
+  color: var(--primColor) !important;
+}
+
+i {
+  transition: .5s;
+}
+
 .button-org {
   border-radius: 5px;
   font-family: var(--secFont);

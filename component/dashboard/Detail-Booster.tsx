@@ -75,22 +75,21 @@ function DetailBooster() {
                             {orderTake?.data?.map((order) => (
                                 <Col className="col-md-4 col-12 mb-3" key={order?.boost_id}>
                                     <div className="centered w-95-res card flex-down">
-                                        <div className="fullwidth flex-right">
-                                            <span className={styles['booster-card-date']}>{order?.order_date}</span>
-                                        </div>
+                                        <Image src={order?.thumbnail} width="100" height="100" />
                                         <Row className="fullwidth mb-3">
-                                            <Col className="centered-down p-0">
+                                            <Col className="centered-down p-3">
                                                 <span className={styles['booster-card-title']}>{order?.game}</span>
                                                 <span className={styles['booster-card-subtitle']}>{order?.service}</span>
                                             </Col>
                                             <Col className="centered-down col-5 p-0">
+                                                <span className={styles['booster-card-date']}>{order?.order_date}</span>
                                                 <span className={styles['booster-card-price']}>
                                                     $
                                                     {order?.total_price}
                                                 </span>
                                             </Col>
                                         </Row>
-                                        <div className="centered">
+                                        <div className="centered mb-3">
                                             <button onClick={() => { showModal(true); setSelectedOrder(order); }} className="button-org capsule">Details</button>
                                         </div>
                                     </div>
@@ -113,6 +112,7 @@ function DetailBooster() {
             )}
             {/* Take Order */}
             <DetailModal
+                sizing="lg"
                 show={modal}
                 onHide={() => showModal(false)}
             >
@@ -171,7 +171,7 @@ function DetailBooster() {
                 {selectedOrder?.detail?.add_ons !== undefined && (
                     <Row>
                         {selectedOrder?.detail?.add_ons[0].name !== 'None' && (
-                            <>
+                            <Col className="flex-down col-md-6 col-sm-12">
                                 <h5 className="text-org">Add Ons</h5>
                                 <span>Add Ons : </span>
                                 <ul className="px-5">
@@ -179,8 +179,19 @@ function DetailBooster() {
                                         <li>{list.name}</li>
                                     ))}
                                 </ul>
-                            </>
+                            </Col>
                         )}
+                        <Col className="col-md-6 col-sm-12 ">
+                            <div className="centered my-3">
+                                <button type="button" className="button capsule">
+                                    <a target="_blank" href={process.env.DISCORD_LINK} rel="noreferrer">
+                                        <i className="fa-brands fa-discord" />
+                                        {' '}
+                                        Chat Booster
+                                    </a>
+                                </button>
+                            </div>
+                        </Col>
                     </Row>
                 )}
                 <Row>

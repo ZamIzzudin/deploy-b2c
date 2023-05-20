@@ -20,6 +20,8 @@ const nextConfig = {
     TAWK_PROP_ID: process.env.TAWK_PROP_ID,
     TAWK_WIDGET_ID: process.env.TAWK_WIDGET_ID,
     CRYPTO_WALLET_ADDRESS: process.env.CRYPTO_WALLET_ADDRESS,
+    VALO_API: process.env.VALO_API,
+    DISCORD_LINK: process.env.DISCORD_LINK,
     SALT: process.env.SALT,
   },
 };

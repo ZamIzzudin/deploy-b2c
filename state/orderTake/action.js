@@ -29,10 +29,23 @@ function getTakeOrder(orders) {
 
 // Middleware
 function asyncGetAllOrderToTake() {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         try {
-            const orders = await api.boosterSeeAvailableOrder();
-            dispatch(getOrderToTake(orders));
+            const { games } = getState();
+
+            const raw = await api.boosterSeeAvailableOrder();
+
+            const orders = raw.data.map((order) => {
+                let temp;
+                games.forEach((game) => {
+                    if (game.name.toLowerCase() === order.game.toLowerCase()) {
+                        temp = { ...order, thumbnail: game.logo_url };
+                    }
+                });
+                return temp;
+            });
+            raw.data = orders;
+            dispatch(getOrderToTake(raw));
         } catch (err) {
             console.log(err);
         }

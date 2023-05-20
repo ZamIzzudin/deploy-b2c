@@ -48,7 +48,7 @@ function Footer() {
                 <Row className="mt-3">
                     <Col className={styles['footer-copyright']}>
                         <h3>
-                            Lunar Boost 2022 &copy;
+                            Lunar Boost 2023 &copy;
                             <span> All Rights Reserved</span>
                         </h3>
                     </Col>

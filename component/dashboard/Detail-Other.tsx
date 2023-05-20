@@ -20,8 +20,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import Image from 'next/image';
-import dynamic from 'next/dynamic';
-import { Editor as CKEditorComponentType } from '@ckeditor/ckeditor5-react';
+
 import { useAppSelector, useAppDispatch } from '../../hooks';
 import Breadcrump from '../Breadcrump';
 import DetailModal from '../Detail-Modal';
@@ -29,11 +28,9 @@ import DetailModal from '../Detail-Modal';
 import {
     asyncGetAllFAQ, asyncCreateAllFAQ, asyncEditAllFAQ, asyncRemoveAllFAQ,
 } from '../../state/faq/action';
+import CKeditor from '../Editor';
 
 import styles from '../styles/DetailPage.module.css';
-
-const Editor = dynamic<CKEditorComponentType<any>>(() => import('@ckeditor/ckeditor5-react').then((mod) => mod.Editor), { ssr: false });
-const DynamicClassicEditor = dynamic(() => import('@ckeditor/ckeditor5-build-classic'), { ssr: false });
 
 function DetailOther() {
     const { auth, faq } = useAppSelector((states) => states);
@@ -55,10 +52,9 @@ function DetailOther() {
     const [reviewsAll, setReviewAll] = useState<any>([]);
 
     const [policy, setPolicy] = useState<any>([]);
-    const [addpolicy, setAddPolicy] = useState<any>(false);
-    const [policyText, setPolicyText] = useState<any>('');
-    const [policyTitle, setPolicyTitle] = useState<any>('');
+    const [policyText, setPolicyText] = useState<string>('');
     const [selectedPolicy, setSelectedPolicy] = useState<any>({});
+    const [editorLoaded, setEditorLoaded] = useState<boolean>(false);
 
     const [isActive, setActive] = useState<any>('faq');
 
@@ -179,22 +175,7 @@ function DetailOther() {
         const url = `${process.env.API}/configs`;
 
         await axios.get(url)
-            .then((res) => { setPolicy(res.data.data.data); setSelectedPolicy(res.data.data.data[0]); })
-            .catch((err) => console.log(err));
-    }
-
-    async function createPolicy() {
-        const url = `${process.env.API}/configs`;
-
-        const data = {
-            config_code: Math.random(),
-            config_value: policyText,
-            config_type: 'Policy',
-            config_description: policyTitle,
-        };
-
-        await axios.post(url, data)
-            .then((res) => { getPolicy(); setSelectedPolicy(null); setPolicyText(''); setPolicyTitle(''); })
+            .then((res) => { setPolicy(res.data.data.data); setSelectedPolicy(res.data.data.data[0]); setPolicyText(res.data.data.data[0].config_value); })
             .catch((err) => console.log(err));
     }
 
@@ -207,7 +188,7 @@ function DetailOther() {
         };
 
         await axios.put(url, payload)
-            .then((res) => { getPolicy(); setSelectedPolicy(null); setPolicyText(''); setPolicyTitle(''); })
+            .then((res) => { getPolicy(); })
             .catch((err) => console.log(err));
     }
 
@@ -223,10 +204,9 @@ function DetailOther() {
         getReviews(paginationPage);
     }, [paginationPage]);
 
-    const handleEditorDataChange = (event, editor) => {
-        const data = editor.getData();
-        setPolicyText(data);
-    };
+    useEffect(() => {
+        setEditorLoaded(true);
+    }, []);
 
     for (let i = 1; i <= reviewsAll.last_page; i++) {
         pagination.push(
@@ -294,24 +274,18 @@ function DetailOther() {
                             <h3 className="sec-font mb-4">Policy</h3>
                             <div className={`${styles['policy-container']} mb-3`}>
                                 {policy.map((unit) => (
-                                    <button className="button" onClick={() => { setAddPolicy(false); setPolicyText(unit.config_value); setSelectedPolicy(unit); }}>{unit.config_description}</button>
+                                    <button className={selectedPolicy.config_description === unit.config_description ? 'button-org' : 'button'} onClick={() => { setPolicyText(unit.config_value); setSelectedPolicy(unit); }}>{unit.config_description}</button>
                                 ))}
-                                <button className="button button-org" onClick={() => { setAddPolicy(true); setPolicyText(''); setPolicyTitle(''); setSelectedPolicy(null); }}>+ Add</button>
                             </div>
-                            {addpolicy && (
-                                <Form.Control placeholder="Title" className="form-layout mb-3" value={policyTitle} onChange={(e) => setPolicyTitle(e.target.value)} />
-                            )}
-                            <Editor
-                                editor={DynamicClassicEditor}
-                                data={policyText}
-                                onChange={handleEditorDataChange}
+                            <CKeditor
+                                value={policyText}
+                                onChange={(data: string) => {
+                                    setPolicyText(data);
+                                }}
+                                editorLoaded={editorLoaded}
                             />
                             <div>
-                                {addpolicy ? (
-                                    <button className="button capsule mt-3" onClick={() => createPolicy()}>Add</button>
-                                ) : (
-                                    <button className="button capsule mt-3" onClick={() => updatePolicy(selectedPolicy)}>Update</button>
-                                )}
+                                <button className="button capsule mt-3" onClick={() => updatePolicy(selectedPolicy)}>Update</button>
                             </div>
                         </div>
                     </Col>

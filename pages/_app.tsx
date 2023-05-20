@@ -48,11 +48,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   };
 
-  useEffect(() => {
-    if (window.Tawk_API.showWidget !== undefined) {
-      onLoad();
-    }
-  }, [pathname]);
+  // useEffect(() => {
+  //   if (window.Tawk_API.showWidget !== undefined) {
+  //     onLoad();
+  //   }
+  // }, [pathname]);
 
   return (
     <>
