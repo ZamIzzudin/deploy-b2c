@@ -20,6 +20,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 
 import { useAppSelector, useAppDispatch } from '../../hooks';
 import Breadcrump from '../Breadcrump';
@@ -28,9 +29,13 @@ import DetailModal from '../Detail-Modal';
 import {
     asyncGetAllFAQ, asyncCreateAllFAQ, asyncEditAllFAQ, asyncRemoveAllFAQ,
 } from '../../state/faq/action';
-import CKeditor from '../Editor';
+// import CKeditor from '../Editor';
 
 import styles from '../styles/DetailPage.module.css';
+
+const CKeditor = dynamic(() => import('../Editor'), {
+    ssr: false,
+});
 
 function DetailOther() {
     const { auth, faq } = useAppSelector((states) => states);
