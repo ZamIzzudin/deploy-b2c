@@ -29,7 +29,6 @@ import DetailModal from '../Detail-Modal';
 import {
     asyncGetAllFAQ, asyncCreateAllFAQ, asyncEditAllFAQ, asyncRemoveAllFAQ,
 } from '../../state/faq/action';
-// import CKeditor from '../Editor';
 
 import styles from '../styles/DetailPage.module.css';
 
