@@ -351,7 +351,7 @@ export default function UserOrder({ orders }) {
                 {selectedOrder?.detail?.add_ons !== undefined && (
                     <Row>
                         {selectedOrder?.detail?.add_ons[0].name !== 'None' && (
-                            <>
+                            <Col className="flex-down col-md-6 col-sm-12 ">
                                 <h4 className="text-org">Add Ons</h4>
                                 <span>Add Ons : </span>
                                 <ul className="px-5">
@@ -359,7 +359,20 @@ export default function UserOrder({ orders }) {
                                         <li>{list.name}</li>
                                     ))}
                                 </ul>
-                            </>
+                            </Col>
+                        )}
+                        {selectedOrder?.detail?.add_ons.filter((e) => e.name === 'Play With Booster').length > 0 && (
+                            <Col className="col-md-6 col-sm-12 ">
+                                <div className="centered my-3">
+                                    <button type="button" className="button capsule">
+                                        <a target="_blank" href={process.env.DISCORD_LINK} rel="noreferrer">
+                                            <i className="fa-brands fa-discord" />
+                                            {' '}
+                                            Chat Booster
+                                        </a>
+                                    </button>
+                                </div>
+                            </Col>
                         )}
                     </Row>
                 )}

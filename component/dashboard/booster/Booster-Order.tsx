@@ -261,7 +261,7 @@ export default function BoosterOrder({ orders }) {
                         ))}
                         <input type="file" onChange={(e) => { addScreenshoot(e); }} accept="image/png, image/jpg, image/jpeg" hidden ref={fileForm} />
                         <button className="button-org-border capsule my-3" onClick={() => fileForm.current?.click()}>
-                            Choose File
+                            Choose File *Max 2 mb
                         </button>
                     </Col>
                 </Row>

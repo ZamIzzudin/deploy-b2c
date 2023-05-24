@@ -272,7 +272,7 @@ export default function AdminOrder({ orders }) {
                 {selectedOrder?.detail?.add_ons !== undefined && (
                     <Row>
                         {selectedOrder?.detail?.add_ons[0].name !== 'None' && (
-                            <>
+                            <Col className="flex-down col-md-6 col-sm-12 ">
                                 <h4 className="text-org">Add Ons</h4>
                                 <span>Add Ons : </span>
                                 <ul className="px-5">
@@ -280,11 +280,11 @@ export default function AdminOrder({ orders }) {
                                         <li>{list.name}</li>
                                     ))}
                                 </ul>
-                                <hr />
-                            </>
+                            </Col>
                         )}
                     </Row>
                 )}
+                <hr />
                 <Row>
                     <h4 className="text-org">Customer Address</h4>
                     <span>

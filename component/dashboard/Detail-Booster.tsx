@@ -181,17 +181,6 @@ function DetailBooster() {
                                 </ul>
                             </Col>
                         )}
-                        <Col className="col-md-6 col-sm-12 ">
-                            <div className="centered my-3">
-                                <button type="button" className="button capsule">
-                                    <a target="_blank" href={process.env.DISCORD_LINK} rel="noreferrer">
-                                        <i className="fa-brands fa-discord" />
-                                        {' '}
-                                        Chat Booster
-                                    </a>
-                                </button>
-                            </div>
-                        </Col>
                     </Row>
                 )}
                 <Row>

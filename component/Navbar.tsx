@@ -127,7 +127,7 @@ function TabBar() {
                             {mobile ? (
                                 <>
                                     <Link scroll href="/dashboard">
-                                        <button className="button-border capsule">Profile</button>
+                                        <button className="button-border capsule">Dashboard</button>
                                     </Link>
                                     <span onClick={() => handleLogout()} className="button capsule">
                                         Logout
