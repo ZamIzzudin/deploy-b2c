@@ -85,7 +85,7 @@ function Payment() {
             serviceRequire = {
                 boost_detail: checkoutDetail?.require,
                 add_ons: checkoutDetail?.add_ons,
-                total_price: checkoutDetail?.total_price,
+                // total_price: checkoutDetail?.total_price,
                 notes: encrypt(JSON.stringify(credential)),
                 payment_id: data?.id || data?.hash,
             };

@@ -31,14 +31,15 @@ export default function OptionalAddons(props) {
         if (data.name.includes('Specific') && checked === false) {
             showModal(true);
         } else {
-            getAddOns(data);
+            getAddOns({ name: data.name });
             setChecked(!checked);
         }
     }
 
     function addSpecificAgent() {
         const specificAgent = `${data.name} (${agent}/${agent2})`;
-        getAddOns({ name: specificAgent, percentage_price: data.percentage_price });
+        // getAddOns({ name: specificAgent, percentage_price: data.percentage_price });
+        getAddOns({ name: specificAgent });
         setChecked(!checked);
         showModal(false);
         setAgent('Astra');
@@ -47,7 +48,8 @@ export default function OptionalAddons(props) {
 
     function addSpecificLegend() {
         const specificLegend = `${data.name} (${legend}/${legend2})`;
-        getAddOns({ name: specificLegend, percentage_price: data.percentage_price });
+        // getAddOns({ name: specificLegend, percentage_price: data.percentage_price });
+        getAddOns({ name: specificLegend });
         setChecked(!checked);
         showModal(false);
         setLegend('Ash');

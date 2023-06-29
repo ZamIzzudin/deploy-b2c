@@ -56,7 +56,7 @@ function Checkout(props: any) {
         if (data.add_ons.length === 0) {
             data.add_ons = [{
                 name: 'None',
-                percentage_price: 0,
+                // percentage_price: 0,
             }];
         }
 
